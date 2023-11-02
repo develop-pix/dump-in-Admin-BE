@@ -6,8 +6,8 @@ volumes:
 
 services:
   database:
-    container_name: postgres
-    image: postgres:14
+    container_name: dump-in-postgres
+    image: postgres:14-alpine
     restart: unless-stopped
     environment:
       POSTGRES_DB: ${DATABASE_NAME}
@@ -21,7 +21,7 @@ services:
 
 
   nest-app:
-    container_name: projects-NestJS
+    container_name: dumpin-admin-NestJS
     build:
       context: .
       dockerfile: docker/local.Dockerfile
@@ -43,11 +43,11 @@ services:
       DATABASE_NAME: ${DATABASE_NAME}
       DATABASE_USER: ${DATABASE_USER}
       DATABASE_PASS: ${DATABASE_PASS}
-      DATABASE_URI: ${DATABASE_URI}
+      DATABASE_HOST: ${DATABASE_HOST}
       ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
     
   pgadmin:
-    container_name: pgadmin
+    container_name: dump-in-pgadmin
     image: dpage/pgadmin4
     restart: unless-stopped
     ports:
