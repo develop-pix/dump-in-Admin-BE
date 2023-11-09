@@ -8,7 +8,12 @@ export class ResponseEntity<T> {
   @Exclude() private readonly _success: boolean;
   @Exclude() private readonly _data: T;
 
-  private constructor(code: HttpStatus, message: string, success: boolean, data: T) {
+  private constructor(
+    code: HttpStatus,
+    message: string,
+    success: boolean,
+    data: T,
+  ) {
     this._code = code;
     this._message = message;
     this._success = success;
