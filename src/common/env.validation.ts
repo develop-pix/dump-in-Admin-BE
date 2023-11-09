@@ -3,6 +3,9 @@ import { IsString, validateSync } from 'class-validator';
 
 class EnvironmentVariables {
   @IsString()
+  NODE_ENV: string;
+
+  @IsString()
   ALLOWED_ORIGINS: string;
 
   @IsString()
