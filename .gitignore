@@ -38,3 +38,8 @@ lerna-debug.log*
 
 .env.local
 .env
+
+# docker-local
+
+pgadmin/
+postgres/

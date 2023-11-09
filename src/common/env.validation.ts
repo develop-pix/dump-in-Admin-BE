@@ -3,6 +3,9 @@ import { IsString, validateSync } from 'class-validator';
 
 class EnvironmentVariables {
   @IsString()
+  NODE_ENV: string;
+
+  @IsString()
   ALLOWED_ORIGINS: string;
 
   @IsString()
@@ -15,7 +18,7 @@ class EnvironmentVariables {
   DATABASE_PASS: string;
 
   @IsString()
-  DATABASE_URI: string;
+  DATABASE_HOST: string;
 }
 
 export function validate(
