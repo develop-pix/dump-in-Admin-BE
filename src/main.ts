@@ -7,9 +7,12 @@ import {
   ValidationPipe,
 } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true
+  });
   const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
 
   const validationPipeOptions = {
@@ -25,12 +28,13 @@ async function bootstrap(): Promise<void> {
   };
 
   const config = new DocumentBuilder()
-    .setTitle('Example API')
+    .setTitle('Dump-In-Admin API')
     .setDescription('The Example API description')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
 
+  app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   app
     .useGlobalPipes(new ValidationPipe(validationPipeOptions))
     .useGlobalFilters(new HttpExceptionFilter(new Logger()))
