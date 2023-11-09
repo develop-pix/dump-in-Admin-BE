@@ -6,6 +6,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { utilities, WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { ExceptionModule } from './common/filter/exception-filter.module';
+import { UserModule } from './user/user.module';
+import { PhotoBoothModule } from './photo-booth/photo-booth.module';
 
 @Module({
   imports: [
@@ -34,11 +36,13 @@ import { ExceptionModule } from './common/filter/exception-filter.module';
           format: winston.format.combine(
             winston.format.timestamp(),
             winston.format.colorize(),
-            utilities.format.nestLike('DumpInAdmin', { prettyPrint: true })
-          )
-        })
-      ]
+            utilities.format.nestLike('DumpInAdmin', { prettyPrint: true }),
+          ),
+        }),
+      ],
     }),
+    UserModule,
+    PhotoBoothModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
