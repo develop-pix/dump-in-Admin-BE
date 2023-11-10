@@ -1,24 +1,26 @@
-import { Injectable } from '@nestjs/common';
+
+import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import * as bcrypt from 'bcryptjs';
+import { User } from '../user/entity/user.entity';
 
 @Injectable()
 export class AuthService {
-  create(): string {
-    return 'This action adds a new auth';
-  }
+  constructor(
+    @InjectRepository(User) private usersRepository: Repository<User>,
+  ) { }
 
-  findAll(): string {
-    return `This action returns all auth`;
-  }
+  async validateAdminUser(username: string, password: string): Promise<any> {
+    const user = await this.usersRepository.findOne({ where: { username } });
 
-  findOne(id: number): string {
-    return `This action returns a #${id} auth`;
-  }
+    if (user.authGroupPermissions.userGroupId !== 2) {
+      throw new UnauthorizedException('관리자 권한이 없습니다')
+    }
 
-  update(id: number): string {
-    return `This action updates a #${id} auth`;
-  }
-
-  remove(id: number): string {
-    return `This action removes a #${id} auth`;
+    if (user && bcrypt.compareSync(password, user.password)) {
+      const { password, ...userWithoutPassword } = user;
+      return userWithoutPassword;
+    }
   }
 }
