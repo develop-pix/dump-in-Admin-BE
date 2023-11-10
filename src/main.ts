@@ -8,6 +8,8 @@ import {
 } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
+import * as session from 'express-session';
+import * as passport from 'passport';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
@@ -27,6 +29,16 @@ async function bootstrap(): Promise<void> {
     allowedHeaders: 'Content-Type, Accept, Authorization',
   };
 
+  const sessionOptions = {
+    secret: process.env.SET_COOKIE_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
+    },
+    name: 'session-cookie',
+  };
+
   const config = new DocumentBuilder()
     .setTitle('Dump-In-Admin API')
     .setDescription('The Example API description')
@@ -34,11 +46,15 @@ async function bootstrap(): Promise<void> {
     .build();
   const document = SwaggerModule.createDocument(app, config);
 
+  app.use(session(sessionOptions))
+  app.use(passport.initialize())
+  app.use(passport.session());
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   app
     .useGlobalPipes(new ValidationPipe(validationPipeOptions))
     .useGlobalFilters(new HttpExceptionFilter(new Logger()))
-    .enableCors(corsOptions);
+    .enableCors(corsOptions)
+
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   SwaggerModule.setup('api-docs', app, document);

@@ -45,4 +45,4 @@ import { PhotoBoothModule } from './photo-booth/photo-booth.module';
     PhotoBoothModule,
   ],
 })
-export class AppModule {}
+export class AppModule { }
