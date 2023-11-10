@@ -1,32 +1,28 @@
-import { Controller, Get, Post, Patch, Param, Delete } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Controller, Logger, Post, Req, Res, UseGuards } from '@nestjs/common';
+import { LocalAuthGuard } from './guard/local-auth.guard';
+import { ResponseEntity } from '../common/entity/response.entity';
+import { CookieAuthGuard } from './guard/cookie-auth.guard';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private logger: Logger) { }
 
-  @Post()
-  create(): string {
-    return this.authService.create();
+  @UseGuards(LocalAuthGuard)
+  @Post('login')
+  async login() {
+    return ResponseEntity.OK('로그인에 성공했습니다.');
   }
 
-  @Get()
-  findAll(): string {
-    return this.authService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string): string {
-    return this.authService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string): string {
-    return this.authService.update(+id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string): string {
-    return this.authService.remove(+id);
+  @UseGuards(CookieAuthGuard)
+  @Post('logout')
+  logOut(@Req() req: Request, @Res() res: Response) {
+    req.logout((err) => {
+      req.session.destroy(() => res.redirect("/"))
+      if (err) {
+        this.logger.error(err.stack)
+      }
+    });
+    return ResponseEntity.OK('로그아웃에 성공했습니다.');
   }
 }
