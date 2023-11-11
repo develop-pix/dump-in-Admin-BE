@@ -32,7 +32,6 @@
     "connect-pg-simple": "^9.0.1",
     "express-session": "^1.17.3",
     "nest-winston": "^1.9.4",
-    "nestjs-session": "^3.0.1",
     "passport": "^0.6.0",
     "passport-local": "^1.0.0",
     "pg": "^8.11.3",
