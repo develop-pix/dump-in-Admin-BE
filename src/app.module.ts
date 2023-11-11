@@ -1,18 +1,16 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { validate } from './common/env.validation';
-import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { utilities, WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { ExceptionModule } from './common/filter/exception-filter.module';
-import { UserModule } from './user/user.module';
 import { PhotoBoothModule } from './photo-booth/photo-booth.module';
+import { User } from './user/entity/user.entity';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
-    ExceptionModule,
-    AuthModule,
     ConfigModule.forRoot({
       envFilePath: '.env',
       isGlobal: true,
@@ -27,7 +25,7 @@ import { PhotoBoothModule } from './photo-booth/photo-booth.module';
       database: process.env.DATABASE_NAME,
       synchronize: process.env.NODE_ENV !== 'production',
       logging: process.env.NODE_ENV !== 'production',
-      entities: [],
+      entities: [User],
     }),
     WinstonModule.forRoot({
       transports: [
@@ -41,8 +39,9 @@ import { PhotoBoothModule } from './photo-booth/photo-booth.module';
         }),
       ],
     }),
-    UserModule,
     PhotoBoothModule,
+    ExceptionModule,
+    AuthModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}
