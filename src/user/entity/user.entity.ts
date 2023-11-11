@@ -1,24 +1,10 @@
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  Unique,
-  ManyToOne,
-  OneToMany,
-  JoinColumn,
-  JoinTable,
-} from 'typeorm';
-
-export interface UserSignInProps {
-  username: string;
-  password: string;
-}
+import { Entity, Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
 @Entity('user')
 @Unique(['email'])
 export class User extends BaseDateEntity {
-  @PrimaryGeneratedColumn({ name: 'user_id' })
+  @PrimaryGeneratedColumn({ name: 'id' })
   userId: number;
 
   @Column({ name: 'email', type: 'varchar', nullable: false, length: 128 })
@@ -57,65 +43,6 @@ export class User extends BaseDateEntity {
   @Column({ name: 'birth', type: 'timestamp', nullable: true })
   birth: Date;
 
-  @OneToMany(
-    () => AuthGroupPermissions,
-    (AuthGroupPermissions) => AuthGroupPermissions.authGroup.name,
-  )
-  @JoinColumn({ name: 'user_group_id' })
-  authGroupPermissions: AuthGroupPermissions;
-
-  @ManyToOne(() => AuthGroup, (authGroup) => authGroup.authGroupPermissions, {
-    eager: true,
-  })
-  @JoinTable({
-    name: 'auth_group_permissions',
-    joinColumn: {
-      name: 'user_id',
-      referencedColumnName: 'userId',
-    },
-    inverseJoinColumn: {
-      name: 'auth_group_id',
-      referencedColumnName: 'authGroupPermissionsIds',
-    },
-  })
-  authGroup: AuthGroup;
-
-  static of({ username, password }: UserSignInProps): User {
-    const user = new User();
-
-    user.username = username;
-    user.password = password;
-
-    return user;
-  }
-}
-
-@Entity('auth_group_permissions')
-export class AuthGroupPermissions {
-  @PrimaryGeneratedColumn({ name: 'user_group_id' })
-  userGroupId: number;
-
-  @ManyToOne(() => User, (user) => user.authGroupPermissions)
-  user: User;
-
-  @ManyToOne(() => AuthGroup, (authGroup) => authGroup.authGroupPermissions)
-  authGroup: AuthGroup;
-}
-
-@Entity('auth_group')
-export class AuthGroup {
-  @PrimaryGeneratedColumn({ name: 'user_group_permissions_id' })
-  userGroupPermissionsId: number;
-
-  @Column()
-  name: string;
-
-  @Column()
-  description: string;
-
-  @OneToMany(
-    () => AuthGroupPermissions,
-    (authGroupPermissions) => authGroupPermissions.authGroup,
-  )
-  authGroupPermissions: AuthGroupPermissions[];
+  @Column({ name: 'group', type: 'varchar', nullable: false, length: 16 })
+  group: string;
 }

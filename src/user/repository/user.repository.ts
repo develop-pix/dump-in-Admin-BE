@@ -1,16 +1,37 @@
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 import { User } from '../entity/user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { RawAdmin } from '../dto/get-session-admin.dto';
 
 @Injectable()
 export class UserRepository {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) { }
+  ) {}
 
-  // async getAuthGroupIdByUsername(username: string): Promise<string> {
-  //   const user = await this.userRepository.findOne({ where: { username } });
-  //   return user.authGroup.name;
-  // }
+  async findByUsername(username: string): Promise<RawAdmin> {
+    const result = await this.createUserQueryBuilder(username);
+    return result.getRawOne();
+  }
+
+  async findByUsernameOrFail(username: string): Promise<RawAdmin> {
+    const result = await this.createUserQueryBuilder(username);
+    return result.getOneOrFail();
+  }
+
+  async createUserQueryBuilder(
+    username: string,
+  ): Promise<SelectQueryBuilder<User>> {
+    const queryBuilder = await this.userRepository.createQueryBuilder('user');
+    return queryBuilder
+      .select([
+        'user.id as userId',
+        'user.email as email',
+        'user.username as username',
+        'user.password as password',
+        'user.group as group',
+      ])
+      .where('username = :username', { username });
+  }
 }
