@@ -1,6 +1,5 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '../../user/entity/user.entity';
 import {
   IsNotEmpty,
   IsStrongPassword,
@@ -8,7 +7,7 @@ import {
   MinLength,
 } from 'class-validator';
 
-export class SignInDto {
+export class LogInDto {
   @ApiProperty({
     description: '어드민이 로그인에 사용할 아이디 필드입니다.',
     required: true,
@@ -36,13 +35,4 @@ export class SignInDto {
   })
   @MaxLength(30)
   password: string;
-
-  toEntity(): User {
-    const props = {
-      username: this.username,
-      password: this.password,
-    };
-
-    return User.of(props);
-  }
 }
