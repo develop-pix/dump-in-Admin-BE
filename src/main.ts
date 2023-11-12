@@ -9,7 +9,6 @@ import {
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import * as session from 'express-session';
-import * as passport from 'passport';
 // import * as connectPgSimple from 'connect-pg-simple';
 
 async function bootstrap(): Promise<void> {
@@ -55,8 +54,6 @@ async function bootstrap(): Promise<void> {
   const document = SwaggerModule.createDocument(app, config);
 
   app.use(session(sessionOptions));
-  app.use(passport.initialize());
-  app.use(passport.session());
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   app
     .useGlobalPipes(new ValidationPipe(validationPipeOptions))
