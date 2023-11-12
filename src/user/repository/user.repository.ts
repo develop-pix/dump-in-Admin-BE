@@ -15,18 +15,12 @@ export class UserRepository {
     return result.getRawOne();
   }
 
-  async findByUsernameOrFail(username: string): Promise<RawAdmin> {
-    const result = await this.createUserQueryBuilder(username);
-    return result.getOneOrFail();
-  }
-
   async createUserQueryBuilder(
     username: string,
   ): Promise<SelectQueryBuilder<User>> {
     const queryBuilder = await this.userRepository.createQueryBuilder('user');
     return queryBuilder
       .select([
-        'user.id as userId',
         'user.email as email',
         'user.username as username',
         'user.password as password',

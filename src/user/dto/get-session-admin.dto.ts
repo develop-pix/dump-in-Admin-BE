@@ -1,28 +1,13 @@
 import { Exclude, Expose } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
-
-export interface RawAdmin {
-  userId: number;
-  email: string;
-  username: string;
-  password: string;
-  group: string;
-}
+import { ApiProperty, PickType } from '@nestjs/swagger';
 
 export class GetSessionAdminDto {
-  @Exclude() private readonly _userId: number;
   @Exclude() private readonly _email: string;
   @Exclude() private readonly _username: string;
   @Exclude() private readonly _group: string;
 
   constructor(user: RawAdmin) {
     Object.keys(user).forEach((key) => (this[`_${key}`] = user[key]));
-  }
-
-  @ApiProperty({ description: '유저의 식별자 id 입니다', example: '1' })
-  @Expose()
-  get userId(): number {
-    return this._userId;
   }
 
   @ApiProperty({
@@ -52,3 +37,16 @@ export class GetSessionAdminDto {
     return this._group;
   }
 }
+
+export class RawAdmin {
+  email: string;
+  username: string;
+  password: string;
+  group: string;
+}
+
+export class AdminInfo extends PickType(RawAdmin, [
+  'username',
+  'email',
+  'group',
+]) {}

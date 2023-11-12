@@ -45,4 +45,18 @@ export class User extends BaseDateEntity {
 
   @Column({ name: 'group', type: 'varchar', nullable: false, length: 16 })
   group: string;
+
+  static of({ username, password }: UserSignInProps): User {
+    const user = new User();
+
+    user.username = username;
+    user.password = password;
+
+    return user;
+  }
+}
+
+export interface UserSignInProps {
+  username: string;
+  password: string;
 }
