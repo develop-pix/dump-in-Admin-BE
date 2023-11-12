@@ -1,6 +1,7 @@
 import { LogInDto } from '../../dto/login.dto';
 import { HttpStatus, applyDecorators } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiBody,
   ApiOkResponse,
   ApiOperation,
@@ -52,6 +53,26 @@ export const SwaggerLogIn = (): MethodDecorator =>
                   '로그인에 실패했습니다. 아이디와 비밀번호를 다시 입력해주세요.',
               },
               success: { type: 'boolean', example: false },
+              data: { type: 'string', example: '' },
+            },
+          },
+        ],
+      },
+    }),
+
+    ApiBadRequestResponse({
+      description:
+        '이미 로그인 했을 때 응답입니다. 400 상태코드와 함께 요청 실패 메시지가 반환됩니다',
+      schema: {
+        allOf: [
+          {
+            properties: {
+              code: { enum: [HttpStatus.BAD_REQUEST] },
+              success: { type: 'boolean', example: false },
+              message: {
+                type: 'string',
+                example: '이미 로그인한 사용자입니다.',
+              },
               data: { type: 'string', example: '' },
             },
           },
