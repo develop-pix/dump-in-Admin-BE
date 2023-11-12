@@ -1,11 +1,7 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsNotEmpty,
-  IsStrongPassword,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
+import { User } from '../../user/entity/user.entity';
 
 export class LogInDto {
   @ApiProperty({
@@ -26,13 +22,15 @@ export class LogInDto {
   })
   @Expose()
   @IsNotEmpty()
-  @IsStrongPassword({
-    minLength: 8,
-    minLowercase: 1,
-    minNumbers: 1,
-    minSymbols: 1,
-    minUppercase: 1,
-  })
   @MaxLength(30)
   password: string;
+
+  toEntity(): User {
+    const props = {
+      username: this.username,
+      password: this.password,
+    };
+
+    return User.of(props);
+  }
 }

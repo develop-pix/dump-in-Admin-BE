@@ -1,12 +1,20 @@
-import { Controller, Post, Req, UseGuards } from '@nestjs/common';
-import { LocalAuthGuard } from './guard/local-auth.guard';
+import {
+  Controller,
+  Post,
+  Body,
+  Session,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { ResponseEntity } from '../common/entity/response.entity';
-import { CookieAuthGuard } from './guard/cookie-auth.guard';
-import { Request } from 'express';
 import { AuthService } from './auth.service';
 import { SwaggerLogIn } from './decorator/swagger/login.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { SwaggerLogOut } from './decorator/swagger/logout.decorator';
+import { LogInDto } from './dto/login.dto';
+import { Response } from 'express';
+import { CookieAuthGuard } from './guard/cookie-check.guard';
+import { AdminInfo } from '../user/dto/get-session-admin.dto';
 
 @ApiTags('인증')
 @Controller('auth')
@@ -14,17 +22,22 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @SwaggerLogIn()
-  @UseGuards(LocalAuthGuard)
   @Post('login')
-  async logIn(@Req() req: Request) {
-    return ResponseEntity.OK(`${req.body.username}님이 로그인 했습니다.`);
+  async logIn(
+    @Body() dto: LogInDto,
+    @Session() session: Record<string, AdminInfo>,
+  ) {
+    const sessionUser = await this.authService.logInAndSetSession(
+      dto.toEntity(),
+      session,
+    );
+    return ResponseEntity.OK(`${sessionUser.username}님이 로그인 했습니다.`);
   }
 
   @SwaggerLogOut()
   @UseGuards(CookieAuthGuard)
   @Post('logout')
-  logOut(@Req() req: Request) {
-    this.authService.logOut(req);
-    return ResponseEntity.OK(`${req.body.username}님이 로그아웃 했습니다.`);
+  logOut(@Res() res: Response) {
+    this.authService.logOut(res);
   }
 }
