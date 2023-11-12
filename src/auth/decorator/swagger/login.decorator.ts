@@ -22,7 +22,7 @@ export const SwaggerLogIn = (): MethodDecorator =>
         allOf: [
           {
             properties: {
-              statusCode: { enum: [HttpStatus.OK] },
+              code: { enum: [HttpStatus.OK] },
               message: {
                 type: 'string',
                 example: '로그인 했습니다',
@@ -45,7 +45,7 @@ export const SwaggerLogIn = (): MethodDecorator =>
         allOf: [
           {
             properties: {
-              statusCode: { enum: [HttpStatus.UNAUTHORIZED] },
+              code: { enum: [HttpStatus.UNAUTHORIZED] },
               message: {
                 type: 'string',
                 example:
