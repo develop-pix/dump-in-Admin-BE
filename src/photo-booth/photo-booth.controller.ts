@@ -1,6 +1,8 @@
 import { Controller, Get, Post, Patch, Param, Delete } from '@nestjs/common';
 import { PhotoBoothService } from './photo-booth.service';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('포토부스')
 @Controller('photo-booth')
 export class PhotoBoothController {
   constructor(private readonly photoBoothService: PhotoBoothService) {}
