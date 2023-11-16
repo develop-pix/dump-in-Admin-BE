@@ -5,6 +5,7 @@
 .devcontainer
 .gitmessage.txt
 node_modules/
+dist/
 *.md
 pgadmin/
 postgres/
