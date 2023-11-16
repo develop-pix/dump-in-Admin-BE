@@ -19,7 +19,7 @@ import { AdminInfo } from '../user/dto/get-session-admin.dto';
 @ApiTags('인증')
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @SwaggerLogIn()
   @UseGuards(LoggedCheckGuard)
