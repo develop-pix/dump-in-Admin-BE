@@ -1,7 +1,7 @@
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 import { Entity, Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
 
-@Entity('user')
+@Entity('users')
 @Unique(['email'])
 export class User extends BaseDateEntity {
   @PrimaryGeneratedColumn({ name: 'id' })
@@ -43,16 +43,16 @@ export class User extends BaseDateEntity {
   @Column({ name: 'birth', type: 'timestamp', nullable: true })
   birth: Date;
 
-  @Column({ name: 'group', type: 'varchar', nullable: false, length: 16 })
-  group: string;
+  @Column({ name: 'is_admin', type: 'bool', nullable: false })
+  isAdmin: boolean;
 
   static of({ username, password }: UserSignInProps): User {
-    const user = new User();
+    const users = new User();
 
-    user.username = username;
-    user.password = password;
+    users.username = username;
+    users.password = password;
 
-    return user;
+    return users;
   }
 }
 
