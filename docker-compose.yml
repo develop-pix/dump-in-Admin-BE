@@ -1,9 +1,5 @@
 version: '3.9'
 
-volumes:
-  postgres: {}
-  pgadmin: {}
-
 services:
   database:
     container_name: dump-in-postgres
@@ -16,8 +12,6 @@ services:
       TZ: Asia/Seoul
     networks:
       - mynetwork
-    volumes:
-      - './postgres:/var/lib/postgresql/data'
     ports:
       - '5433:5432'
 
@@ -48,6 +42,7 @@ services:
       - DATABASE_HOST
       - DATABASE_URL
       - ALLOWED_ORIGINS
+      - DATABASE_PORT
 
 networks:
   mynetwork:
