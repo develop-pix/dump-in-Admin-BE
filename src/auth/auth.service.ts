@@ -6,7 +6,7 @@ import {
 import * as bcrypt from 'bcrypt';
 import { UserRepository } from '../user/repository/user.repository';
 import {
-  AdminInfo,
+  SessionAdminInfo,
   GetSessionAdminDto,
   RawAdmin,
 } from '../user/dto/get-session-admin.dto';
@@ -15,12 +15,14 @@ import { User } from '../user/entity/user.entity';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+  ) { }
 
   async logInAndSetSession(
     user: User,
-    session: Record<string, AdminInfo>,
-  ): Promise<AdminInfo> {
+    session: Record<string, SessionAdminInfo>,
+  ): Promise<SessionAdminInfo> {
     /**
      * @param user - 컨트롤러에서 받은 유저 정보 (username, password)
      * @param session - 세션에 넣을 정보
@@ -73,9 +75,9 @@ export class AuthService {
   }
 
   private setSessionUser(
-    session: Record<string, AdminInfo>,
+    session: Record<string, SessionAdminInfo>,
     user: GetSessionAdminDto,
-  ): AdminInfo {
+  ): SessionAdminInfo {
     /**
      * @param session - 세션 객체
      * @param user - 세션에 넣을 유저 정보 객체
