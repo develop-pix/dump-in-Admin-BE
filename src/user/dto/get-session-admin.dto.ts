@@ -43,19 +43,19 @@ export class RawAdmin {
   email: string;
   username: string;
   password: string;
-  isadmin: boolean;
+  is_admin: boolean;
 
   constructor(user: User) {
     Object.keys(user).forEach((key) => (this[`${key}`] = user[key]));
   }
 
   get isAdmin(): boolean {
-    return this.isadmin;
+    return this.is_admin;
   }
 }
 
-export class AdminInfo extends PickType(RawAdmin, [
+export class SessionAdminInfo extends PickType(RawAdmin, [
   'username',
   'email',
   'isAdmin',
-]) {}
+]) { }

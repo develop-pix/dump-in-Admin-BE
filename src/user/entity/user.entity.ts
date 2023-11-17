@@ -19,19 +19,19 @@ export class User extends BaseDateEntity {
   @Column({ name: 'password', type: 'varchar', nullable: true, length: 128 })
   password: string;
 
-  @Column({ name: 'is_active', type: 'bool', nullable: false })
+  @Column({ name: 'is_active', type: 'boolean', nullable: false })
   isActive: boolean;
 
-  @Column({ name: 'is_deleted', type: 'bool', nullable: false })
+  @Column({ name: 'is_deleted', type: 'boolean', nullable: false })
   isDeleted: boolean;
 
   @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
   deletedAt: Date;
 
-  @Column({ name: 'is_agree_privacy', type: 'bool', nullable: false })
+  @Column({ name: 'is_agree_privacy', type: 'boolean', nullable: false })
   isAgreePrivacy: boolean;
 
-  @Column({ name: 'is_agree_marketing', type: 'bool', nullable: false })
+  @Column({ name: 'is_agree_marketing', type: 'boolean', nullable: false })
   isAgreeMarketing: boolean;
 
   @Column({ name: 'last_login_at', type: 'timestamp', nullable: true })
@@ -43,7 +43,7 @@ export class User extends BaseDateEntity {
   @Column({ name: 'birth', type: 'timestamp', nullable: true })
   birth: Date;
 
-  @Column({ name: 'is_admin', type: 'bool', nullable: false })
+  @Column({ name: 'is_admin', type: 'boolean', nullable: false })
   isAdmin: boolean;
 
   static of({ username, password }: UserSignInProps): User {

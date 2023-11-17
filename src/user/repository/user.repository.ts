@@ -8,19 +8,19 @@ import { RawAdmin } from '../dto/get-session-admin.dto';
 export class UserRepository {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
-  ) {}
+  ) { }
 
   async findByUsername(username: string): Promise<RawAdmin> {
-    const queryBuilder = this.userRepository.createQueryBuilder('users');
-
-    return queryBuilder
+    const queryBuilder = await this.userRepository.createQueryBuilder('users')
       .select([
-        'users.email as email',
-        'users.username as username',
-        'users.password as password',
-        'users.is_admin as isAdmin',
+        'email',
+        'username',
+        'password',
+        'is_admin',
       ])
-      .where('users.username = :username', { username })
+      .where('username = :username', { username })
       .getRawOne();
+
+    return new RawAdmin(queryBuilder)
   }
 }
