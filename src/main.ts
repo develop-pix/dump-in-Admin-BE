@@ -63,8 +63,6 @@ async function bootstrap(): Promise<void> {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   SwaggerModule.setup('api-docs', app, document);
-  console.log('DATABASE_URL:', process.env.DATABASE_URL);
-  console.log('Session Options:', sessionOptions);
   await app.listen(3000);
 }
 bootstrap();
