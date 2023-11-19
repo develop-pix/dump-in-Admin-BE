@@ -5,6 +5,7 @@ import {
   Session,
   Res,
   UseGuards,
+  Req,
 } from '@nestjs/common';
 import { ResponseEntity } from '../common/entity/response.entity';
 import { AuthService } from './auth.service';
@@ -12,7 +13,7 @@ import { SwaggerLogIn } from './decorator/swagger/login.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { SwaggerLogOut } from './decorator/swagger/logout.decorator';
 import { LogInDto } from './dto/login.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { LoggedCheckGuard } from './guard/logged-check.guard';
 import { SessionAdminInfo } from '../user/dto/get-session-admin.dto';
 
@@ -38,7 +39,7 @@ export class AuthController {
   @SwaggerLogOut()
   @UseGuards(LoggedCheckGuard)
   @Post('logout')
-  logOut(@Res() res: Response) {
-    this.authService.logOut(res);
+  logOut(@Req() req: Request, @Res() res: Response) {
+    this.authService.logOut(req, res);
   }
 }

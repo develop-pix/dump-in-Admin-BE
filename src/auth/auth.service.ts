@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   UnauthorizedException,
@@ -10,7 +11,7 @@ import {
   GetSessionAdminDto,
   RawAdmin,
 } from '../user/dto/get-session-admin.dto';
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import { User } from '../user/entity/user.entity';
 
 @Injectable()
@@ -88,7 +89,12 @@ export class AuthService {
     return session.user;
   }
 
-  logOut(res: Response): void {
+  logOut(req: Request, res: Response): void {
+    req.session.destroy((error) => {
+      if (error) {
+        throw new BadRequestException('세션 만료에 실패했습니다.')
+      }
+    });
     res.clearCookie('session-cookie');
     res.status(200).send();
   }
