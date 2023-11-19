@@ -8,6 +8,7 @@ import { ExceptionModule } from './common/filter/exception-filter.module';
 import { PhotoBoothModule } from './photo-booth/photo-booth.module';
 import { User } from './user/entity/user.entity';
 import { AuthModule } from './auth/auth.module';
+import { Session } from './auth/entity/session.entity';
 
 @Module({
   imports: [
@@ -19,16 +20,16 @@ import { AuthModule } from './auth/auth.module';
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DATABASE_HOST,
-      port: Number(process.env.DATABASE_PORT),
+      port: +process.env.DATABASE_PORT,
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASS,
       database: process.env.DATABASE_NAME,
-      ssl: {
-        "rejectUnauthorized": false
-      },
+      // ssl: {
+      //   "rejectUnauthorized": false
+      // },
       synchronize: process.env.NODE_ENV !== 'production',
       logging: process.env.NODE_ENV !== 'production',
-      entities: [User],
+      entities: [User, Session],
     }),
     WinstonModule.forRoot({
       transports: [

@@ -9,13 +9,15 @@ import {
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import * as session from 'express-session';
-// import * as connectPgSimple from 'connect-pg-simple';
+import { TypeormStore } from 'connect-typeorm';
+import { Session } from './auth/entity/session.entity';
+import { DataSource } from 'typeorm';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
-  // const pgSession = connectPgSimple(session);
+  const sessionRepo = app.get(DataSource).getRepository(Session);
   const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
 
   const validationPipeOptions = {
@@ -31,16 +33,13 @@ async function bootstrap(): Promise<void> {
   };
 
   const sessionOptions = {
-    // store: new pgSession({
-    //   conObject: {
-    //     connectionString: process.env.DATABASE_URL,
-    //   },
-    //   tableName: 'session',
-    // }),
+    store: new TypeormStore({ cleanupLimit: 3, ttl: 86400 }).connect(sessionRepo),
     secret: process.env.SET_COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
+      httpOnly: true,
+      Secure: true,
       maxAge: 24 * 60 * 60 * 1000, // 1 day
     },
     name: 'session-cookie',
@@ -63,6 +62,6 @@ async function bootstrap(): Promise<void> {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   SwaggerModule.setup('api-docs', app, document);
-  await app.listen(3000);
+  await app.listen(process.env.APP_SERVER_PORT);
 }
 bootstrap();
