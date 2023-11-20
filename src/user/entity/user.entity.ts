@@ -7,44 +7,44 @@ export class User extends BaseDateEntity {
   @PrimaryGeneratedColumn({ name: 'id' })
   userId: number;
 
-  @Column({ name: 'email', type: 'varchar', nullable: false, length: 128 })
+  @Column({ type: 'varchar', nullable: false, length: 128 })
   email: string;
 
-  @Column({ name: 'username', type: 'varchar', nullable: false, length: 128 })
+  @Column({ type: 'varchar', nullable: false, length: 128 })
   username: string;
 
-  @Column({ name: 'nickname', type: 'varchar', nullable: false, length: 128 })
+  @Column({ type: 'varchar', nullable: false, length: 128 })
   nickname: string;
 
-  @Column({ name: 'password', type: 'varchar', nullable: true, length: 128 })
+  @Column({ type: 'varchar', nullable: true, length: 128 })
   password: string;
 
-  @Column({ name: 'is_active', type: 'boolean', nullable: false })
-  isActive: boolean;
+  @Column({ type: 'boolean', nullable: false })
+  is_active: boolean;
 
-  @Column({ name: 'is_deleted', type: 'boolean', nullable: false })
-  isDeleted: boolean;
+  @Column({ type: 'boolean', nullable: false })
+  is_deleted: boolean;
 
-  @Column({ name: 'deleted_at', type: 'timestamp', nullable: true })
-  deletedAt: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  deleted_at: Date;
 
-  @Column({ name: 'is_agree_privacy', type: 'boolean', nullable: false })
-  isAgreePrivacy: boolean;
+  @Column({ type: 'boolean', nullable: false })
+  is_agree_privacy: boolean;
 
-  @Column({ name: 'is_agree_marketing', type: 'boolean', nullable: false })
-  isAgreeMarketing: boolean;
+  @Column({ type: 'boolean', nullable: false })
+  is_agree_marketing: boolean;
 
-  @Column({ name: 'last_login_at', type: 'timestamp', nullable: true })
-  lastLoginAt: Date;
+  @Column({ type: 'timestamp', nullable: true })
+  last_login_at: Date;
 
-  @Column({ name: 'gender', type: 'varchar', nullable: true, length: 8 })
+  @Column({ type: 'varchar', nullable: true, length: 8 })
   gender: string;
 
-  @Column({ name: 'birth', type: 'timestamp', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
   birth: Date;
 
-  @Column({ name: 'is_admin', type: 'boolean', nullable: false })
-  isAdmin: boolean;
+  @Column({ type: 'boolean', nullable: false })
+  is_admin: boolean;
 
   static of({ username, password }: UserSignInProps): User {
     const users = new User();

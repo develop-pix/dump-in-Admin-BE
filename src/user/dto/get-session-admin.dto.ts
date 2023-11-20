@@ -5,10 +5,12 @@ import { User } from '../entity/user.entity';
 export class GetSessionAdminDto {
   @Exclude() private readonly _email: string;
   @Exclude() private readonly _username: string;
-  @Exclude() private readonly _isadmin: boolean;
+  @Exclude() private readonly _isAdmin: boolean;
 
   constructor(user: RawAdmin) {
-    Object.keys(user).forEach((key) => (this[`_${key}`] = user[key]));
+    this._email = user.email;
+    this._username = user.username;
+    this._isAdmin = user.isAdmin;
   }
 
   @ApiProperty({
@@ -35,7 +37,7 @@ export class GetSessionAdminDto {
   })
   @Expose()
   get isAdmin(): boolean {
-    return this._isadmin;
+    return this._isAdmin;
   }
 }
 
