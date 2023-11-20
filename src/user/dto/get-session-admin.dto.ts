@@ -60,4 +60,4 @@ export class SessionAdminInfo extends PickType(RawAdmin, [
   'username',
   'email',
   'isAdmin',
-]) { }
+]) {}

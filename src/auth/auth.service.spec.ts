@@ -7,7 +7,7 @@ import { User } from '../user/entity/user.entity';
 import { ConflictException, UnauthorizedException } from '@nestjs/common';
 
 class MockUserRepository {
-  findByUsername = jest.fn()
+  findByUsername = jest.fn();
 }
 
 describe('AuthService', () => {
@@ -37,15 +37,15 @@ describe('AuthService', () => {
       .spyOn(userRepository, 'findByUsername')
       .mockImplementation((username: string) => {
         if (username === 'admin') {
-          const savedUser = new User()
-          savedUser.username = 'admin'
+          const savedUser = new User();
+          savedUser.username = 'admin';
           savedUser.email = 'admin@example.com';
           savedUser.password = 'admin hashed 12';
           savedUser.is_admin = true;
           return Promise.resolve(new RawAdmin(savedUser));
         } else if (username === 'user') {
-          const savedUser = new User()
-          savedUser.username = 'user'
+          const savedUser = new User();
+          savedUser.username = 'user';
           savedUser.email = 'user@example.com';
           savedUser.password = 'user hashed 12';
           savedUser.is_admin = false;
@@ -65,9 +65,7 @@ describe('AuthService', () => {
     expect(userRepository).toBeDefined();
   });
 
-
   describe('logInAndSetSession()', () => {
-
     const mockSession = {};
 
     it('SUCCESS: 어드민 역할을 가진 유저일 때 로그인', async () => {
@@ -75,9 +73,12 @@ describe('AuthService', () => {
       adminUser.username = 'admin';
       adminUser.password = 'admin';
 
-      const result = await authService.logInAndSetSession(adminUser, mockSession);
+      const result = await authService.logInAndSetSession(
+        adminUser,
+        mockSession,
+      );
 
-      expect(result.email).toEqual('admin@example.com')
+      expect(result.email).toEqual('admin@example.com');
       expect(result.isAdmin).toEqual(true);
       expect(result.username).toEqual('admin');
     });
@@ -87,11 +88,10 @@ describe('AuthService', () => {
       notAdminUser.username = 'user';
       notAdminUser.password = 'user';
 
-
       await expect(async () => {
         await authService.logInAndSetSession(notAdminUser, mockSession);
       }).rejects.toThrowError(
-        new UnauthorizedException('관리자 권한이 없습니다')
+        new UnauthorizedException('관리자 권한이 없습니다'),
       );
     });
 
@@ -100,11 +100,10 @@ describe('AuthService', () => {
       notExistUser.username = 'anonymous';
       notExistUser.password = 'anonymous';
 
-
       await expect(async () => {
         await authService.logInAndSetSession(notExistUser, mockSession);
       }).rejects.toThrowError(
-        new UnauthorizedException('사용자 정보를 찾을 수 없습니다.')
+        new UnauthorizedException('사용자 정보를 찾을 수 없습니다.'),
       );
     });
 
@@ -113,11 +112,10 @@ describe('AuthService', () => {
       wrongAdminUser.username = 'admin';
       wrongAdminUser.password = 'wrong';
 
-
       await expect(async () => {
         await authService.logInAndSetSession(wrongAdminUser, mockSession);
       }).rejects.toThrowError(
-        new ConflictException('관리자 정보가 일치하지 않습니다')
+        new ConflictException('관리자 정보가 일치하지 않습니다'),
       );
     });
   });

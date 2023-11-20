@@ -48,4 +48,4 @@ import { Session } from './auth/entity/session.entity';
     AuthModule,
   ],
 })
-export class AppModule { }
+export class AppModule {}

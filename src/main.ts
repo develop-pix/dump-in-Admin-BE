@@ -33,7 +33,9 @@ async function bootstrap(): Promise<void> {
   };
 
   const sessionOptions = {
-    store: new TypeormStore({ cleanupLimit: 3, ttl: 86400 }).connect(sessionRepo),
+    store: new TypeormStore({ cleanupLimit: 3, ttl: 86400 }).connect(
+      sessionRepo,
+    ),
     secret: process.env.SET_COOKIE_SECRET,
     resave: false,
     saveUninitialized: false,

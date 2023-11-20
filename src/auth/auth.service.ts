@@ -16,9 +16,7 @@ import { User } from '../user/entity/user.entity';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly userRepository: UserRepository,
-  ) { }
+  constructor(private readonly userRepository: UserRepository) {}
 
   async logInAndSetSession(
     user: User,
@@ -92,7 +90,7 @@ export class AuthService {
   logOut(req: Request, res: Response): void {
     req.session.destroy((error) => {
       if (error) {
-        throw new BadRequestException('세션 만료에 실패했습니다.')
+        throw new BadRequestException('세션 만료에 실패했습니다.');
       }
     });
     res.clearCookie('session-cookie');
