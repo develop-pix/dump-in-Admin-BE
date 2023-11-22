@@ -2,6 +2,7 @@ import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 import { User } from '../../user/entity/user.entity';
+import * as crypto from 'crypto';
 
 export class LogInDto {
   @ApiProperty({
@@ -28,9 +29,13 @@ export class LogInDto {
   toEntity(): User {
     const props = {
       username: this.username,
-      password: this.password,
+      password: this.sha256(this.password),
     };
 
     return User.of(props);
+  }
+
+  private sha256(data: string): string {
+    return crypto.createHash('sha256').update(data).digest('hex');
   }
 }

@@ -1,4 +1,4 @@
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { Repository } from 'typeorm';
 import { User } from '../entity/user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,21 +11,12 @@ export class UserRepository {
   ) {}
 
   async findByUsername(username: string): Promise<RawAdmin> {
-    const result = await this.createUserQueryBuilder(username);
-    return result.getRawOne();
-  }
+    const queryBuilder = await this.userRepository
+      .createQueryBuilder('users')
+      .select(['email', 'username', 'password', 'is_admin'])
+      .where('username = :username', { username })
+      .getRawOne();
 
-  async createUserQueryBuilder(
-    username: string,
-  ): Promise<SelectQueryBuilder<User>> {
-    const queryBuilder = await this.userRepository.createQueryBuilder('user');
-    return queryBuilder
-      .select([
-        'user.email as email',
-        'user.username as username',
-        'user.password as password',
-        'user.group as group',
-      ])
-      .where('username = :username', { username });
+    return new RawAdmin(queryBuilder);
   }
 }

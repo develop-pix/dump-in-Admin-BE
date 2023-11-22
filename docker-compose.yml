@@ -1,9 +1,5 @@
 version: '3.9'
 
-volumes:
-  postgres: {}
-  pgadmin: {}
-
 services:
   database:
     container_name: dump-in-postgres
@@ -16,8 +12,6 @@ services:
       TZ: Asia/Seoul
     networks:
       - mynetwork
-    volumes:
-      - './postgres:/var/lib/postgresql/data'
     ports:
       - '5433:5432'
 
@@ -32,7 +26,8 @@ services:
       # debugging port
       - '9229:9229'
     volumes:
-      - .:/usr/src/app
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
     # npm run start
     # npm run start:debug -> this is debugging mode
     command: npm run start
@@ -41,27 +36,13 @@ services:
     networks:
       - mynetwork
     environment:
-      DATABASE_NAME: ${DATABASE_NAME}
-      DATABASE_USER: ${DATABASE_USER}
-      DATABASE_PASS: ${DATABASE_PASS}
-      DATABASE_HOST: ${DATABASE_HOST}
-      DATABASE_URL: ${DATABASE_URL}
-      ALLOWED_ORIGINS: ${ALLOWED_ORIGINS}
-    
-  pgadmin:
-    container_name: dump-in-pgadmin
-    image: dpage/pgadmin4
-    restart: unless-stopped
-    ports:
-      - '5555:80'
-    volumes:
-      - ./pgadmin:/var/lib/pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-      TZ: Asia/Seoul
-    depends_on:
-      - database
+      - DATABASE_NAME
+      - DATABASE_USER
+      - DATABASE_PASS
+      - DATABASE_HOST
+      - DATABASE_URL
+      - ALLOWED_ORIGINS
+      - DATABASE_PORT
 
 networks:
   mynetwork:
