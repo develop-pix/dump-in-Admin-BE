@@ -13,7 +13,7 @@ import { Session } from './auth/entity/session.entity';
 @Module({
   imports: [
     ConfigModule.forRoot({
-      envFilePath: '.env',
+      envFilePath: `.env.${process.env.NODE_ENV}`,
       isGlobal: true,
       validate,
     }),
@@ -24,12 +24,13 @@ import { Session } from './auth/entity/session.entity';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASS,
       database: process.env.DATABASE_NAME,
-      // ssl: {
-      //   "rejectUnauthorized": false
-      // },
-      synchronize: process.env.NODE_ENV !== 'production',
+      synchronize: process.env.NODE_ENV === 'local',
       logging: process.env.NODE_ENV !== 'production',
       entities: [User, Session],
+      ssl:
+        process.env.NODE_ENV === 'local'
+          ? undefined
+          : { rejectUnauthorized: false },
     }),
     WinstonModule.forRoot({
       transports: [
@@ -38,7 +39,10 @@ import { Session } from './auth/entity/session.entity';
           format: winston.format.combine(
             winston.format.timestamp(),
             winston.format.colorize(),
-            utilities.format.nestLike('DumpInAdmin', { prettyPrint: true }),
+            utilities.format.nestLike('DumpInAdmin', {
+              prettyPrint: true,
+              colors: true,
+            }),
           ),
         }),
       ],

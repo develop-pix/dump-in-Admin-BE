@@ -8,15 +8,24 @@ import {
 } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
-import * as session from 'express-session';
 import { TypeormStore } from 'connect-typeorm';
 import { Session } from './auth/entity/session.entity';
 import { DataSource } from 'typeorm';
+import * as fs from 'fs';
+import * as session from 'express-session';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
+    httpsOptions:
+      process.env.NODE_ENV === 'production'
+        ? {
+            key: fs.readFileSync(process.env.SET_HTTPS_KEY_PATH),
+            cert: fs.readFileSync(process.env.SET_HTTPS_CERT_PATH),
+          }
+        : undefined,
   });
+
   const sessionRepo = app.get(DataSource).getRepository(Session);
   const allowedOrigins = process.env.ALLOWED_ORIGINS.split(',');
 
@@ -64,6 +73,6 @@ async function bootstrap(): Promise<void> {
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
   SwaggerModule.setup('api-docs', app, document);
-  await app.listen(process.env.APP_SERVER_PORT);
+  await app.listen(+process.env.APP_SERVER_PORT);
 }
 bootstrap();
