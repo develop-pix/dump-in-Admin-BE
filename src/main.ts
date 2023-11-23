@@ -20,9 +20,9 @@ async function bootstrap(): Promise<void> {
     httpsOptions:
       process.env.NODE_ENV === 'production'
         ? {
-            key: fs.readFileSync(process.env.SET_HTTPS_KEY_PATH),
-            cert: fs.readFileSync(process.env.SET_HTTPS_CERT_PATH),
-          }
+          key: fs.readFileSync(process.env.SET_HTTPS_KEY_PATH),
+          cert: fs.readFileSync(process.env.SET_HTTPS_CERT_PATH),
+        }
         : undefined,
   });
 
