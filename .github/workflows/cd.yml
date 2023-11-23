@@ -8,29 +8,24 @@ on:
         - Zamoca42
 
 jobs:
-  test:
+  test-lint:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
+
       - name: Run Tests with Coverage
         run: npm run test:cov
 
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Install Dependencies
-        run: npm install
       - name: Run Lint
         run: npm run lint
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [test, lint]
+    needs: test-lint
     steps:
       - name: Deploy
         uses: appleboy/ssh-action@v0.1.5
@@ -39,11 +34,9 @@ jobs:
           host: ${{ secrets.LIGHTSAIL_IP }}
           username: ${{ secrets.LIGHTSAIL_NAME }}
           port: ${{ secrets.LIGHTSAIL_PORT }}
-          # LIGHTSAIL_PATH -> /home/backend
           script: |
             cd ${{ secrets.LIGHTSAIL_PATH }} 
             git pull origin main
-            rm -rf dist
             npm install
             npm run build
             npm run start:prod

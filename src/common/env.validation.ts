@@ -1,9 +1,15 @@
 import { plainToClass } from 'class-transformer';
-import { IsString, validateSync } from 'class-validator';
+import { IsEnum, IsString, validateSync } from 'class-validator';
+
+enum Environment {
+  Local = 'local',
+  Production = 'production',
+  Dev = 'dev',
+}
 
 class EnvironmentVariables {
-  @IsString()
-  NODE_ENV: string;
+  @IsEnum(Environment)
+  NODE_ENV: Environment;
 
   @IsString()
   ALLOWED_ORIGINS: string;
@@ -19,6 +25,21 @@ class EnvironmentVariables {
 
   @IsString()
   DATABASE_HOST: string;
+
+  @IsString()
+  APP_SERVER_PORT: string;
+
+  @IsString()
+  DATABASE_PORT: string;
+
+  @IsString()
+  SET_COOKIE_SECRET: string;
+
+  @IsString()
+  SET_HTTPS_KEY_PATH: string;
+
+  @IsString()
+  SET_HTTPS_CERT_PATH: string;
 }
 
 export function validate(
