@@ -5,21 +5,21 @@ on:
     branches: [feature/*]
 
 jobs:
-  # setup-node:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
-        
-  #     - name: Setup Node.js
-  #       uses: actions/setup-node@v3
-  #       with:
-  #         node-version: 18
-  #         cache: npm
+  setup-node:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-  #     - name: Install Dependencies
-  #       if: steps.cache.outputs.cache-hit != 'true'
-  #       run: npm install
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - name: Install Dependencies
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: npm install
 
   test:
     runs-on: ubuntu-latest
@@ -27,12 +27,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
         with:
-          node-version: 18
-          cache: npm
+          path: '**/node_modules'
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
@@ -48,11 +50,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Cache dependencies
+        id: cache
+        uses: actions/cache@v3
         with:
-          node-version: 18
-          cache: npm
+          path: '**/node_modules'
+          restore-keys: |
+            ${{ runner.os }}-node-
 
       - name: Install Dependencies
         if: steps.cache.outputs.cache-hit != 'true'
