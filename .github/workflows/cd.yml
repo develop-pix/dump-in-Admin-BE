@@ -37,6 +37,15 @@ jobs:
           port: ${{ secrets.LIGHTSAIL_PORT }}
           script: |
             cd ${{ secrets.LIGHTSAIL_PATH }} 
+            
+            if [ -f pid.txt ]; then
+
+              pid=$(cat pid.txt)
+
+              kill $pid
+              echo "Stopped the previous process with PID $pid"
+            fi
+
             git pull origin main
             npm install
             npm run build
