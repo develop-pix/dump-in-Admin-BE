@@ -37,7 +37,7 @@ jobs:
           port: ${{ secrets.LIGHTSAIL_PORT }}
           script: |
             cd ${{ secrets.LIGHTSAIL_PATH }} 
-            
+
             if [ -f pid.txt ]; then
 
               pid=$(cat pid.txt)
@@ -51,3 +51,5 @@ jobs:
             npm run build
             nohup npm run start:prod > output.log 2>&1 &
             echo $! > pid.txt
+
+            cat output.log
