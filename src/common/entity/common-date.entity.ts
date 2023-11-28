@@ -1,12 +1,11 @@
 import {
-  BaseEntity,
   CreateDateColumn,
   Entity,
   UpdateDateColumn,
 } from 'typeorm';
 
 @Entity()
-export class UpdatedDateEntity extends BaseEntity {
+export class UpdatedDateEntity {
   @UpdateDateColumn({ name: 'updated_at', type: 'timestamp', nullable: false })
   updatedAt: Date;
 }
