@@ -9,11 +9,9 @@ export class PhotoBoothRawRepository {
   constructor(
     @InjectRepository(PhotoBoothRawData)
     private readonly photoBoothRawRepository: Repository<PhotoBoothRawData>,
-    @InjectRepository(PhotoBoothBrand)
-    private readonly photoBoothBrandRepository: Repository<PhotoBoothBrand>,
   ) { }
 
-  async findBy(data: PhotoBoothRawData): Promise<PhotoBoothRawData[]> {
+  async findAll(data: PhotoBoothRawData): Promise<PhotoBoothRawData[]> {
     return await this.photoBoothRawRepository.find();
   }
 
