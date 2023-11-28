@@ -8,7 +8,7 @@ export class PhotoBoothRepository {
   constructor(
     @InjectRepository(PhotoBooth)
     private readonly photoBoothRepository: Repository<PhotoBooth>,
-  ) { }
+  ) {}
 
   async isExist(data: PhotoBooth): Promise<boolean> {
     return await this.photoBoothRepository.exist();

@@ -7,28 +7,43 @@ import { ApiTags } from '@nestjs/swagger';
 export class PhotoBoothController {
   constructor(private readonly photoBoothService: PhotoBoothService) {}
 
-  @Post()
-  create() {
-    return this.photoBoothService.create();
-  }
-
   @Get()
-  findAll() {
-    return this.photoBoothService.findAll();
+  findAllBooth() {
+    return this.photoBoothService.findAllRawData();
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.photoBoothService.findOne(+id);
+  findOneBooth(@Param('id') id: string) {
+    return this.photoBoothService.findOneRawData(+id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string) {
+  updateBooth(@Param('id') id: string) {
+    return this.photoBoothService.updateRawData(+id);
+  }
+
+  // @Delete(':id')
+  // deleteBooth(@Param('id') id: string) {
+  //   return this.photoBoothService.deleteBooth(+id);
+  // }
+
+  @Get('brand')
+  findAllBrand() {
+    return this.photoBoothService.findAll();
+  }
+
+  @Get('brand/:id')
+  findOneBrand(@Param('id') id: string) {
+    return this.photoBoothService.findOne(+id);
+  }
+
+  @Patch('brand/:id')
+  updateBrand(@Param('id') id: string) {
     return this.photoBoothService.update(+id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.photoBoothService.remove(+id);
-  }
+  // @Delete(':id')
+  // deleteBrand(@Param('id') id: string) {
+  //   return this.photoBoothService.deleteBrand(+id);
+  // }
 }

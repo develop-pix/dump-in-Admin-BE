@@ -9,7 +9,7 @@ export class PhotoBoothRawRepository {
   constructor(
     @InjectRepository(PhotoBoothRawData)
     private readonly photoBoothRawRepository: Repository<PhotoBoothRawData>,
-  ) { }
+  ) {}
 
   async findAll(data: PhotoBoothRawData): Promise<PhotoBoothRawData[]> {
     return await this.photoBoothRawRepository.find();
@@ -19,8 +19,14 @@ export class PhotoBoothRawRepository {
   //   return await this.photoBoothRawRepository.findOne();
   // }
 
-  async updateRawToApp(userId: number, data: PhotoBoothRawData): Promise<boolean> {
-    const result = await this.photoBoothRawRepository.update({ photo_booth_raw_data_id: userId }, data);
+  async updateRawToApp(
+    userId: number,
+    data: PhotoBoothRawData,
+  ): Promise<boolean> {
+    const result = await this.photoBoothRawRepository.update(
+      { photo_booth_raw_data_id: userId },
+      data,
+    );
     return result.affected > 0;
   }
 

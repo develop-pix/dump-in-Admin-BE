@@ -8,6 +8,5 @@ export class PhotoBoothRawRepository {
   constructor(
     @InjectRepository(PhotoBoothBrand)
     private readonly photoBoothBrandRepository: Repository<PhotoBoothBrand>,
-  ) { }
-
+  ) {}
 }

@@ -2,10 +2,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class PhotoBoothService {
-  create() {
-    return 'This action adds a new photoBooth';
-  }
-
   findAll() {
     return `This action returns all photoBooth`;
   }
@@ -19,6 +15,22 @@ export class PhotoBoothService {
   }
 
   remove(id: number) {
+    return `This action removes a #${id} photoBooth`;
+  }
+
+  findAllRawData() {
+    return `This action returns all photoBooth`;
+  }
+
+  findOneRawData(id: number) {
+    return `This action returns a #${id} photoBooth`;
+  }
+
+  updateRawData(id: number) {
+    return `This action updates a #${id} photoBooth`;
+  }
+
+  removeRawData(id: number) {
     return `This action removes a #${id} photoBooth`;
   }
 }
