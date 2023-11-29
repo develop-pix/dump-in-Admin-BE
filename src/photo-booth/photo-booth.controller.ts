@@ -1,49 +1,41 @@
-import { Controller, Get, Post, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Patch, Param, Delete, Query } from '@nestjs/common';
 import { PhotoBoothService } from './photo-booth.service';
 import { ApiTags } from '@nestjs/swagger';
 
 @ApiTags('포토부스')
 @Controller('photo-booth')
 export class PhotoBoothController {
-  constructor(private readonly photoBoothService: PhotoBoothService) {}
+  constructor(private readonly photoBoothService: PhotoBoothService) { }
 
   @Get()
-  findAllBooth() {
-    return this.photoBoothService.findAllRawData();
+  async findAllBooth() {
+  }
+
+  @Get()
+  async findBoothByQuery(@Query() request) {
   }
 
   @Get(':id')
-  findOneBooth(@Param('id') id: string) {
-    return this.photoBoothService.findOneRawData(+id);
+  async findOneBooth(@Param('id') id: string) {
   }
 
   @Patch(':id')
-  updateBooth(@Param('id') id: string) {
-    return this.photoBoothService.updateRawData(+id);
+  async updateBooth(@Param('id') id: string) {
   }
 
-  // @Delete(':id')
-  // deleteBooth(@Param('id') id: string) {
-  //   return this.photoBoothService.deleteBooth(+id);
-  // }
+  @Delete(':id')
+  async deleteBooth(@Param('id') id: string) {
+  }
 
   @Get('brand')
-  findAllBrand() {
-    return this.photoBoothService.findAll();
+  async findAllBrand() {
   }
 
   @Get('brand/:id')
-  findOneBrand(@Param('id') id: string) {
-    return this.photoBoothService.findOne(+id);
+  async findOneBrand(@Param('id') id: string) {
   }
 
   @Patch('brand/:id')
-  updateBrand(@Param('id') id: string) {
-    return this.photoBoothService.update(+id);
+  async updateBrand(@Param('id') id: string) {
   }
-
-  // @Delete(':id')
-  // deleteBrand(@Param('id') id: string) {
-  //   return this.photoBoothService.deleteBrand(+id);
-  // }
 }

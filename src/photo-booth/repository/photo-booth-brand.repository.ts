@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
 
 @Injectable()
-export class PhotoBoothRawRepository {
+export class PhotoBoothBrandRepository {
   constructor(
     @InjectRepository(PhotoBoothBrand)
     private readonly photoBoothBrandRepository: Repository<PhotoBoothBrand>,
