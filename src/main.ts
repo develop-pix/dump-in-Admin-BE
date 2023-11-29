@@ -11,19 +11,11 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { TypeormStore } from 'connect-typeorm';
 import { Session } from './auth/entity/session.entity';
 import { DataSource } from 'typeorm';
-import * as fs from 'fs';
 import * as session from 'express-session';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
-    httpsOptions:
-      process.env.NODE_ENV === 'production'
-        ? {
-          key: fs.readFileSync(process.env.SET_HTTPS_KEY_PATH),
-          cert: fs.readFileSync(process.env.SET_HTTPS_CERT_PATH),
-        }
-        : undefined,
   });
 
   const sessionRepo = app.get(DataSource).getRepository(Session);
