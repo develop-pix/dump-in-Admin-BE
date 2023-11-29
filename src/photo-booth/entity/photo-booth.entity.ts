@@ -10,10 +10,7 @@ import { PhotoBoothBrand } from './photo-booth-brand.entity';
 
 @Entity('photo_booth')
 export class PhotoBooth extends BaseDateEntity {
-  @ManyToOne(() => PhotoBoothBrand, { eager: true }) // eager: true는 PhotoBooth를 불러올 때 바로 PhotoBoothBrand를 가져오도록 합니다.
-  photo_booth_brand: PhotoBoothBrand;
-
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ name: 'id' })
   photo_booth_id: number;
 
   @Column({ type: 'varchar', length: 64 })
@@ -45,4 +42,11 @@ export class PhotoBooth extends BaseDateEntity {
 
   @Column({ type: 'boolean', default: false })
   is_public: boolean;
+
+  @ManyToOne(
+    () => PhotoBoothBrand,
+    (photoBoothBrand: PhotoBoothBrand) => photoBoothBrand.photo_booths,
+  )
+  @JoinColumn({ name: 'photo_booth_brand_id' })
+  photo_booth_brand: PhotoBoothBrand;
 }

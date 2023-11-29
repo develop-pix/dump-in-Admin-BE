@@ -1,31 +1,17 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { PhotoBoothNames } from '../photo-booth-name';
 import { PhotoBooth } from './photo-booth.entity';
-
-type PhotoBoothName = (typeof PhotoBoothNames)[number];
 
 @Entity('photo_booth_brand')
 export class PhotoBoothBrand {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn({ name: 'id' })
   photo_booth_brand_id: number;
 
-  @Column({
-    type: 'enum',
-    enum: PhotoBoothNames,
-  })
-  name: PhotoBoothName;
-
-  @OneToMany(
-    () => PhotoBooth,
-    (photoBooth: PhotoBooth) => photoBooth.photo_booth_brand,
-    { eager: true },
-  )
-  photo_booths: PhotoBooth[];
+  @Column({ type: 'varchar', length: 32 })
+  name: string;
 
   @Column({ type: 'varchar', length: 128, nullable: true })
   description: string;
 
-  //TODO: OneToMany
   @Column({ type: 'varchar', length: 128 })
   photo_booth_url: string;
 
@@ -34,4 +20,10 @@ export class PhotoBoothBrand {
 
   @Column({ type: 'bool' })
   is_event: boolean;
+
+  @OneToMany(
+    () => PhotoBooth,
+    (photoBooth: PhotoBooth) => photoBooth.photo_booth_brand,
+  )
+  photo_booths: PhotoBooth[];
 }
