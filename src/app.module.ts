@@ -11,7 +11,11 @@ import { AuthModule } from './auth/auth.module';
 import { Session } from './auth/entity/session.entity';
 import { PhotoBooth } from './photo-booth/entity/photo-booth.entity';
 import { PhotoBoothRawData } from './photo-booth/entity/raw-data.entity';
-import { PhotoBoothBrand } from './photo-booth/entity/photo-booth-brand.entity';
+import {
+  Category,
+  PhotoBoothBrand,
+  PhotoBoothCategory,
+} from './photo-booth/entity/photo-booth-brand.entity';
 
 @Module({
   imports: [
@@ -27,9 +31,17 @@ import { PhotoBoothBrand } from './photo-booth/entity/photo-booth-brand.entity';
       username: process.env.DATABASE_USER,
       password: process.env.DATABASE_PASS,
       database: process.env.DATABASE_NAME,
-      // synchronize: process.env.NODE_ENV === 'local',
+      synchronize: process.env.NODE_ENV === 'local',
       logging: process.env.NODE_ENV !== 'production',
-      entities: [User, Session, PhotoBooth, PhotoBoothRawData, PhotoBoothBrand],
+      entities: [
+        User,
+        Session,
+        PhotoBooth,
+        PhotoBoothRawData,
+        PhotoBoothBrand,
+        PhotoBoothCategory,
+        Category,
+      ],
       ssl:
         process.env.NODE_ENV === 'local'
           ? undefined
