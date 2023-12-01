@@ -7,6 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { PhotoBoothBrand } from './photo-booth-brand.entity';
+import { FindBoothOptionWhere } from '../repository/photo-booth.repository';
 
 @Entity('photo_booth')
 export class PhotoBooth extends BaseDateEntity {
@@ -46,4 +47,21 @@ export class PhotoBooth extends BaseDateEntity {
   )
   @JoinColumn({ name: 'photo_booth_brand_id' })
   photo_booth_brand: PhotoBoothBrand;
+
+  static byId({ id }: FindBoothOptionWhere) {
+    const photoBooth = new PhotoBooth();
+
+    photoBooth.id = id;
+
+    return photoBooth;
+  }
+
+  static of({ location, name }: FindBoothOptionWhere) {
+    const photoBooth = new PhotoBooth();
+
+    photoBooth.location = location;
+    photoBooth.name = name;
+
+    return photoBooth;
+  }
 }

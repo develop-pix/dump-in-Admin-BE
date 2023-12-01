@@ -1,5 +1,6 @@
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { FindBoothOptionWhere } from '../repository/photo-booth.repository';
 
 @Entity('photo_booth_raw_data')
 export class PhotoBoothRawData extends BaseDateEntity {
@@ -30,9 +31,12 @@ export class PhotoBoothRawData extends BaseDateEntity {
   @Column({ type: 'timestamp' })
   preprocessed_at: Date;
 
-  static softDelete() {
+  static of({ location, name }: FindBoothOptionWhere) {
     const photoBoothRaw = new PhotoBoothRawData();
-    photoBoothRaw.preprocessed_at = new Date();
+
+    photoBoothRaw.location = location;
+    photoBoothRaw.name = name;
+
     return photoBoothRaw;
   }
 }
