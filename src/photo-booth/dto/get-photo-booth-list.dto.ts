@@ -3,7 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { PhotoBoothRawData } from '../entity/raw-data.entity';
 import { PhotoBooth } from '../entity/photo-booth.entity';
 
-//TODO: 지역
 export class GetPhotoBoothListDto {
   @Exclude() private readonly _id: string;
   @Exclude() private readonly _name: string;
