@@ -26,7 +26,8 @@ export class PhotoBoothController {
   async findOpenBoothByQueryParam(
     @Query() request: BoothQueryDto,
   ): Promise<ResponseEntity<Page<GetPhotoBoothListDto>>> {
-    const response = await this.photoBoothService.findOpenBoothByQueryParam(request);
+    const response =
+      await this.photoBoothService.findOpenBoothByQueryParam(request);
     return ResponseEntity.OK_WITH<Page<GetPhotoBoothListDto>>(
       '공개된 포토부스 목록을 반환합니다.',
       response,
@@ -34,7 +35,9 @@ export class PhotoBoothController {
   }
 
   @Get(':id')
-  async findOneOpenBooth(@Param('id', ParseUUIDPipe) id: string): Promise<ResponseEntity<GetPhotoBoothDetailDto>> {
+  async findOneOpenBooth(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<ResponseEntity<GetPhotoBoothDetailDto>> {
     const response = await this.photoBoothService.findOneOpenBooth(id);
     return ResponseEntity.OK_WITH<GetPhotoBoothDetailDto>(
       '공개된 포토부스 목록을 반환합니다.',
