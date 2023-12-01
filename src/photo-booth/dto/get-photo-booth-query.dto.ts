@@ -1,16 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
-import { PaginatedRequestDto } from '../../common/dto/paginated-req.dto';
+import { PaginatedDto } from '../../common/dto/paginated-req.dto';
+import { FindBoothOptionWhere } from '../repository/photo-booth.repository';
 
-export interface QueryProps {
-  name: string;
-  location: string;
-}
-
-export class paginatedBoothQueryRequestDto extends PaginatedRequestDto {
+export class BoothQueryDto extends PaginatedDto {
   @ApiProperty({
-    description: '포토부스에서 지역을 검색하는 쿼리스트링입니다',
+    description: '포토부스에서 지역을 검색하는 쿼리스트링',
     example: '서울',
   })
   @IsString()
@@ -19,7 +15,7 @@ export class paginatedBoothQueryRequestDto extends PaginatedRequestDto {
   location?: string;
 
   @ApiProperty({
-    description: '포토부스에서 지점명을 검색하는 쿼리스트링입니다',
+    description: '포토부스에서 지점명을 검색하는 쿼리스트링',
     example: '하루필름 홍대 1호점',
   })
   @IsString()
@@ -27,7 +23,7 @@ export class paginatedBoothQueryRequestDto extends PaginatedRequestDto {
   @Type(() => String)
   name?: string;
 
-  getQueryProps(): QueryProps {
+  getQueryProps(): FindBoothOptionWhere {
     return {
       location: this.location,
       name: this.name,
