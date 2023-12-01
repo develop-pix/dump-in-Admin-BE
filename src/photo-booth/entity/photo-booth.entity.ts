@@ -10,10 +10,13 @@ import { PhotoBoothBrand } from './photo-booth-brand.entity';
 
 @Entity('photo_booth')
 export class PhotoBooth extends BaseDateEntity {
-  @PrimaryGeneratedColumn({ name: 'id' })
-  photo_booth_id: number;
+  @PrimaryGeneratedColumn('uuid', { name: 'id' })
+  id: string;
 
   @Column({ type: 'varchar', length: 64 })
+  name: string;
+
+  @Column({ type: 'varchar', length: 32 })
   location: string;
 
   @Column({ type: 'decimal', precision: 13, scale: 10 })
@@ -28,9 +31,6 @@ export class PhotoBooth extends BaseDateEntity {
   @Column({ type: 'varchar', length: 64 })
   road_address: string;
 
-  @Column({ type: 'varchar', length: 128 })
-  address_detail: string;
-
   @Column({ type: 'varchar', length: 64 })
   operation_time: string;
 
@@ -39,9 +39,6 @@ export class PhotoBooth extends BaseDateEntity {
 
   @Column({ type: 'int' })
   view_count: number;
-
-  @Column({ type: 'boolean', default: false })
-  is_public: boolean;
 
   @ManyToOne(
     () => PhotoBoothBrand,
