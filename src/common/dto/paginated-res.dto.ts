@@ -13,19 +13,19 @@ export class Page<T> {
   }
 
   @ApiProperty({
-    description: '페이지당 항목 수가 적용된 결과 데이터 입니다',
+    description: '페이지당 항목 수가 적용된 결과 데이터',
   })
   @Expose()
   public results: T[];
 
   @ApiProperty({
-    description: '현재 페이지 입니다',
+    description: '현재 페이지',
   })
   @Expose()
   public page: number;
 
   @ApiProperty({
-    description: '총 페이지 수 입니다',
+    description: '총 페이지 수',
   })
   @Expose()
   get totalPage(): number {

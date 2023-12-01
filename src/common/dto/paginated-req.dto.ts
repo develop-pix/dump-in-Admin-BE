@@ -8,9 +8,9 @@ export interface PaginatedProps {
   page: number;
 }
 
-export class PaginatedRequestDto {
+export class PaginatedDto {
   @ApiProperty({
-    description: '리스트에 요구할 페이지 숫자입니다',
+    description: '리스트에 요구할 페이지 숫자',
     example: 1,
     default: 1,
   })
@@ -22,7 +22,7 @@ export class PaginatedRequestDto {
   page?: number = 1;
 
   @ApiProperty({
-    description: '리스트에 요구할 페이지당 항목 수 입니다',
+    description: '리스트에 요구할 페이지당 항목 수',
     example: 20,
     default: 10,
   })
