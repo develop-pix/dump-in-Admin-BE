@@ -7,7 +7,6 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PhotoBooth } from '../entity/photo-booth.entity';
-import { BoothQueryDto } from '../dto/get-photo-booth-query.dto';
 import { PaginatedProps } from '../../common/dto/paginated-req.dto';
 
 export interface FindBoothOptionWhere {
@@ -21,21 +20,24 @@ export class PhotoBoothRepository {
   constructor(
     @InjectRepository(PhotoBooth)
     private readonly photoBoothRepository: Repository<PhotoBooth>,
-  ) { }
+  ) {}
 
   async findBoothByOptionAndCount(
-    request: BoothQueryDto,
+    booth: PhotoBooth,
+    page: PaginatedProps,
   ): Promise<[PhotoBooth[], number]> {
-    const options = this.findBoothManyOptions(
-      request.getPageProps(),
-      PhotoBooth.of(request.getQueryProps()),
-    );
+    const options = this.findBoothManyOptions(page, booth);
     return await this.photoBoothRepository.findAndCount(options);
   }
 
-  async findOneBoothById(id: string): Promise<PhotoBooth | null> {
-    const where = this.findBoothOptionsWhere(PhotoBooth.byId({ id }));
+  async findOneBoothBy(booth: PhotoBooth): Promise<PhotoBooth | null> {
+    const where = this.findBoothOptionsWhere(booth);
     return await this.photoBoothRepository.findOneBy(where);
+  }
+
+  async updatePhotoBooth(id: string, booth: PhotoBooth): Promise<boolean> {
+    const result = await this.photoBoothRepository.update({ id }, booth);
+    return result.affected > 0;
   }
 
   private findBoothManyOptions(

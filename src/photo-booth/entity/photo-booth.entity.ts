@@ -9,6 +9,13 @@ import {
 import { PhotoBoothBrand } from './photo-booth-brand.entity';
 import { FindBoothOptionWhere } from '../repository/photo-booth.repository';
 
+export interface PhotoBoothUpdateProps {
+  name: string;
+  location: string;
+  street_address: string;
+  road_address: string;
+}
+
 @Entity('photo_booth')
 export class PhotoBooth extends BaseDateEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'id' })
@@ -61,6 +68,22 @@ export class PhotoBooth extends BaseDateEntity {
 
     photoBooth.location = location;
     photoBooth.name = name;
+
+    return photoBooth;
+  }
+
+  static updateBy({
+    name,
+    location,
+    street_address,
+    road_address,
+  }: PhotoBoothUpdateProps): PhotoBooth {
+    const photoBooth = new PhotoBooth();
+
+    photoBooth.name = name;
+    photoBooth.location = location;
+    photoBooth.street_address = street_address;
+    photoBooth.road_address = road_address;
 
     return photoBooth;
   }
