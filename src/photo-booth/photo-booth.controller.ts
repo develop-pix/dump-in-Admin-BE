@@ -8,6 +8,7 @@ import {
   Post,
   Put,
   ParseUUIDPipe,
+  Body,
 } from '@nestjs/common';
 import { PhotoBoothService } from './photo-booth.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -16,18 +17,21 @@ import { ResponseEntity } from 'src/common/entity/response.entity';
 import { BoothQueryDto } from './dto/get-photo-booth-query.dto';
 import { Page } from '../common/dto/paginated-res.dto';
 import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
+import { UpdatePhotoBoothDto } from './dto/patch-photo-booth.dto';
 
 @ApiTags('포토부스')
 @Controller('photo-booth')
 export class PhotoBoothController {
-  constructor(private readonly photoBoothService: PhotoBoothService) { }
+  constructor(private readonly photoBoothService: PhotoBoothService) {}
 
   @Get()
   async findOpenBoothByQueryParam(
     @Query() request: BoothQueryDto,
   ): Promise<ResponseEntity<Page<GetPhotoBoothListDto>>> {
-    const response =
-      await this.photoBoothService.findOpenBoothByQueryParam(request);
+    const response = await this.photoBoothService.findOpenBoothByQueryParam(
+      request.getPageProps(),
+      request.getQueryProps(),
+    );
     return ResponseEntity.OK_WITH<Page<GetPhotoBoothListDto>>(
       '공개된 포토부스 목록을 반환합니다.',
       response,
@@ -46,35 +50,41 @@ export class PhotoBoothController {
   }
 
   @Patch(':id')
-  async updateOpenBooth() { }
+  async updateOpenBooth(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() request: UpdatePhotoBoothDto,
+  ): Promise<ResponseEntity<string>> {
+    await this.photoBoothService.updateOpenBooth(id, request.getUpdateProps());
+    return ResponseEntity.OK('포토부스 업데이트를 업데이트 했습니다.');
+  }
 
   @Delete(':id')
-  async deleteOpenBooth() { }
+  async deleteOpenBooth() {}
 
   @Get('raw')
-  async findHiddenBoothByQuery() { }
+  async findHiddenBoothByQuery() {}
 
   @Get('raw/:id')
-  async findOneHiddenBooth() { }
+  async findOneHiddenBooth() {}
 
   @Put('raw/:id')
-  async moveHiddenToOpenBooth() { }
+  async moveHiddenToOpenBooth() {}
 
   @Patch('raw/:id')
-  async updateHiddenBooth() { }
+  async updateHiddenBooth() {}
 
   @Delete('raw/:id')
-  async deleteHiddenBooth() { }
+  async deleteHiddenBooth() {}
 
   @Post('brand')
-  async createBrand() { }
+  async createBrand() {}
 
   @Get('brand')
-  async findAllBrand() { }
+  async findAllBrand() {}
 
   @Get('brand/:id')
-  async findOneBrand() { }
+  async findOneBrand() {}
 
   @Patch('brand/:id')
-  async updateBrand() { }
+  async updateBrand() {}
 }
