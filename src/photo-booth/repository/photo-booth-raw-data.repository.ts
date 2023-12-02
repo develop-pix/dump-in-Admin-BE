@@ -2,6 +2,7 @@ import {
   FindManyOptions,
   FindOptionsSelect,
   FindOptionsWhere,
+  IsNull,
   Repository,
 } from 'typeorm';
 import { Injectable } from '@nestjs/common';
@@ -50,6 +51,7 @@ export class PhotoBoothRawRepository {
       id: booth.id,
       location: booth.location,
       name: booth.name,
+      preprocessed_at: IsNull(),
     };
   }
 }

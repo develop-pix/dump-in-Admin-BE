@@ -28,7 +28,7 @@ export class PhotoBoothRawData extends BaseDateEntity {
   @Column({ type: 'varchar', length: 64 })
   operation_time: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', nullable: true })
   preprocessed_at: Date;
 
   static of({ location, name }: FindBoothOptionWhere) {
