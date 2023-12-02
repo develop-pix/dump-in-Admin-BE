@@ -1,7 +1,13 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString } from 'class-validator';
-import { PhotoBoothUpdateProps } from '../entity/photo-booth.entity';
+
+export interface PhotoBoothUpdateProps {
+  name: string;
+  location: string;
+  street_address: string;
+  road_address: string;
+}
 
 export class UpdatePhotoBoothDto {
   @ApiProperty({

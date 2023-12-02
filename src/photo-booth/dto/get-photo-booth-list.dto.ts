@@ -12,7 +12,7 @@ export class GetPhotoBoothListDto {
   @Exclude() private readonly _road_address?: string | null;
   @Exclude()
   @Type(() => PhotoBoothBrand)
-  private readonly _photo_booth_brand: PhotoBoothBrand | undefined;
+  private readonly _photo_booth_brand: PhotoBoothBrand | null;
 
   constructor(data: PhotoBooth | HiddenPhotoBooth) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));

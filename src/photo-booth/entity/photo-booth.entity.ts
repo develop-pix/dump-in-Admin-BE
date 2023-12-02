@@ -8,13 +8,7 @@ import {
 } from 'typeorm';
 import { PhotoBoothBrand } from './photo-booth-brand.entity';
 import { FindBoothOptionWhere } from '../dto/get-photo-booth-query.dto';
-
-export interface PhotoBoothUpdateProps {
-  name: string;
-  location: string;
-  street_address: string;
-  road_address: string;
-}
+import { PhotoBoothUpdateProps } from '../dto/patch-photo-booth.dto';
 
 @Entity('photo_booth')
 export class PhotoBooth extends BaseDateEntity {
