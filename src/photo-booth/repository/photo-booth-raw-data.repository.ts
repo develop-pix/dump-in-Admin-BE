@@ -7,31 +7,46 @@ import {
 } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { PhotoBoothRawData } from '../entity/raw-data.entity';
-import { PaginatedProps } from '../../common/dto/paginated-req.dto';
+import { HiddenPhotoBooth } from '../entity/raw-data.entity';
+import { PaginationProps } from '../../common/dto/paginated-req.dto';
 
 @Injectable()
-export class PhotoBoothRawRepository {
+export class HiddenBoothRepository {
   constructor(
-    @InjectRepository(PhotoBoothRawData)
-    private readonly photoBoothRawRepository: Repository<PhotoBoothRawData>,
+    @InjectRepository(HiddenPhotoBooth)
+    private readonly hiddenBoothRepository: Repository<HiddenPhotoBooth>,
   ) {}
 
   async findHiddenBoothByOptionAndCount(
-    booth: PhotoBoothRawData,
-    page: PaginatedProps,
-  ): Promise<[PhotoBoothRawData[], number]> {
+    booth: HiddenPhotoBooth,
+    page: PaginationProps,
+  ): Promise<[HiddenPhotoBooth[], number]> {
     const options = this.findHiddenBoothManyOptions(page, booth);
-    return await this.photoBoothRawRepository.findAndCount(options);
+    return await this.hiddenBoothRepository.findAndCount(options);
+  }
+
+  async findOneHiddenBoothBy(
+    booth: HiddenPhotoBooth,
+  ): Promise<HiddenPhotoBooth> {
+    const where = this.findHiddenBoothOptionsWhere(booth);
+    return await this.hiddenBoothRepository.findOneBy(where);
+  }
+
+  async updateHiddenBooth(
+    id: string,
+    booth: HiddenPhotoBooth,
+  ): Promise<boolean> {
+    const result = await this.hiddenBoothRepository.update({ id }, booth);
+    return result.affected > 0;
   }
 
   private findHiddenBoothManyOptions(
-    page: PaginatedProps,
-    booth: PhotoBoothRawData,
-  ): FindManyOptions<PhotoBoothRawData> {
+    page: PaginationProps,
+    booth: HiddenPhotoBooth,
+  ): FindManyOptions<HiddenPhotoBooth> {
     const { take, skip } = page;
     const where = this.findHiddenBoothOptionsWhere(booth);
-    const select: FindOptionsSelect<PhotoBoothRawData> = {
+    const select: FindOptionsSelect<HiddenPhotoBooth> = {
       id: true,
       name: true,
       location: true,
@@ -45,8 +60,8 @@ export class PhotoBoothRawRepository {
   }
 
   private findHiddenBoothOptionsWhere(
-    booth: PhotoBoothRawData,
-  ): FindOptionsWhere<PhotoBoothRawData> {
+    booth: HiddenPhotoBooth,
+  ): FindOptionsWhere<HiddenPhotoBooth> {
     return {
       id: booth.id,
       location: booth.location,

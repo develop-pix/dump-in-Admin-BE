@@ -3,7 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { FindBoothOptionWhere } from '../dto/get-photo-booth-query.dto';
 
 @Entity('photo_booth_raw_data')
-export class PhotoBoothRawData extends BaseDateEntity {
+export class HiddenPhotoBooth extends BaseDateEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'id' })
   id: string;
 
@@ -32,20 +32,20 @@ export class PhotoBoothRawData extends BaseDateEntity {
   preprocessed_at: Date;
 
   static of({ location, name }: FindBoothOptionWhere) {
-    const photoBoothRaw = new PhotoBoothRawData();
+    const hiddenBooth = new HiddenPhotoBooth();
 
-    photoBoothRaw.location = location;
-    photoBoothRaw.name = name;
+    hiddenBooth.location = location;
+    hiddenBooth.name = name;
 
-    return photoBoothRaw;
+    return hiddenBooth;
   }
 
   static byId({ id }: FindBoothOptionWhere) {
-    const photoBoothRaw = new PhotoBoothRawData();
+    const hiddenBooth = new HiddenPhotoBooth();
 
-    photoBoothRaw.id = id;
+    hiddenBooth.id = id;
 
-    return photoBoothRaw;
+    return hiddenBooth;
   }
 
   // static updateBy({

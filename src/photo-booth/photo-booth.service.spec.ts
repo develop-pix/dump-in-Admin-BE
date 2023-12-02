@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { PhotoBoothService } from './photo-booth.service';
 import { PhotoBoothRepository } from './repository/photo-booth.repository';
-import { PhotoBoothRawRepository } from './repository/photo-booth-raw-data.repository';
+import { HiddenBoothRepository } from './repository/photo-booth-raw-data.repository';
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
 import { PhotoBooth } from './entity/photo-booth.entity';
 import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
@@ -26,7 +26,7 @@ class MockPhotoBoothBrandRepository {
 describe('PhotoBoothService', () => {
   let photoBoothService: PhotoBoothService;
   let photoBoothRepository: PhotoBoothRepository;
-  let photoBoothRawRepository: PhotoBoothRawRepository;
+  let photoBoothRawRepository: HiddenBoothRepository;
   let photoBoothBrandRepository: PhotoBoothBrandRepository;
 
   beforeEach(async () => {
@@ -35,7 +35,7 @@ describe('PhotoBoothService', () => {
         PhotoBoothService,
         { provide: PhotoBoothRepository, useClass: MockPhotoBoothRepository },
         {
-          provide: PhotoBoothRawRepository,
+          provide: HiddenBoothRepository,
           useClass: MockPhotoBoothRawRepository,
         },
         {
@@ -48,8 +48,8 @@ describe('PhotoBoothService', () => {
     photoBoothService = module.get<PhotoBoothService>(PhotoBoothService);
     photoBoothRepository =
       module.get<PhotoBoothRepository>(PhotoBoothRepository);
-    photoBoothRawRepository = module.get<PhotoBoothRawRepository>(
-      PhotoBoothRawRepository,
+    photoBoothRawRepository = module.get<HiddenBoothRepository>(
+      HiddenBoothRepository,
     );
     photoBoothBrandRepository = module.get<PhotoBoothBrandRepository>(
       PhotoBoothBrandRepository,

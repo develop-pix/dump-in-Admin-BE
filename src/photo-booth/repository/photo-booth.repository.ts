@@ -7,7 +7,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PhotoBooth } from '../entity/photo-booth.entity';
-import { PaginatedProps } from '../../common/dto/paginated-req.dto';
+import { PaginationProps } from '../../common/dto/paginated-req.dto';
 
 @Injectable()
 export class PhotoBoothRepository {
@@ -18,13 +18,13 @@ export class PhotoBoothRepository {
 
   async findBoothByOptionAndCount(
     booth: PhotoBooth,
-    page: PaginatedProps,
+    page: PaginationProps,
   ): Promise<[PhotoBooth[], number]> {
     const options = this.findBoothManyOptions(page, booth);
     return await this.photoBoothRepository.findAndCount(options);
   }
 
-  async findOneBoothBy(booth: PhotoBooth): Promise<PhotoBooth | null> {
+  async findOneBoothBy(booth: PhotoBooth): Promise<PhotoBooth> {
     const where = this.findBoothOptionsWhere(booth);
     return await this.photoBoothRepository.findOneBy(where);
   }
@@ -35,7 +35,7 @@ export class PhotoBoothRepository {
   }
 
   private findBoothManyOptions(
-    page: PaginatedProps,
+    page: PaginationProps,
     booth: PhotoBooth,
   ): FindManyOptions<PhotoBooth> {
     const { take, skip } = page;

@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { PhotoBoothRawData } from '../entity/raw-data.entity';
+import { HiddenPhotoBooth } from '../entity/raw-data.entity';
 import { PhotoBooth } from '../entity/photo-booth.entity';
 import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
 
@@ -14,7 +14,7 @@ export class GetPhotoBoothListDto {
   @Type(() => PhotoBoothBrand)
   private readonly _photo_booth_brand: PhotoBoothBrand | undefined;
 
-  constructor(data: PhotoBooth | PhotoBoothRawData) {
+  constructor(data: PhotoBooth | HiddenPhotoBooth) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
   }
 

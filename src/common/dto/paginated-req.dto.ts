@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
 import { IsInt, IsOptional, Min } from 'class-validator';
 
-export interface PaginatedProps {
+export interface PaginationProps {
   take: number;
   skip: number;
   page: number;
@@ -40,7 +40,7 @@ export class PaginatedDto {
     return this.perPage;
   }
 
-  getPageProps(): PaginatedProps {
+  getPageProps(): PaginationProps {
     return {
       take: this.take,
       skip: this.skip,
