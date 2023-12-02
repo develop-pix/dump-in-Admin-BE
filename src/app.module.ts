@@ -12,9 +12,9 @@ import { Session } from './auth/entity/session.entity';
 import { PhotoBooth } from './photo-booth/entity/photo-booth.entity';
 import { PhotoBoothRawData } from './photo-booth/entity/raw-data.entity';
 import {
-  Category,
+  Hashtag,
   PhotoBoothBrand,
-  PhotoBoothCategory,
+  PhotoBoothHashtag,
 } from './photo-booth/entity/photo-booth-brand.entity';
 
 @Module({
@@ -39,8 +39,8 @@ import {
         PhotoBooth,
         PhotoBoothRawData,
         PhotoBoothBrand,
-        PhotoBoothCategory,
-        Category,
+        PhotoBoothHashtag,
+        Hashtag,
       ],
       ssl:
         process.env.NODE_ENV === 'local'

@@ -7,9 +7,9 @@ import { PhotoBoothRawData } from './entity/raw-data.entity';
 import { PhotoBoothRepository } from './repository/photo-booth.repository';
 import { PhotoBoothRawRepository } from './repository/photo-booth-raw-data.repository';
 import {
-  Category,
+  Hashtag,
   PhotoBoothBrand,
-  PhotoBoothCategory,
+  PhotoBoothHashtag,
 } from './entity/photo-booth-brand.entity';
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
 
@@ -19,8 +19,8 @@ import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.reposi
       PhotoBooth,
       PhotoBoothRawData,
       PhotoBoothBrand,
-      PhotoBoothCategory,
-      Category,
+      PhotoBoothHashtag,
+      Hashtag,
     ]),
   ],
   controllers: [PhotoBoothController],
