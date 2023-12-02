@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PhotoBoothRepository } from './repository/photo-booth.repository';
-import { HiddenBoothRepository } from './repository/photo-booth-raw-data.repository';
+import { HiddenBoothRepository } from './repository/photo-booth-hidden.repository';
 import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
 import { Page } from '../common/dto/paginated-res.dto';
 import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
