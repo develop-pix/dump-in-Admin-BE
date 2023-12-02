@@ -7,7 +7,7 @@ import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
 import { PhotoBooth, PhotoBoothUpdateProps } from './entity/photo-booth.entity';
 import { PaginationProps } from 'src/common/dto/paginated-req.dto';
 import { FindBoothOptionWhere } from './dto/get-photo-booth-query.dto';
-import { HiddenPhotoBooth } from './entity/raw-data.entity';
+import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
 
 @Injectable()
 export class PhotoBoothService {

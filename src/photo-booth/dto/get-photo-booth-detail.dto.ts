@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { HiddenPhotoBooth } from '../entity/raw-data.entity';
+import { HiddenPhotoBooth } from '../entity/photo-booth-hidden.entity';
 import { PhotoBooth } from '../entity/photo-booth.entity';
 import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
 
