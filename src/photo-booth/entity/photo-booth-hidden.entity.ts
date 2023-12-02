@@ -1,6 +1,7 @@
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { FindBoothOptionWhere } from '../dto/get-photo-booth-query.dto';
+import { PhotoBoothUpdateProps } from '../dto/patch-photo-booth.dto';
 
 @Entity('photo_booth_raw_data')
 export class HiddenPhotoBooth extends BaseDateEntity {
@@ -31,7 +32,7 @@ export class HiddenPhotoBooth extends BaseDateEntity {
   @Column({ type: 'timestamp', nullable: true })
   preprocessed_at: Date;
 
-  static of({ location, name }: FindBoothOptionWhere) {
+  static of({ location, name }: FindBoothOptionWhere): HiddenPhotoBooth {
     const hiddenBooth = new HiddenPhotoBooth();
 
     hiddenBooth.location = location;
@@ -40,7 +41,7 @@ export class HiddenPhotoBooth extends BaseDateEntity {
     return hiddenBooth;
   }
 
-  static byId({ id }: FindBoothOptionWhere) {
+  static byId({ id }: FindBoothOptionWhere): HiddenPhotoBooth {
     const hiddenBooth = new HiddenPhotoBooth();
 
     hiddenBooth.id = id;
@@ -48,19 +49,19 @@ export class HiddenPhotoBooth extends BaseDateEntity {
     return hiddenBooth;
   }
 
-  // static updateBy({
-  //   name,
-  //   location,
-  //   street_address,
-  //   road_address,
-  // }: PhotoBoothUpdateProps): PhotoBooth {
-  //   const photoBoothRaw = new PhotoBoothRawData();
+  static updateBy({
+    name,
+    location,
+    street_address,
+    road_address,
+  }: PhotoBoothUpdateProps): HiddenPhotoBooth {
+    const hiddenBooth = new HiddenPhotoBooth();
 
-  //   photoBooth.name = name;
-  //   photoBooth.location = location;
-  //   photoBooth.street_address = street_address;
-  //   photoBooth.road_address = road_address;
+    hiddenBooth.name = name;
+    hiddenBooth.location = location;
+    hiddenBooth.street_address = street_address;
+    hiddenBooth.road_address = road_address;
 
-  //   return photoBooth;
-  // }
+    return hiddenBooth;
+  }
 }
