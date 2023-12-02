@@ -35,15 +35,15 @@ export class PhotoBoothBrand {
   photo_booths: PhotoBooth[];
 
   @OneToMany(
-    () => PhotoBoothCategory,
-    (photoBoothCategory: PhotoBoothCategory) =>
-      photoBoothCategory.photo_booth_brand,
+    () => PhotoBoothHashtag,
+    (photoBoothHashtag: PhotoBoothHashtag) =>
+      photoBoothHashtag.photo_booth_brand,
   )
-  photo_booth_categories: PhotoBoothCategory[];
+  photo_booth_hashtags: PhotoBoothHashtag[];
 }
 
-@Entity('category')
-export class Category {
+@Entity('hashtag')
+export class Hashtag {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
@@ -57,29 +57,25 @@ export class Category {
   order_number: number;
 
   @OneToMany(
-    () => PhotoBoothCategory,
-    (photoBoothCategory: PhotoBoothCategory) => photoBoothCategory.category,
+    () => PhotoBoothHashtag,
+    (photoBoothHashtag: PhotoBoothHashtag) => photoBoothHashtag.hashtag,
   )
-  photo_booth_categories: PhotoBoothCategory[];
+  photo_booth_hashtags: PhotoBoothHashtag[];
 }
 
-@Entity('photo_booth_category')
-export class PhotoBoothCategory {
+@Entity('photo_booth_hashtag')
+export class PhotoBoothHashtag {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
   @ManyToOne(
     () => PhotoBoothBrand,
-    (photoBoothBrand: PhotoBoothBrand) =>
-      photoBoothBrand.photo_booth_categories,
+    (photoBoothBrand: PhotoBoothBrand) => photoBoothBrand.photo_booth_hashtags,
   )
   @JoinColumn({ name: 'photo_booth_brand_id' })
   photo_booth_brand: PhotoBoothBrand;
 
-  @ManyToOne(
-    () => Category,
-    (category: Category) => category.photo_booth_categories,
-  )
-  @JoinColumn({ name: 'category_id' })
-  category: Category;
+  @ManyToOne(() => Hashtag, (hashtag: Hashtag) => hashtag.photo_booth_hashtags)
+  @JoinColumn({ name: 'hashtag_id' })
+  hashtag: Hashtag;
 }
