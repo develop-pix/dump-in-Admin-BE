@@ -67,7 +67,7 @@ export class GetPhotoBoothDetailDto {
     description: '포토부스의 지번 주소',
   })
   @Expose()
-  get street_address(): string | null {
+  get streetAddress(): string | null {
     return this._street_address;
   }
 
@@ -75,7 +75,7 @@ export class GetPhotoBoothDetailDto {
     description: '포토부스의 도로명 주소',
   })
   @Expose()
-  get road_address(): string | null {
+  get roadAddress(): string | null {
     return this._road_address;
   }
 
@@ -83,7 +83,7 @@ export class GetPhotoBoothDetailDto {
     description: '포토부스의 운영 시간',
   })
   @Expose()
-  get operation_time(): string | null {
+  get operationTime(): string | null {
     return this._operation_time;
   }
 
