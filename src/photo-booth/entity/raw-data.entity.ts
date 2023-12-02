@@ -1,6 +1,6 @@
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { FindBoothOptionWhere } from '../repository/photo-booth.repository';
+import { FindBoothOptionWhere } from '../dto/get-photo-booth-query.dto';
 
 @Entity('photo_booth_raw_data')
 export class PhotoBoothRawData extends BaseDateEntity {
@@ -39,4 +39,28 @@ export class PhotoBoothRawData extends BaseDateEntity {
 
     return photoBoothRaw;
   }
+
+  static byId({ id }: FindBoothOptionWhere) {
+    const photoBoothRaw = new PhotoBoothRawData();
+
+    photoBoothRaw.id = id;
+
+    return photoBoothRaw;
+  }
+
+  // static updateBy({
+  //   name,
+  //   location,
+  //   street_address,
+  //   road_address,
+  // }: PhotoBoothUpdateProps): PhotoBooth {
+  //   const photoBoothRaw = new PhotoBoothRawData();
+
+  //   photoBooth.name = name;
+  //   photoBooth.location = location;
+  //   photoBooth.street_address = street_address;
+  //   photoBooth.road_address = road_address;
+
+  //   return photoBooth;
+  // }
 }

@@ -1,14 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  FindBoothOptionWhere,
-  PhotoBoothRepository,
-} from './repository/photo-booth.repository';
+import { PhotoBoothRepository } from './repository/photo-booth.repository';
 import { PhotoBoothRawRepository } from './repository/photo-booth-raw-data.repository';
 import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
 import { Page } from '../common/dto/paginated-res.dto';
 import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
 import { PhotoBooth, PhotoBoothUpdateProps } from './entity/photo-booth.entity';
 import { PaginatedProps } from 'src/common/dto/paginated-req.dto';
+import { FindBoothOptionWhere } from './dto/get-photo-booth-query.dto';
+import { PhotoBoothRawData } from './entity/raw-data.entity';
 
 @Injectable()
 export class PhotoBoothService {
@@ -96,13 +95,40 @@ export class PhotoBoothService {
      */
   }
 
-  async findHiddenBoothByQuery() {
+  async findHiddenBoothByQuery(
+    pageProps: PaginatedProps,
+    query: FindBoothOptionWhere,
+  ): Promise<Page<GetPhotoBoothListDto>> {
     /**
      * @param pageProps - paginated - 항목수, 페이지
      * @param query - request query string - 지점명, 지역
      * @desc - 쿼리 파라미터에 맞는 공개되지 않은 포토부스 데이터 반환
      *       - 쿼리 옵션이 없으면 공개되지 않은 전체 포토부스 데이터 반환
      */
+
+    const { page, take } = pageProps;
+    const [hiddenPhotoBooths, count] =
+      await this.photoBoothRawRepository.findHiddenBoothByOptionAndCount(
+        PhotoBoothRawData.of(query),
+        pageProps,
+      );
+
+    if (hiddenPhotoBooths.length === 0) {
+      throw new NotFoundException(
+        '공개되지 않은 포토부스 지점을 찾지 못했습니다',
+      );
+    }
+
+    const hiddenPhotoBoothResult = hiddenPhotoBooths.map(
+      (photoBooth) => new GetPhotoBoothListDto(photoBooth),
+    );
+
+    return new Page<GetPhotoBoothListDto>(
+      page,
+      take,
+      count,
+      hiddenPhotoBoothResult,
+    );
   }
 
   async findOneHiddenBooth() {
@@ -131,6 +157,12 @@ export class PhotoBoothService {
     /**
      * @param request - request query string - 포토부스명(Brand), 지역, 업종, 공개여부
      * @desc 쿼리 파라미터에 맞는 데이터 반환
+     */
+  }
+
+  async createBrand() {
+    /**
+     * @desc 포토부스 업체에 대한 정보와 업체가 가지고 있는 지점 정보 반환
      */
   }
 

@@ -62,7 +62,18 @@ export class PhotoBoothController {
   async deleteOpenBooth() {}
 
   @Get('raw')
-  async findHiddenBoothByQuery() {}
+  async findHiddenBoothByQuery(
+    @Query() request: BoothQueryDto,
+  ): Promise<ResponseEntity<Page<GetPhotoBoothListDto>>> {
+    const response = await this.photoBoothService.findOpenBoothByQueryParam(
+      request.getPageProps(),
+      request.getQueryProps(),
+    );
+    return ResponseEntity.OK_WITH<Page<GetPhotoBoothListDto>>(
+      '공개되지 않은 포토부스 목록을 반환합니다.',
+      response,
+    );
+  }
 
   @Get('raw/:id')
   async findOneHiddenBooth() {}
