@@ -1,33 +1,32 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PhotoBoothRepository } from './repository/photo-booth.repository';
-import { PhotoBoothRawRepository } from './repository/photo-booth-raw-data.repository';
+import { HiddenBoothRepository } from './repository/photo-booth-raw-data.repository';
 import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
 import { Page } from '../common/dto/paginated-res.dto';
 import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
 import { PhotoBooth, PhotoBoothUpdateProps } from './entity/photo-booth.entity';
-import { PaginatedProps } from 'src/common/dto/paginated-req.dto';
+import { PaginationProps } from 'src/common/dto/paginated-req.dto';
 import { FindBoothOptionWhere } from './dto/get-photo-booth-query.dto';
-import { PhotoBoothRawData } from './entity/raw-data.entity';
+import { HiddenPhotoBooth } from './entity/raw-data.entity';
 
 @Injectable()
 export class PhotoBoothService {
   constructor(
     private readonly photoBoothRepository: PhotoBoothRepository,
-    private readonly photoBoothRawRepository: PhotoBoothRawRepository,
+    private readonly hiddenBoothRepository: HiddenBoothRepository,
   ) {}
 
   async findOpenBoothByQueryParam(
-    pageProps: PaginatedProps,
+    pageProps: PaginationProps,
     query: FindBoothOptionWhere,
   ): Promise<Page<GetPhotoBoothListDto>> {
     /**
-     * @param pageProps - paginated - 항목수, 페이지
+     * @param pageProps - paginated - skip, take
      * @param query - request query string - 지점명, 지역
      * @desc - 쿼리 파라미터에 맞는 포토부스 데이터 반환
      *       - 쿼리 옵션이 없으면 전체 포토부스 데이터 반환
      */
 
-    const { page, take } = pageProps;
     const [photoBooths, count] =
       await this.photoBoothRepository.findBoothByOptionAndCount(
         PhotoBooth.of(query),
@@ -38,11 +37,7 @@ export class PhotoBoothService {
       throw new NotFoundException('공개된 포토부스 지점을 찾지 못했습니다');
     }
 
-    const photoBoothResult = photoBooths.map(
-      (photoBooth) => new GetPhotoBoothListDto(photoBooth),
-    );
-
-    return new Page<GetPhotoBoothListDto>(page, take, count, photoBoothResult);
+    return await this.paginatedPhotoBoothList(pageProps, photoBooths, count);
   }
 
   async findOneOpenBooth(id: string): Promise<GetPhotoBoothDetailDto> {
@@ -96,7 +91,7 @@ export class PhotoBoothService {
   }
 
   async findHiddenBoothByQuery(
-    pageProps: PaginatedProps,
+    pageProps: PaginationProps,
     query: FindBoothOptionWhere,
   ): Promise<Page<GetPhotoBoothListDto>> {
     /**
@@ -106,36 +101,35 @@ export class PhotoBoothService {
      *       - 쿼리 옵션이 없으면 공개되지 않은 전체 포토부스 데이터 반환
      */
 
-    const { page, take } = pageProps;
-    const [hiddenPhotoBooths, count] =
-      await this.photoBoothRawRepository.findHiddenBoothByOptionAndCount(
-        PhotoBoothRawData.of(query),
+    const [hiddenBooths, count] =
+      await this.hiddenBoothRepository.findHiddenBoothByOptionAndCount(
+        HiddenPhotoBooth.of(query),
         pageProps,
       );
 
-    if (hiddenPhotoBooths.length === 0) {
+    if (hiddenBooths.length === 0) {
       throw new NotFoundException(
         '공개되지 않은 포토부스 지점을 찾지 못했습니다',
       );
     }
 
-    const hiddenPhotoBoothResult = hiddenPhotoBooths.map(
-      (photoBooth) => new GetPhotoBoothListDto(photoBooth),
-    );
-
-    return new Page<GetPhotoBoothListDto>(
-      page,
-      take,
-      count,
-      hiddenPhotoBoothResult,
-    );
+    return await this.paginatedPhotoBoothList(pageProps, hiddenBooths, count);
   }
 
-  async findOneHiddenBooth() {
+  async findOneHiddenBooth(id: string) {
     /**
      * @param id - photoboothRawData의 uuid 값
      * @desc 공개되지 않은 포토부스에 대한 디테일 데이터 반환
      */
+    const hiddenBooth = await this.hiddenBoothRepository.findOneHiddenBoothBy(
+      HiddenPhotoBooth.byId({ id }),
+    );
+
+    if (!hiddenBooth) {
+      throw new NotFoundException(`포토부스 지점을 찾지 못했습니다. ID: ${id}`);
+    }
+
+    return new GetPhotoBoothDetailDto(hiddenBooth);
   }
 
   async updateHiddenBooth() {
@@ -185,5 +179,26 @@ export class PhotoBoothService {
      * @param request - 포토부스 업체에 대한 수정 데이터
      * @desc 포토부스 업체의 이름, 대표사진, 지점 목록, 해시태그의 데이터를 수정
      */
+  }
+
+  private async paginatedPhotoBoothList(
+    pageProps: PaginationProps,
+    photoBooths: PhotoBooth[] | HiddenPhotoBooth[],
+    count: number,
+  ): Promise<Page<GetPhotoBoothListDto>> {
+    /**
+     * @param pageProps - paginated - page, take
+     * @param photoBooths - 포토부스 데이터
+     * @param count - 조회된 데이터 수
+     * @desc - 페이지네이션
+     */
+    const { page, take } = pageProps;
+
+    const photoBoothResult = photoBooths.map(
+      (photoBooth: PhotoBooth | HiddenPhotoBooth) =>
+        new GetPhotoBoothListDto(photoBooth),
+    );
+
+    return new Page<GetPhotoBoothListDto>(page, take, count, photoBoothResult);
   }
 }
