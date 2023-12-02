@@ -4,10 +4,11 @@ import { HiddenBoothRepository } from './repository/photo-booth-hidden.repositor
 import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
 import { Page } from '../common/dto/paginated-res.dto';
 import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
-import { PhotoBooth, PhotoBoothUpdateProps } from './entity/photo-booth.entity';
+import { PhotoBooth } from './entity/photo-booth.entity';
 import { PaginationProps } from 'src/common/dto/paginated-req.dto';
 import { FindBoothOptionWhere } from './dto/get-photo-booth-query.dto';
 import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
+import { PhotoBoothUpdateProps } from './dto/patch-photo-booth.dto';
 
 @Injectable()
 export class PhotoBoothService {
@@ -132,12 +133,27 @@ export class PhotoBoothService {
     return new GetPhotoBoothDetailDto(hiddenBooth);
   }
 
-  async updateHiddenBooth() {
+  async updateHiddenBooth(
+    id: string,
+    updateProps: PhotoBoothUpdateProps,
+  ): Promise<boolean> {
     /**
      * @param id - uuid값
      * @param updateProps - 수정이 필요한 데이터 일부 - 지역, 지점명, 주소
      * @desc 공개되지 않은 포토부스 지점에 대한 데이터 수정
      */
+    const isUpdated = await this.hiddenBoothRepository.updateHiddenBooth(
+      id,
+      HiddenPhotoBooth.updateBy(updateProps),
+    );
+
+    if (!isUpdated) {
+      throw new NotFoundException(
+        `비공개 포토부스가 업데이트되지 않았습니다. ID:${id}`,
+      );
+    }
+
+    return true;
   }
 
   async moveHiddenToOpenBooth() {

@@ -55,7 +55,7 @@ export class PhotoBoothController {
     @Body() request: UpdatePhotoBoothDto,
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.updateOpenBooth(id, request.getUpdateProps());
-    return ResponseEntity.OK('포토부스 업데이트를 업데이트 했습니다.');
+    return ResponseEntity.OK('공개된 포토부스 지점을 업데이트 했습니다.');
   }
 
   @Delete(':id')
@@ -76,13 +76,30 @@ export class PhotoBoothController {
   }
 
   @Get('raw/:id')
-  async findOneHiddenBooth() {}
+  async findOneHiddenBooth(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<ResponseEntity<GetPhotoBoothDetailDto>> {
+    const response = await this.photoBoothService.findOneHiddenBooth(id);
+    return ResponseEntity.OK_WITH<GetPhotoBoothDetailDto>(
+      '공개되지 않은 포토부스 목록을 반환합니다.',
+      response,
+    );
+  }
+
+  @Patch('raw/:id')
+  async updateHiddenBooth(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() request: UpdatePhotoBoothDto,
+  ): Promise<ResponseEntity<string>> {
+    await this.photoBoothService.updateHiddenBooth(
+      id,
+      request.getUpdateProps(),
+    );
+    return ResponseEntity.OK('비공개 포토부스를 업데이트 했습니다.');
+  }
 
   @Put('raw/:id')
   async moveHiddenToOpenBooth() {}
-
-  @Patch('raw/:id')
-  async updateHiddenBooth() {}
 
   @Delete('raw/:id')
   async deleteHiddenBooth() {}

@@ -26,7 +26,7 @@ class MockPhotoBoothBrandRepository {
 describe('PhotoBoothService', () => {
   let photoBoothService: PhotoBoothService;
   let photoBoothRepository: PhotoBoothRepository;
-  let photoBoothRawRepository: HiddenBoothRepository;
+  let photoBoothHiddenRepository: HiddenBoothRepository;
   let photoBoothBrandRepository: PhotoBoothBrandRepository;
 
   beforeEach(async () => {
@@ -48,7 +48,7 @@ describe('PhotoBoothService', () => {
     photoBoothService = module.get<PhotoBoothService>(PhotoBoothService);
     photoBoothRepository =
       module.get<PhotoBoothRepository>(PhotoBoothRepository);
-    photoBoothRawRepository = module.get<HiddenBoothRepository>(
+    photoBoothHiddenRepository = module.get<HiddenBoothRepository>(
       HiddenBoothRepository,
     );
     photoBoothBrandRepository = module.get<PhotoBoothBrandRepository>(
@@ -122,7 +122,7 @@ describe('PhotoBoothService', () => {
   it('should be defined', () => {
     expect(photoBoothService).toBeDefined();
     expect(photoBoothRepository).toBeDefined();
-    expect(photoBoothRawRepository).toBeDefined();
+    expect(photoBoothHiddenRepository).toBeDefined();
     expect(photoBoothBrandRepository).toBeDefined();
   });
 
