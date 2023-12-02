@@ -9,6 +9,13 @@ import { PhotoBoothModule } from './photo-booth/photo-booth.module';
 import { User } from './user/entity/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { Session } from './auth/entity/session.entity';
+import { PhotoBooth } from './photo-booth/entity/photo-booth.entity';
+import { PhotoBoothRawData } from './photo-booth/entity/raw-data.entity';
+import {
+  Hashtag,
+  PhotoBoothBrand,
+  PhotoBoothHashtag,
+} from './photo-booth/entity/photo-booth-brand.entity';
 
 @Module({
   imports: [
@@ -26,7 +33,15 @@ import { Session } from './auth/entity/session.entity';
       database: process.env.DATABASE_NAME,
       synchronize: process.env.NODE_ENV === 'local',
       logging: process.env.NODE_ENV !== 'production',
-      entities: [User, Session],
+      entities: [
+        User,
+        Session,
+        PhotoBooth,
+        PhotoBoothRawData,
+        PhotoBoothBrand,
+        PhotoBoothHashtag,
+        Hashtag,
+      ],
       ssl:
         process.env.NODE_ENV === 'local'
           ? undefined
