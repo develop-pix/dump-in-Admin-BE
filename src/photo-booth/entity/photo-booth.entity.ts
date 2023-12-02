@@ -7,7 +7,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { PhotoBoothBrand } from './photo-booth-brand.entity';
-import { FindBoothOptionWhere } from '../repository/photo-booth.repository';
+import { FindBoothOptionWhere } from '../dto/get-photo-booth-query.dto';
 
 export interface PhotoBoothUpdateProps {
   name: string;

@@ -9,12 +9,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PhotoBooth } from '../entity/photo-booth.entity';
 import { PaginatedProps } from '../../common/dto/paginated-req.dto';
 
-export interface FindBoothOptionWhere {
-  id?: string;
-  name?: string;
-  location?: string;
-}
-
 @Injectable()
 export class PhotoBoothRepository {
   constructor(

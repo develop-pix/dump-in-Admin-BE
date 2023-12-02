@@ -2,7 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
 import { PaginatedDto } from '../../common/dto/paginated-req.dto';
-import { FindBoothOptionWhere } from '../repository/photo-booth.repository';
+
+export interface FindBoothOptionWhere {
+  id?: string;
+  name?: string;
+  location?: string;
+}
 
 export class BoothQueryDto extends PaginatedDto {
   @ApiProperty({
