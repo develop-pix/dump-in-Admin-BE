@@ -104,14 +104,14 @@ export class PhotoBoothController {
   @Delete('raw/:id')
   async deleteHiddenBooth() {}
 
-  @Post('brand')
-  async createBrand() {}
-
   @Get('brand')
   async findAllBrand() {}
 
   @Get('brand/:id')
   async findOneBrand() {}
+
+  @Post('brand')
+  async createBrand() {}
 
   @Patch('brand/:id')
   async updateBrand() {}
