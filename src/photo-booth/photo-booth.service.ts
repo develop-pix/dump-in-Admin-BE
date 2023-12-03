@@ -28,17 +28,21 @@ export class PhotoBoothService {
      *       - 쿼리 옵션이 없으면 전체 포토부스 데이터 반환
      */
 
-    const [photoBooths, count] =
+    const photoBooths =
       await this.photoBoothRepository.findBoothByOptionAndCount(
         PhotoBooth.of(query),
         pageProps,
       );
 
-    if (photoBooths.length === 0) {
+    if (photoBooths[0].length === 0) {
       throw new NotFoundException('공개된 포토부스 지점을 찾지 못했습니다');
     }
 
-    return await this.paginatedPhotoBoothList(pageProps, photoBooths, count);
+    return await this.listPaginatedEntity(
+      pageProps,
+      photoBooths,
+      (entity: PhotoBooth) => new GetPhotoBoothListDto(entity),
+    );
   }
 
   async findOneOpenBooth(id: string): Promise<GetPhotoBoothDetailDto> {
@@ -102,19 +106,23 @@ export class PhotoBoothService {
      *       - 쿼리 옵션이 없으면 공개되지 않은 전체 포토부스 데이터 반환
      */
 
-    const [hiddenBooths, count] =
+    const hiddenBooths =
       await this.hiddenBoothRepository.findHiddenBoothByOptionAndCount(
         HiddenPhotoBooth.of(query),
         pageProps,
       );
 
-    if (hiddenBooths.length === 0) {
+    if (hiddenBooths[0].length === 0) {
       throw new NotFoundException(
         '공개되지 않은 포토부스 지점을 찾지 못했습니다',
       );
     }
 
-    return await this.paginatedPhotoBoothList(pageProps, hiddenBooths, count);
+    return await this.listPaginatedEntity(
+      pageProps,
+      hiddenBooths,
+      (entity: HiddenPhotoBooth) => new GetPhotoBoothListDto(entity),
+    );
   }
 
   async findOneHiddenBooth(id: string) {
@@ -173,6 +181,7 @@ export class PhotoBoothService {
   async createBrand() {
     /**
      * @desc 포토부스 업체에 대한 정보와 업체가 가지고 있는 지점 정보 반환
+     * @TODO 해시태그 데이터를 추가
      */
   }
 
@@ -194,27 +203,21 @@ export class PhotoBoothService {
      * @param id - 포토부스 업체에 대한 id
      * @param request - 포토부스 업체에 대한 수정 데이터
      * @desc 포토부스 업체의 이름, 대표사진, 지점 목록, 해시태그의 데이터를 수정
+     * @TODO 해시 태그 데이터를 수정
      */
   }
 
-  private async paginatedPhotoBoothList(
+  private async listPaginatedEntity<T, U>(
     pageProps: PaginationProps,
-    photoBooths: PhotoBooth[] | HiddenPhotoBooth[],
-    count: number,
-  ): Promise<Page<GetPhotoBoothListDto>> {
-    /**
-     * @param pageProps - paginated - page, take
-     * @param photoBooths - 포토부스 데이터
-     * @param count - 조회된 데이터 수
-     * @desc - 페이지네이션
-     */
+    results: [T[], number],
+    mapper: (entity: T) => U,
+  ): Promise<Page<U>> {
     const { page, take } = pageProps;
 
-    const photoBoothResult = photoBooths.map(
-      (photoBooth: PhotoBooth | HiddenPhotoBooth) =>
-        new GetPhotoBoothListDto(photoBooth),
-    );
+    const [entities, count] = results;
 
-    return new Page<GetPhotoBoothListDto>(page, take, count, photoBoothResult);
+    const entityResult = entities.map(mapper);
+
+    return new Page<U>(page, take, count, entityResult);
   }
 }
