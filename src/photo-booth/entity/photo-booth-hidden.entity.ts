@@ -1,6 +1,6 @@
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { FindBoothOptionWhere } from '../dto/get-photo-booth-query.dto';
+import { FindBoothOptionProps } from '../dto/get-photo-booth-query.dto';
 import { PhotoBoothUpdateProps } from '../dto/patch-photo-booth.dto';
 
 @Entity('photo_booth_raw_data')
@@ -32,7 +32,7 @@ export class HiddenPhotoBooth extends BaseDateEntity {
   @Column({ type: 'timestamp', nullable: true })
   preprocessed_at: Date;
 
-  static of({ location, name }: FindBoothOptionWhere): HiddenPhotoBooth {
+  static of({ location, name }: FindBoothOptionProps): HiddenPhotoBooth {
     const hiddenBooth = new HiddenPhotoBooth();
 
     hiddenBooth.location = location;
@@ -41,7 +41,7 @@ export class HiddenPhotoBooth extends BaseDateEntity {
     return hiddenBooth;
   }
 
-  static byId({ id }: FindBoothOptionWhere): HiddenPhotoBooth {
+  static byId({ id }: FindBoothOptionProps): HiddenPhotoBooth {
     const hiddenBooth = new HiddenPhotoBooth();
 
     hiddenBooth.id = id;
