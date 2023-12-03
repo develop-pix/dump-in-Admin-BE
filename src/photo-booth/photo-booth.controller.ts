@@ -9,15 +9,27 @@ import {
   Put,
   ParseUUIDPipe,
   Body,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { PhotoBoothService } from './photo-booth.service';
 import { ApiTags } from '@nestjs/swagger';
-import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
+import {
+  GetBoothBrandListDto,
+  GetPhotoBoothListDto,
+} from './dto/get-photo-booth-list.dto';
 import { ResponseEntity } from 'src/common/entity/response.entity';
-import { BoothQueryDto } from './dto/get-photo-booth-query.dto';
+import { BoothQueryDto, BrandQueryDto } from './dto/get-photo-booth-query.dto';
 import { Page } from '../common/dto/paginated-res.dto';
-import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
-import { UpdatePhotoBoothDto } from './dto/patch-photo-booth.dto';
+import {
+  GetBoothBrandDetailDto,
+  GetPhotoBoothDetailDto,
+} from './dto/get-photo-booth-detail.dto';
+import {
+  UpdateBoothBrandDto,
+  UpdatePhotoBoothDto,
+} from './dto/patch-photo-booth.dto';
+import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
+import { CreateBrandDto } from './dto/post-photo-booth.dto';
 
 @ApiTags('포토부스')
 @Controller('photo-booth')
@@ -62,10 +74,10 @@ export class PhotoBoothController {
   async deleteOpenBooth() {}
 
   @Get('raw')
-  async findHiddenBoothByQuery(
+  async findHiddenBoothByQueryParam(
     @Query() request: BoothQueryDto,
   ): Promise<ResponseEntity<Page<GetPhotoBoothListDto>>> {
-    const response = await this.photoBoothService.findOpenBoothByQueryParam(
+    const response = await this.photoBoothService.findHiddenBoothByQueryParam(
       request.getPageProps(),
       request.getQueryProps(),
     );
@@ -105,14 +117,49 @@ export class PhotoBoothController {
   async deleteHiddenBooth() {}
 
   @Get('brand')
-  async findAllBrand() {}
+  async findBrandByQueryParam(
+    @Query() request: BrandQueryDto,
+  ): Promise<ResponseEntity<Page<GetBoothBrandListDto>>> {
+    const response = await this.photoBoothService.findBrandByQueryParam(
+      request.getPageProps(),
+      request.getQueryProps(),
+    );
+    return ResponseEntity.OK_WITH<Page<GetBoothBrandListDto>>(
+      '공개된 포토부스 목록을 반환합니다.',
+      response,
+    );
+  }
 
   @Get('brand/:id')
-  async findOneBrand() {}
+  async findOneBrand(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<ResponseEntity<GetBoothBrandDetailDto>> {
+    const response = await this.photoBoothService.findOneBrand(id);
+    return ResponseEntity.OK_WITH<GetBoothBrandDetailDto>(
+      '공개되지 않은 포토부스 목록을 반환합니다.',
+      response,
+    );
+  }
 
   @Post('brand')
-  async createBrand() {}
+  async createBrand(
+    @Body() request: CreateBrandDto,
+  ): Promise<ResponseEntity<PhotoBoothBrand>> {
+    const response = await this.photoBoothService.createBrand(
+      request.toEntity(),
+    );
+    return ResponseEntity.OK_WITH<PhotoBoothBrand>(
+      '포토부스 업체를 생성 했습니다.',
+      response,
+    );
+  }
 
   @Patch('brand/:id')
-  async updateBrand() {}
+  async updateBrand(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() request: UpdateBoothBrandDto,
+  ): Promise<ResponseEntity<string>> {
+    await this.photoBoothService.updateBrand(id, request.getUpdateProps());
+    return ResponseEntity.OK('포토부스 업체를 업데이트 했습니다.');
+  }
 }
