@@ -45,9 +45,6 @@ export class PhotoBoothRepository {
       id: true,
       name: true,
       location: true,
-      latitude: true,
-      longitude: true,
-      operation_time: true,
       road_address: true,
       street_address: true,
       photo_booth_brand: {
