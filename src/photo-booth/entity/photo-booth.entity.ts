@@ -7,7 +7,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { PhotoBoothBrand } from './photo-booth-brand.entity';
-import { FindBoothOptionWhere } from '../repository/photo-booth.repository';
+import { FindBoothOptionProps } from '../dto/get-photo-booth-query.dto';
+import { PhotoBoothUpdateProps } from '../dto/patch-photo-booth.dto';
 
 @Entity('photo_booth')
 export class PhotoBooth extends BaseDateEntity {
@@ -48,7 +49,7 @@ export class PhotoBooth extends BaseDateEntity {
   @JoinColumn({ name: 'photo_booth_brand_id' })
   photo_booth_brand: PhotoBoothBrand;
 
-  static byId({ id }: FindBoothOptionWhere) {
+  static byId({ id }: FindBoothOptionProps) {
     const photoBooth = new PhotoBooth();
 
     photoBooth.id = id;
@@ -56,11 +57,27 @@ export class PhotoBooth extends BaseDateEntity {
     return photoBooth;
   }
 
-  static of({ location, name }: FindBoothOptionWhere) {
+  static of({ location, name }: FindBoothOptionProps) {
     const photoBooth = new PhotoBooth();
 
     photoBooth.location = location;
     photoBooth.name = name;
+
+    return photoBooth;
+  }
+
+  static updateBy({
+    name,
+    location,
+    street_address,
+    road_address,
+  }: PhotoBoothUpdateProps): PhotoBooth {
+    const photoBooth = new PhotoBooth();
+
+    photoBooth.name = name;
+    photoBooth.location = location;
+    photoBooth.street_address = street_address;
+    photoBooth.road_address = road_address;
 
     return photoBooth;
   }

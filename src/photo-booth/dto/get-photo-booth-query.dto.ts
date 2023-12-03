@@ -1,8 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { PaginatedDto } from '../../common/dto/paginated-req.dto';
-import { FindBoothOptionWhere } from '../repository/photo-booth.repository';
+
+export interface FindBoothOptionProps {
+  id?: string;
+  name?: string;
+  location?: string;
+}
 
 export class BoothQueryDto extends PaginatedDto {
   @ApiProperty({
@@ -23,10 +28,45 @@ export class BoothQueryDto extends PaginatedDto {
   @Type(() => String)
   name?: string;
 
-  getQueryProps(): FindBoothOptionWhere {
+  getQueryProps(): FindBoothOptionProps {
     return {
       location: this.location,
       name: this.name,
+    };
+  }
+}
+
+export interface FindBrandOptionProps {
+  id?: number;
+  name?: string;
+  is_event?: boolean;
+}
+
+export class BrandQueryDto extends PaginatedDto {
+  @ApiProperty({
+    description: '포토부스 업체명',
+    required: true,
+    example: '포토그레이',
+  })
+  @IsString()
+  @IsOptional()
+  @IsString()
+  @Type(() => String)
+  name: string;
+
+  @ApiProperty({
+    description: '포토부스 업체의 이벤트 허용 여부',
+    example: true,
+  })
+  @IsOptional()
+  @IsBoolean()
+  @Type(() => Boolean)
+  isEvent: boolean = false;
+
+  getQueryProps(): FindBrandOptionProps {
+    return {
+      name: this.name,
+      is_event: this.isEvent,
     };
   }
 }

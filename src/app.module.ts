@@ -10,7 +10,7 @@ import { User } from './user/entity/user.entity';
 import { AuthModule } from './auth/auth.module';
 import { Session } from './auth/entity/session.entity';
 import { PhotoBooth } from './photo-booth/entity/photo-booth.entity';
-import { PhotoBoothRawData } from './photo-booth/entity/raw-data.entity';
+import { HiddenPhotoBooth } from './photo-booth/entity/photo-booth-hidden.entity';
 import {
   Hashtag,
   PhotoBoothBrand,
@@ -37,7 +37,7 @@ import {
         User,
         Session,
         PhotoBooth,
-        PhotoBoothRawData,
+        HiddenPhotoBooth,
         PhotoBoothBrand,
         PhotoBoothHashtag,
         Hashtag,
