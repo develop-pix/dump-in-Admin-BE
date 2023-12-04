@@ -9,6 +9,7 @@ import {
 import { PhotoBoothBrand } from './photo-booth-brand.entity';
 import { FindBoothOptionProps } from '../dto/get-photo-booth-query.dto';
 import { PhotoBoothUpdateProps } from '../dto/patch-photo-booth.dto';
+import { MoveToOpenBoothProps } from '../dto/put-photo-booth.dto';
 
 @Entity('photo_booth')
 export class PhotoBooth extends BaseDateEntity {
@@ -78,6 +79,34 @@ export class PhotoBooth extends BaseDateEntity {
     photoBooth.location = location;
     photoBooth.street_address = streetAddress;
     photoBooth.road_address = roadAddress;
+
+    return photoBooth;
+  }
+
+  static to(
+    id: string,
+    {
+      name,
+      location,
+      latitude,
+      longitude,
+      streetAddress,
+      roadAddress,
+      operationTime,
+      photoBoothBrand,
+    }: MoveToOpenBoothProps,
+  ): PhotoBooth {
+    const photoBooth = new PhotoBooth();
+
+    photoBooth.id = id;
+    photoBooth.name = name;
+    photoBooth.latitude = latitude;
+    photoBooth.location = location;
+    photoBooth.longitude = longitude;
+    photoBooth.road_address = roadAddress;
+    photoBooth.operation_time = operationTime;
+    photoBooth.street_address = streetAddress;
+    photoBooth.photo_booth_brand = photoBoothBrand;
 
     return photoBooth;
   }
