@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PhotoBoothRepository } from './repository/photo-booth.repository';
 import { HiddenBoothRepository } from './repository/photo-booth-hidden.repository';
 import {
@@ -24,6 +28,7 @@ import {
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
 import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 import { BrandCreateProps } from './dto/post-photo-booth.dto';
+import { MoveToOpenBoothProps } from './dto/put-photo-booth.dto';
 
 @Injectable()
 export class PhotoBoothService {
@@ -95,20 +100,35 @@ export class PhotoBoothService {
     );
 
     if (!isUpdated) {
-      throw new NotFoundException(
-        `포토부스가 업데이트되지 않았습니다. ID:${id}`,
-      );
+      throw new NotFoundException(`포토부스를 찾지 못했습니다. ID:${id}`);
     }
 
     return true;
   }
 
-  async deleteOpenBooth() {
+  async deleteOpenBooth(id: string): Promise<boolean> {
     /**
-     * @param id - id값
-     * @desc 해당 id의 포토부스 지점을 삭제하고 Raw 데이터로 이동
-     * @TODO Raw Data에서 exist 작성 후 적용
+     * @param id - uuid값
+     * @desc - 해당 id의 포토부스 지점을 삭제하고 hiddenBooth로 이동
+     *       - hiddenBooth에 id가 존재하지 않으면 새로 생성하고 삭제 처리
      */
+
+    const photoBoothDetail = await this.findOneOpenBooth(id);
+    const isDeleted = await this.photoBoothRepository.deletePhotoBooth(id);
+
+    if (!isDeleted) {
+      throw new NotFoundException(`포토부스 삭제가 불가능합니다. ID:${id}`);
+    }
+
+    await this.updateHiddenBooth(id, {
+      name: photoBoothDetail.name,
+      location: photoBoothDetail.location,
+      streetAddress: photoBoothDetail.streetAddress,
+      roadAddress: photoBoothDetail.roadAddress,
+      isDelete: true,
+    });
+
+    return true;
   }
 
   async findHiddenBoothByQueryParam(
@@ -173,25 +193,56 @@ export class PhotoBoothService {
 
     if (!isUpdated) {
       throw new NotFoundException(
-        `비공개 포토부스가 업데이트되지 않았습니다. ID:${id}`,
+        `비공개 포토부스 업데이트가 불가능합니다. ID:${id}`,
       );
     }
 
     return true;
   }
 
-  async moveHiddenToOpenBooth() {
+  async moveHiddenToOpenBooth(
+    id: string,
+    moveProps: MoveToOpenBoothProps,
+  ): Promise<boolean> {
     /**
      * @param request - request query string - 포토부스명(Brand), 지역, 업종, 공개여부
      * @desc 쿼리 파라미터에 맞는 데이터 반환
      */
+
+    const isPhotoBoothExist = await this.photoBoothRepository.photoBoothHasId(
+      PhotoBooth.byId({ id }),
+    );
+
+    if (isPhotoBoothExist) {
+      throw new BadRequestException('이미 포토부스가 존재합니다');
+    }
+
+    const photoBoothBrand = await this.photoBoothBrandRepository.findOneBrandBy(
+      PhotoBoothBrand.byName({ name: moveProps.brandName }),
+    );
+
+    if (!photoBoothBrand) {
+      throw new NotFoundException('포토부스 업체를 찾지 못했습니다.');
+    }
+
+    moveProps.photoBoothBrand = photoBoothBrand;
+    await this.photoBoothRepository.saveOpenBooth(PhotoBooth.to(id, moveProps));
+    await this.deleteHiddenBooth(id);
+
+    return true;
   }
 
-  async deleteHiddenBooth() {
+  async deleteHiddenBooth(id: string): Promise<boolean> {
     /**
      * @param request - request query string - 포토부스명(Brand), 지역, 업종, 공개여부
      * @desc 쿼리 파라미터에 맞는 데이터 반환
      */
+
+    await this.updateHiddenBooth(id, {
+      isDelete: true,
+    });
+
+    return true;
   }
 
   async findBrandByQueryParam(

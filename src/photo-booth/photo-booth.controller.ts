@@ -30,6 +30,7 @@ import {
 } from './dto/patch-photo-booth.dto';
 import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 import { CreateBrandDto } from './dto/post-photo-booth.dto';
+import { MoveHiddenToOpenBoothDto } from './dto/put-photo-booth.dto';
 
 @ApiTags('포토부스')
 @Controller('photo-booth')
@@ -71,7 +72,12 @@ export class PhotoBoothController {
   }
 
   @Delete(':id')
-  async deleteOpenBooth() {}
+  async deleteOpenBooth(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<ResponseEntity<string>> {
+    await this.photoBoothService.deleteOpenBooth(id);
+    return ResponseEntity.OK('공개된 포토부스 지점을 삭제 했습니다.');
+  }
 
   @Get('raw')
   async findHiddenBoothByQueryParam(
@@ -111,10 +117,24 @@ export class PhotoBoothController {
   }
 
   @Put('raw/:id')
-  async moveHiddenToOpenBooth() {}
+  async moveHiddenToOpenBooth(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() request: MoveHiddenToOpenBoothDto,
+  ): Promise<ResponseEntity<string>> {
+    await this.photoBoothService.moveHiddenToOpenBooth(
+      id,
+      request.getUpdateProps(),
+    );
+    return ResponseEntity.OK('비공개 포토부스를 이동 했습니다.');
+  }
 
   @Delete('raw/:id')
-  async deleteHiddenBooth() {}
+  async deleteHiddenBooth(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<ResponseEntity<string>> {
+    await this.photoBoothService.deleteHiddenBooth(id);
+    return ResponseEntity.OK('비공개 포토부스를 삭제 했습니다.');
+  }
 
   @Get('brand')
   async findBrandByQueryParam(
