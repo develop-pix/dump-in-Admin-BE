@@ -263,7 +263,7 @@ export class PhotoBoothService {
      * @param query - request query string - 업체명, 이벤트 허용 여부
      * @desc - 쿼리 파라미터에 맞는 포토부스 업체 반환
      *       - 쿼리 옵션이 없으면 전체 포토부스 업체 반환
-     * @TODO - 해시태그로 업체명 찾기
+     *       - 해시태그들로 업체명 찾기
      */
 
     const boothBrands =
@@ -284,6 +284,11 @@ export class PhotoBoothService {
   }
 
   async findOneBrandByName(name: string): Promise<PhotoBoothBrand> {
+    /**
+     * @param name 포토부스 업체명
+     * @desc - 이름으로 포토부스 업체명 검색 후 포토부스 업체 정보 반환
+     */
+
     const photoBoothBrand = await this.photoBoothBrandRepository.findOneBrandBy(
       PhotoBoothBrand.byName({ name }),
     );

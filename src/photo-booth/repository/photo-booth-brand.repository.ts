@@ -68,6 +68,9 @@ export class PhotoBoothBrandRepository {
       id: brand.id,
       name: brand.name,
       is_event: brand.is_event,
+      photo_booth_hashtags: brand.photo_booth_hashtags?.map((hashtag) => ({
+        hashtag: { name: hashtag.hashtag.name },
+      })),
     };
   }
 }

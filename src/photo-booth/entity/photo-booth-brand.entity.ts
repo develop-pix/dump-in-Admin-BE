@@ -76,11 +76,21 @@ export class PhotoBoothBrand {
     return brand;
   }
 
-  static of({ name, isEvent }: FindBrandOptionProps): PhotoBoothBrand {
+  static of({
+    name,
+    isEvent,
+    hashtags,
+  }: FindBrandOptionProps): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.name = name;
     brand.is_event = isEvent;
+    brand.photo_booth_hashtags = hashtags.map((tag) => {
+      const hashtag = new PhotoBoothHashtag();
+      hashtag.hashtag = new Hashtag();
+      hashtag.hashtag.name = tag;
+      return hashtag;
+    });
 
     return brand;
   }

@@ -62,10 +62,22 @@ export class BrandQueryDto extends PaginatedDto {
   @Type(() => Boolean)
   isEvent: boolean = false;
 
+  @ApiProperty({
+    description: '포토부스 업체의 해시태그',
+    example: '카페,스튜디오,이벤트',
+  })
+  @IsOptional()
+  @IsString()
+  @Type(() => String)
+  hashtags?: string;
+
   getQueryProps(): FindBrandOptionProps {
     return {
       name: this.name,
       isEvent: this.isEvent,
+      hashtags: this.hashtags
+        ? this.hashtags.split(',').map((tag) => tag.trim())
+        : [],
     };
   }
 }
@@ -74,6 +86,7 @@ export interface FindBrandOptionProps {
   id?: number;
   name?: string;
   isEvent?: boolean;
+  hashtags?: string[];
 }
 
 export interface FindBoothOptionProps {

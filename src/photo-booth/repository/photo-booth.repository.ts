@@ -74,6 +74,7 @@ export class PhotoBoothRepository {
       id: booth.id,
       location: booth.location,
       name: booth.name,
+      photo_booth_brand: booth.photo_booth_brand,
     };
   }
 }
