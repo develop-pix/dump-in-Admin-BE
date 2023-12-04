@@ -1,13 +1,12 @@
-import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { MoveToOpenBoothProps } from './put-photo-booth.dto';
 
 export class UpdatePhotoBoothDto {
   @ApiProperty({
     description: '포토부스의 업체 + 지점명',
     example: '하루필름 홍대 1호점',
   })
-  @Expose()
   @IsString()
   @IsOptional()
   name?: string;
@@ -16,7 +15,6 @@ export class UpdatePhotoBoothDto {
     description: '포토부스의 지역',
     example: '서울',
   })
-  @Expose()
   @IsString()
   @IsOptional()
   location?: string;
@@ -24,7 +22,6 @@ export class UpdatePhotoBoothDto {
   @ApiProperty({
     description: '포토부스의 지번 주소',
   })
-  @Expose()
   @IsString()
   @IsOptional()
   streetAddress?: string;
@@ -32,7 +29,6 @@ export class UpdatePhotoBoothDto {
   @ApiProperty({
     description: '포토부스의 도로명 주소',
   })
-  @Expose()
   @IsString()
   @IsOptional()
   roadAddress?: string;
@@ -53,7 +49,6 @@ export class UpdateBoothBrandDto {
     description: '포토부스의 업체명',
     example: '하루필름',
   })
-  @Expose()
   @IsString()
   @IsOptional()
   name?: string;
@@ -61,7 +56,6 @@ export class UpdateBoothBrandDto {
   @ApiProperty({
     description: '포토부스의 업체 설명',
   })
-  @Expose()
   @IsString()
   @IsOptional()
   description?: string;
@@ -69,7 +63,6 @@ export class UpdateBoothBrandDto {
   @ApiProperty({
     description: '포토부스의 업체 관련 홈페이지 주소',
   })
-  @Expose()
   @IsString()
   @IsOptional()
   photoBoothUrl?: string;
@@ -78,7 +71,6 @@ export class UpdateBoothBrandDto {
     description: '포토부스의 업체 이벤트 허용 여부',
     example: true,
   })
-  @Expose()
   @IsBoolean()
   @IsOptional()
   isEvent?: boolean;
@@ -86,7 +78,8 @@ export class UpdateBoothBrandDto {
   @ApiProperty({
     description: '포토부스의 대표 이미지',
   })
-  @Expose()
+  @IsString()
+  @IsOptional()
   mainThumbnailImageUrl?: string;
 
   getUpdateProps(): BrandUpdateProps {
@@ -108,10 +101,6 @@ export interface BrandUpdateProps {
   isEvent: boolean;
 }
 
-export interface PhotoBoothUpdateProps {
-  name: string;
-  location: string;
-  streetAddress: string;
-  roadAddress: string;
+export interface PhotoBoothUpdateProps extends Partial<MoveToOpenBoothProps> {
   isDelete: boolean;
 }

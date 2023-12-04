@@ -33,14 +33,14 @@ export class CreateBrandDto {
   getCreateProps(): BrandCreateProps {
     return {
       name: this.name,
-      mainThumbnailImageUrl: this.mainThumbnailImageUrl,
       isEvent: this.isEvent,
+      mainThumbnailImageUrl: this.mainThumbnailImageUrl,
     };
   }
 }
 
 export interface BrandCreateProps {
   name: string;
-  mainThumbnailImageUrl: string;
   isEvent: boolean;
+  mainThumbnailImageUrl: string;
 }
