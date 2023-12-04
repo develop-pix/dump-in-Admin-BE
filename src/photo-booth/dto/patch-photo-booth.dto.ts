@@ -41,9 +41,9 @@ export class UpdatePhotoBoothDto {
     return {
       name: this.name,
       location: this.location,
-      street_address: this.streetAddress,
-      road_address: this.roadAddress,
-      is_delete: false,
+      streetAddress: this.streetAddress,
+      roadAddress: this.roadAddress,
+      isDelete: false,
     };
   }
 }
@@ -93,9 +93,9 @@ export class UpdateBoothBrandDto {
     return {
       name: this.name,
       description: this.description,
-      photo_booth_url: this.photoBoothUrl,
-      main_thumbnail_image_url: this.mainThumbnailImageUrl,
-      is_event: this.isEvent,
+      photoBoothUrl: this.photoBoothUrl,
+      mainThumbnailImageUrl: this.mainThumbnailImageUrl,
+      isEvent: this.isEvent,
     };
   }
 }
@@ -103,15 +103,15 @@ export class UpdateBoothBrandDto {
 export interface BrandUpdateProps {
   name: string;
   description: string;
-  photo_booth_url: string;
-  main_thumbnail_image_url: string;
-  is_event: boolean;
+  photoBoothUrl: string;
+  mainThumbnailImageUrl: string;
+  isEvent: boolean;
 }
 
 export interface PhotoBoothUpdateProps {
   name: string;
   location: string;
-  street_address: string;
-  road_address: string;
-  is_delete: boolean;
+  streetAddress: string;
+  roadAddress: string;
+  isDelete: boolean;
 }

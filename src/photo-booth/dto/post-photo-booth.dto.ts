@@ -34,8 +34,8 @@ export class CreateBrandDto {
   toEntity(): PhotoBoothBrand {
     const brandCreateProps: BrandCreateProps = {
       name: this.name,
-      main_thumbnail_image_url: this.mainThumbnailImageUrl,
-      is_event: this.isEvent,
+      mainThumbnailImageUrl: this.mainThumbnailImageUrl,
+      isEvent: this.isEvent,
     };
 
     return PhotoBoothBrand.create(brandCreateProps);
@@ -44,6 +44,6 @@ export class CreateBrandDto {
 
 export interface BrandCreateProps {
   name: string;
-  main_thumbnail_image_url: string;
-  is_event: boolean;
+  mainThumbnailImageUrl: string;
+  isEvent: boolean;
 }

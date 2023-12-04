@@ -46,8 +46,8 @@ export class PhotoBoothBrand {
 
   static create({
     name,
-    main_thumbnail_image_url,
-    is_event,
+    mainThumbnailImageUrl: main_thumbnail_image_url,
+    isEvent: is_event,
   }: BrandCreateProps): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
@@ -61,26 +61,26 @@ export class PhotoBoothBrand {
   static updateBy({
     name,
     description,
-    photo_booth_url,
-    main_thumbnail_image_url,
-    is_event,
+    photoBoothUrl,
+    mainThumbnailImageUrl,
+    isEvent,
   }: BrandUpdateProps): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.name = name;
     brand.description = description;
-    brand.photo_booth_url = photo_booth_url;
-    brand.main_thumbnail_image_url = main_thumbnail_image_url;
-    brand.is_event = is_event;
+    brand.photo_booth_url = photoBoothUrl;
+    brand.main_thumbnail_image_url = mainThumbnailImageUrl;
+    brand.is_event = isEvent;
 
     return brand;
   }
 
-  static of({ name, is_event }: FindBrandOptionProps): PhotoBoothBrand {
+  static of({ name, isEvent }: FindBrandOptionProps): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.name = name;
-    brand.is_event = is_event;
+    brand.is_event = isEvent;
 
     return brand;
   }

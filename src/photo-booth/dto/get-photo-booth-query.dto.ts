@@ -30,12 +30,6 @@ export class BoothQueryDto extends PaginatedDto {
   }
 }
 
-export interface FindBrandOptionProps {
-  id?: number;
-  name?: string;
-  is_event?: boolean;
-}
-
 export class BrandQueryDto extends PaginatedDto {
   @ApiProperty({
     description: '포토부스 업체명',
@@ -60,9 +54,15 @@ export class BrandQueryDto extends PaginatedDto {
   getQueryProps(): FindBrandOptionProps {
     return {
       name: this.name,
-      is_event: this.isEvent,
+      isEvent: this.isEvent,
     };
   }
+}
+
+export interface FindBrandOptionProps {
+  id?: number;
+  name?: string;
+  isEvent?: boolean;
 }
 
 export interface FindBoothOptionProps {

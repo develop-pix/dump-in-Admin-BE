@@ -69,15 +69,15 @@ export class PhotoBooth extends BaseDateEntity {
   static updateBy({
     name,
     location,
-    street_address,
-    road_address,
+    streetAddress,
+    roadAddress,
   }: PhotoBoothUpdateProps): PhotoBooth {
     const photoBooth = new PhotoBooth();
 
     photoBooth.name = name;
     photoBooth.location = location;
-    photoBooth.street_address = street_address;
-    photoBooth.road_address = road_address;
+    photoBooth.street_address = streetAddress;
+    photoBooth.road_address = roadAddress;
 
     return photoBooth;
   }
