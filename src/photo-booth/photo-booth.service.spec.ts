@@ -251,8 +251,9 @@ describe('PhotoBoothService', () => {
     const photoBoothUpdateProps = {
       name: 'string',
       location: 'string',
-      street_address: 'string',
-      road_address: 'string',
+      streetAddress: 'string',
+      roadAddress: 'string',
+      isDelete: false,
     };
 
     it('SUCCESS: uuid 값이 존재할 때 전달 받은 정보로 업데이트 (boolean)', async () => {
