@@ -146,7 +146,7 @@ export class PhotoBoothController {
     @Body() request: CreateBrandDto,
   ): Promise<ResponseEntity<PhotoBoothBrand>> {
     const response = await this.photoBoothService.createBrand(
-      request.toEntity(),
+      request.getCreateProps(),
     );
     return ResponseEntity.OK_WITH<PhotoBoothBrand>(
       '포토부스 업체를 생성 했습니다.',

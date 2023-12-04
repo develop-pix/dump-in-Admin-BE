@@ -46,14 +46,14 @@ export class PhotoBoothBrand {
 
   static create({
     name,
-    mainThumbnailImageUrl: main_thumbnail_image_url,
-    isEvent: is_event,
+    mainThumbnailImageUrl,
+    isEvent,
   }: BrandCreateProps): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.name = name;
-    brand.main_thumbnail_image_url = main_thumbnail_image_url;
-    brand.is_event = is_event;
+    brand.main_thumbnail_image_url = mainThumbnailImageUrl;
+    brand.is_event = isEvent;
 
     return brand;
   }

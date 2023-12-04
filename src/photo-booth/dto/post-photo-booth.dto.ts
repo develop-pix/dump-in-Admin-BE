@@ -1,7 +1,6 @@
 import { Expose } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
 
 export class CreateBrandDto {
   @ApiProperty({
@@ -31,14 +30,12 @@ export class CreateBrandDto {
   @IsBoolean()
   isEvent: boolean = false;
 
-  toEntity(): PhotoBoothBrand {
-    const brandCreateProps: BrandCreateProps = {
+  getCreateProps(): BrandCreateProps {
+    return {
       name: this.name,
       mainThumbnailImageUrl: this.mainThumbnailImageUrl,
       isEvent: this.isEvent,
     };
-
-    return PhotoBoothBrand.create(brandCreateProps);
   }
 }
 

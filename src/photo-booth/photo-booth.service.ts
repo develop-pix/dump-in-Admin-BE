@@ -23,6 +23,7 @@ import {
 } from './dto/patch-photo-booth.dto';
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
 import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
+import { BrandCreateProps } from './dto/post-photo-booth.dto';
 
 @Injectable()
 export class PhotoBoothService {
@@ -238,13 +239,15 @@ export class PhotoBoothService {
     return new GetBoothBrandDetailDto(boothBrand);
   }
 
-  async createBrand(boothBrand: PhotoBoothBrand): Promise<PhotoBoothBrand> {
+  async createBrand(createProps: BrandCreateProps): Promise<PhotoBoothBrand> {
     /**
      * @desc 포토부스 업체 생성
      * @TODO 해시태그 데이터를 추가
      * @TODO 포토부스 업체 이미지를 여러장 추가
      */
-    return await this.photoBoothBrandRepository.saveBrand(boothBrand);
+    return await this.photoBoothBrandRepository.saveBrand(
+      PhotoBoothBrand.create(createProps),
+    );
   }
 
   async updateBrand(id: number, updateProps: BrandUpdateProps) {
