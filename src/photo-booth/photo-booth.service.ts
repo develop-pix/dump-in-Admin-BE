@@ -43,10 +43,11 @@ export class PhotoBoothService {
     query: FindBoothOptionProps,
   ): Promise<Page<GetPhotoBoothListDto>> {
     /**
-     * @param pageProps - paginated - skip, take
+     * @param pageProps - pagination - skip, take
      * @param query - request query string - 지점명, 지역
      * @desc - 쿼리 파라미터에 맞는 포토부스 데이터 반환
      *       - 쿼리 옵션이 없으면 전체 포토부스 데이터 반환
+     * @TODO - 업체명으로 포토부스 찾기
      */
 
     const photoBooths =
@@ -68,8 +69,8 @@ export class PhotoBoothService {
 
   async findOneOpenBooth(id: string): Promise<GetPhotoBoothDetailDto> {
     /**
-     * @param id - photobooth의 uuid 값
-     * @desc PhotoBooth에 대한 디테일 데이터 반환
+     * @param id - 공개 포토부스의 uuid값
+     * @desc 포토부스 지점에 대한 상세 데이터 반환
      */
 
     const photoBooth = await this.photoBoothRepository.findOneBoothBy(
@@ -88,7 +89,7 @@ export class PhotoBoothService {
     updateProps: PhotoBoothUpdateProps,
   ): Promise<boolean> {
     /**
-     * @param id - uuid값
+     * @param id - 공개 포토부스의 uuid값
      * @param updateProps - 수정이 필요한 데이터 일부 - 지역, 지점명, 주소
      * @desc 포토부스 지점에 대한 데이터 수정
      * @TODO 업체명 변경 업데이트
@@ -109,8 +110,7 @@ export class PhotoBoothService {
   async deleteOpenBooth(id: string): Promise<boolean> {
     /**
      * @param id - uuid값
-     * @desc - 해당 id의 포토부스 지점을 삭제하고 hiddenBooth로 이동
-     *       - hiddenBooth에 id가 존재하지 않으면 새로 생성하고 삭제 처리
+     * @desc - 해당 id의 포토부스 지점을 삭제하고 hiddenBooth로 업데이트
      */
 
     const photoBoothDetail = await this.findOneOpenBooth(id);
@@ -136,7 +136,7 @@ export class PhotoBoothService {
     query: FindBoothOptionProps,
   ): Promise<Page<GetPhotoBoothListDto>> {
     /**
-     * @param pageProps - paginated - 항목수, 페이지
+     * @param pageProps - pagination - 항목수, 페이지
      * @param query - request query string - 지점명, 지역
      * @desc - 쿼리 파라미터에 맞는 공개되지 않은 포토부스 데이터 반환
      *       - 쿼리 옵션이 없으면 공개되지 않은 전체 포토부스 데이터 반환
@@ -163,9 +163,10 @@ export class PhotoBoothService {
 
   async findOneHiddenBooth(id: string): Promise<GetPhotoBoothDetailDto> {
     /**
-     * @param id - photoboothRawData의 uuid 값
+     * @param id - 비공개 포토부스의 uuid
      * @desc 공개되지 않은 포토부스에 대한 디테일 데이터 반환
      */
+
     const hiddenBooth = await this.hiddenBoothRepository.findOneHiddenBoothBy(
       HiddenPhotoBooth.byId({ id }),
     );
@@ -182,10 +183,11 @@ export class PhotoBoothService {
     updateProps: PhotoBoothUpdateProps,
   ): Promise<boolean> {
     /**
-     * @param id - uuid값
+     * @param id - 비공개 포토부스의 uuid
      * @param updateProps - 수정이 필요한 데이터 일부 - 지역, 지점명, 주소
      * @desc 공개되지 않은 포토부스 지점에 대한 데이터 수정
      */
+
     const isUpdated = await this.hiddenBoothRepository.updateHiddenBooth(
       id,
       HiddenPhotoBooth.updateBy(updateProps),
@@ -205,8 +207,11 @@ export class PhotoBoothService {
     moveProps: MoveToOpenBoothProps,
   ): Promise<boolean> {
     /**
-     * @param request - request query string - 포토부스명(Brand), 지역, 업종, 공개여부
-     * @desc 쿼리 파라미터에 맞는 데이터 반환
+     * @param id - 비공개 포토부스의 uuid
+     * @param moveProps - 비공개 포토부스에서 공개 포토부스로 이동 시킬때 필요한 속성
+     * @desc - 공개 포토부스에 id가 존재하면 예외처리
+     *       - 브랜드 엔티티에서 업체명이 있으면 해당 업체명으로 업데이트
+     *       - 공개 포토부스로 최종 이동
      */
 
     const isPhotoBoothExist = await this.photoBoothRepository.photoBoothHasId(
@@ -234,8 +239,8 @@ export class PhotoBoothService {
 
   async deleteHiddenBooth(id: string): Promise<boolean> {
     /**
-     * @param request - request query string - 포토부스명(Brand), 지역, 업종, 공개여부
-     * @desc 쿼리 파라미터에 맞는 데이터 반환
+     * @param id - 비공개 포토부스의 uuid
+     * @desc uuid 값을 가진 비공개 포토부스를 찾아서 삭제 처리 (soft)
      */
 
     await this.updateHiddenBooth(id, {
@@ -250,7 +255,7 @@ export class PhotoBoothService {
     query: FindBrandOptionProps,
   ): Promise<Page<GetBoothBrandListDto>> {
     /**
-     * @param pageProps - paginated - 항목수, 페이지
+     * @param pageProps - pagination - 항목수, 페이지
      * @param query - request query string - 업체명, 이벤트 허용 여부
      * @desc - 쿼리 파라미터에 맞는 포토부스 업체 반환
      *       - 쿼리 옵션이 없으면 전체 포토부스 업체 반환
@@ -279,6 +284,7 @@ export class PhotoBoothService {
      * @param id - 포토부스 업체에 대한 id
      * @desc 포토부스 업체의 이름, 대표사진, 지점 목록, 해시태그
      */
+
     const boothBrand = await this.photoBoothBrandRepository.findOneBrandBy(
       PhotoBoothBrand.byId({ id }),
     );
@@ -294,8 +300,9 @@ export class PhotoBoothService {
     /**
      * @desc 포토부스 업체 생성
      * @TODO 해시태그 데이터를 추가
-     * @TODO 포토부스 업체 이미지를 여러장 추가
+     * @TODO 포토부스 업체 이미지를 대표 이미지 외에 여러장 추가
      */
+
     return await this.photoBoothBrandRepository.saveBrand(
       PhotoBoothBrand.create(createProps),
     );
@@ -311,6 +318,7 @@ export class PhotoBoothService {
      * @TODO 해시 태그 데이터를 수정
      * @TODO 포토부스 업체 이미지를 여러장 수정
      */
+
     const isUpdated = await this.photoBoothBrandRepository.updateBoothBrand(
       id,
       PhotoBoothBrand.updateBy(updateProps),
