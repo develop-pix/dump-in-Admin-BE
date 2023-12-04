@@ -286,9 +286,7 @@ describe('PhotoBoothService', () => {
           photoBoothUpdateProps,
         );
       }).rejects.toThrowError(
-        new NotFoundException(
-          `포토부스가 업데이트되지 않았습니다. ID:${notBoothId}`,
-        ),
+        new NotFoundException(`포토부스를 찾지 못했습니다. ID:${notBoothId}`),
       );
     });
   });
