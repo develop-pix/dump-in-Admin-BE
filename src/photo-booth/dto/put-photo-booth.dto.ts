@@ -86,5 +86,5 @@ export interface MoveToOpenBoothProps {
   roadAddress: string;
   streetAddress: string;
   operationTime: string;
-  photoBoothBrand?: PhotoBoothBrand;
+  brand?: PhotoBoothBrand;
 }

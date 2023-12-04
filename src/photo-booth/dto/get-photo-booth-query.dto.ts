@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { PaginatedDto } from '../../common/dto/paginated-req.dto';
+import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
 
 export class BoothQueryDto extends PaginatedDto {
   @ApiProperty({
@@ -22,10 +23,20 @@ export class BoothQueryDto extends PaginatedDto {
   @Type(() => String)
   name?: string;
 
+  @ApiProperty({
+    description: '포토부스에서 업체명을 검색하는 쿼리스트링',
+    example: '하루필름',
+  })
+  @IsString()
+  @IsOptional()
+  @Type(() => String)
+  brandName?: string;
+
   getQueryProps(): FindBoothOptionProps {
     return {
       location: this.location,
       name: this.name,
+      brandName: this.brandName,
     };
   }
 }
@@ -69,4 +80,6 @@ export interface FindBoothOptionProps {
   id?: string;
   name?: string;
   location?: string;
+  brandName?: string;
+  brand?: PhotoBoothBrand;
 }

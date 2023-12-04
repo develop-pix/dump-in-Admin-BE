@@ -58,11 +58,12 @@ export class PhotoBooth extends BaseDateEntity {
     return photoBooth;
   }
 
-  static of({ location, name }: FindBoothOptionProps) {
+  static of({ location, name, brand }: FindBoothOptionProps) {
     const photoBooth = new PhotoBooth();
 
     photoBooth.location = location;
     photoBooth.name = name;
+    photoBooth.photo_booth_brand = brand;
 
     return photoBooth;
   }
@@ -72,6 +73,7 @@ export class PhotoBooth extends BaseDateEntity {
     location,
     streetAddress,
     roadAddress,
+    brand,
   }: PhotoBoothUpdateProps): PhotoBooth {
     const photoBooth = new PhotoBooth();
 
@@ -79,6 +81,7 @@ export class PhotoBooth extends BaseDateEntity {
     photoBooth.location = location;
     photoBooth.street_address = streetAddress;
     photoBooth.road_address = roadAddress;
+    photoBooth.photo_booth_brand = brand;
 
     return photoBooth;
   }
@@ -93,7 +96,7 @@ export class PhotoBooth extends BaseDateEntity {
       streetAddress,
       roadAddress,
       operationTime,
-      photoBoothBrand,
+      brand,
     }: MoveToOpenBoothProps,
   ): PhotoBooth {
     const photoBooth = new PhotoBooth();
@@ -106,7 +109,7 @@ export class PhotoBooth extends BaseDateEntity {
     photoBooth.road_address = roadAddress;
     photoBooth.operation_time = operationTime;
     photoBooth.street_address = streetAddress;
-    photoBooth.photo_booth_brand = photoBoothBrand;
+    photoBooth.photo_booth_brand = brand;
 
     return photoBooth;
   }

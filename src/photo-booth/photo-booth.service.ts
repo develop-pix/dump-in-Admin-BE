@@ -47,8 +47,13 @@ export class PhotoBoothService {
      * @param query - request query string - 지점명, 지역
      * @desc - 쿼리 파라미터에 맞는 포토부스 데이터 반환
      *       - 쿼리 옵션이 없으면 전체 포토부스 데이터 반환
-     * @TODO - 업체명으로 포토부스 찾기
      */
+
+    const photoBoothBrand = query.brandName
+      ? await this.findOneBrandByName(query.brandName)
+      : undefined;
+
+    query.brand = photoBoothBrand;
 
     const photoBooths =
       await this.photoBoothRepository.findBoothByOptionAndCount(
@@ -92,8 +97,13 @@ export class PhotoBoothService {
      * @param id - 공개 포토부스의 uuid값
      * @param updateProps - 수정이 필요한 데이터 일부 - 지역, 지점명, 주소
      * @desc 포토부스 지점에 대한 데이터 수정
-     * @TODO 업체명 변경 업데이트
      */
+
+    const photoBoothBrand = updateProps.brandName
+      ? await this.findOneBrandByName(updateProps.brandName)
+      : undefined;
+
+    updateProps.brand = photoBoothBrand;
 
     const isUpdated = await this.photoBoothRepository.updatePhotoBooth(
       id,
@@ -222,15 +232,9 @@ export class PhotoBoothService {
       throw new BadRequestException('이미 포토부스가 존재합니다');
     }
 
-    const photoBoothBrand = await this.photoBoothBrandRepository.findOneBrandBy(
-      PhotoBoothBrand.byName({ name: moveProps.brandName }),
-    );
+    const photoBoothBrand = await this.findOneBrandByName(moveProps.brandName);
 
-    if (!photoBoothBrand) {
-      throw new NotFoundException('포토부스 업체를 찾지 못했습니다.');
-    }
-
-    moveProps.photoBoothBrand = photoBoothBrand;
+    moveProps.brand = photoBoothBrand;
     await this.photoBoothRepository.saveOpenBooth(PhotoBooth.to(id, moveProps));
     await this.deleteHiddenBooth(id);
 
@@ -277,6 +281,18 @@ export class PhotoBoothService {
       boothBrands,
       (entity: PhotoBoothBrand) => new GetBoothBrandListDto(entity),
     );
+  }
+
+  async findOneBrandByName(name: string): Promise<PhotoBoothBrand> {
+    const photoBoothBrand = await this.photoBoothBrandRepository.findOneBrandBy(
+      PhotoBoothBrand.byName({ name }),
+    );
+
+    if (!photoBoothBrand) {
+      throw new NotFoundException('포토부스 업체를 찾지 못했습니다.');
+    }
+
+    return photoBoothBrand;
   }
 
   async findOneBrand(id: number): Promise<GetBoothBrandDetailDto> {
