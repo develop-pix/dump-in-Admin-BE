@@ -1,10 +1,7 @@
 import { Expose } from 'class-transformer';
 import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  BrandCreateProps,
-  PhotoBoothBrand,
-} from '../entity/photo-booth-brand.entity';
+import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
 
 export class CreateBrandDto {
   @ApiProperty({
@@ -43,4 +40,10 @@ export class CreateBrandDto {
 
     return PhotoBoothBrand.create(brandCreateProps);
   }
+}
+
+export interface BrandCreateProps {
+  name: string;
+  main_thumbnail_image_url: string;
+  is_event: boolean;
 }

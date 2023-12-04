@@ -54,6 +54,7 @@ export class HiddenPhotoBooth extends BaseDateEntity {
     location,
     street_address,
     road_address,
+    is_delete,
   }: PhotoBoothUpdateProps): HiddenPhotoBooth {
     const hiddenBooth = new HiddenPhotoBooth();
 
@@ -61,6 +62,7 @@ export class HiddenPhotoBooth extends BaseDateEntity {
     hiddenBooth.location = location;
     hiddenBooth.street_address = street_address;
     hiddenBooth.road_address = road_address;
+    hiddenBooth.preprocessed_at = is_delete ? new Date() : null;
 
     return hiddenBooth;
   }

@@ -17,12 +17,12 @@ import {
   FindBrandOptionProps,
 } from './dto/get-photo-booth-query.dto';
 import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
-import { PhotoBoothUpdateProps } from './dto/patch-photo-booth.dto';
-import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
 import {
   BrandUpdateProps,
-  PhotoBoothBrand,
-} from './entity/photo-booth-brand.entity';
+  PhotoBoothUpdateProps,
+} from './dto/patch-photo-booth.dto';
+import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
+import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 
 @Injectable()
 export class PhotoBoothService {

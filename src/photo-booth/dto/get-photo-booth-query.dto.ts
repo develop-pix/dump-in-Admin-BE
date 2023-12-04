@@ -3,12 +3,6 @@ import { Type } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { PaginatedDto } from '../../common/dto/paginated-req.dto';
 
-export interface FindBoothOptionProps {
-  id?: string;
-  name?: string;
-  location?: string;
-}
-
 export class BoothQueryDto extends PaginatedDto {
   @ApiProperty({
     description: '포토부스에서 지역을 검색하는 쿼리스트링',
@@ -69,4 +63,10 @@ export class BrandQueryDto extends PaginatedDto {
       is_event: this.isEvent,
     };
   }
+}
+
+export interface FindBoothOptionProps {
+  id?: string;
+  name?: string;
+  location?: string;
 }

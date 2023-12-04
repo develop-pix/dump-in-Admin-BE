@@ -1,14 +1,6 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
-import { BrandUpdateProps } from '../entity/photo-booth-brand.entity';
-
-export interface PhotoBoothUpdateProps {
-  name: string;
-  location: string;
-  street_address: string;
-  road_address: string;
-}
 
 export class UpdatePhotoBoothDto {
   @ApiProperty({
@@ -51,6 +43,7 @@ export class UpdatePhotoBoothDto {
       location: this.location,
       street_address: this.streetAddress,
       road_address: this.roadAddress,
+      is_delete: false,
     };
   }
 }
@@ -105,4 +98,20 @@ export class UpdateBoothBrandDto {
       is_event: this.isEvent,
     };
   }
+}
+
+export interface BrandUpdateProps {
+  name: string;
+  description: string;
+  photo_booth_url: string;
+  main_thumbnail_image_url: string;
+  is_event: boolean;
+}
+
+export interface PhotoBoothUpdateProps {
+  name: string;
+  location: string;
+  street_address: string;
+  road_address: string;
+  is_delete: boolean;
 }

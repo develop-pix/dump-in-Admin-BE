@@ -8,20 +8,8 @@ import {
 } from 'typeorm';
 import { PhotoBooth } from './photo-booth.entity';
 import { FindBrandOptionProps } from '../dto/get-photo-booth-query.dto';
-
-export interface BrandCreateProps {
-  name: string;
-  main_thumbnail_image_url: string;
-  is_event: boolean;
-}
-
-export interface BrandUpdateProps {
-  name: string;
-  description: string;
-  photo_booth_url: string;
-  main_thumbnail_image_url: string;
-  is_event: boolean;
-}
+import { BrandCreateProps } from '../dto/post-photo-booth.dto';
+import { BrandUpdateProps } from '../dto/patch-photo-booth.dto';
 
 @Entity('photo_booth_brand')
 export class PhotoBoothBrand {
