@@ -8,6 +8,7 @@ import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
 import { Page } from '../common/dto/paginated-res.dto';
 import { NotFoundException } from '@nestjs/common';
 import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
+import { PhotoBoothHashtagRepository } from './repository/photo-booth-hashtag.repository';
 
 class MockPhotoBoothRepository {
   findBoothByOptionAndCount = jest.fn();
@@ -15,11 +16,15 @@ class MockPhotoBoothRepository {
   updatePhotoBooth = jest.fn();
 }
 
-class MockPhotoBoothRawRepository {
+class MockHiddenPhotoBoothRepository {
   // mockMethod = jest.fn();
 }
 
 class MockPhotoBoothBrandRepository {
+  // mockMethod = jest.fn();
+}
+
+class MockPhotoBoothHashtagRepository {
   // mockMethod = jest.fn();
 }
 
@@ -28,6 +33,7 @@ describe('PhotoBoothService', () => {
   let photoBoothRepository: PhotoBoothRepository;
   let photoBoothHiddenRepository: HiddenBoothRepository;
   let photoBoothBrandRepository: PhotoBoothBrandRepository;
+  let photoBoothHashtagRepository: PhotoBoothHashtagRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -36,11 +42,15 @@ describe('PhotoBoothService', () => {
         { provide: PhotoBoothRepository, useClass: MockPhotoBoothRepository },
         {
           provide: HiddenBoothRepository,
-          useClass: MockPhotoBoothRawRepository,
+          useClass: MockHiddenPhotoBoothRepository,
         },
         {
           provide: PhotoBoothBrandRepository,
           useClass: MockPhotoBoothBrandRepository,
+        },
+        {
+          provide: PhotoBoothHashtagRepository,
+          useClass: MockPhotoBoothHashtagRepository,
         },
       ],
     }).compile();
@@ -53,6 +63,9 @@ describe('PhotoBoothService', () => {
     );
     photoBoothBrandRepository = module.get<PhotoBoothBrandRepository>(
       PhotoBoothBrandRepository,
+    );
+    photoBoothHashtagRepository = module.get<PhotoBoothHashtagRepository>(
+      PhotoBoothHashtagRepository,
     );
 
     jest
@@ -122,8 +135,9 @@ describe('PhotoBoothService', () => {
   it('should be defined', () => {
     expect(photoBoothService).toBeDefined();
     expect(photoBoothRepository).toBeDefined();
-    expect(photoBoothHiddenRepository).toBeDefined();
     expect(photoBoothBrandRepository).toBeDefined();
+    expect(photoBoothHiddenRepository).toBeDefined();
+    expect(photoBoothHashtagRepository).toBeDefined();
   });
 
   describe('findBoothByOptionAndCount()', () => {

@@ -12,6 +12,7 @@ import {
   PhotoBoothHashtag,
 } from './entity/photo-booth-brand.entity';
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
+import { PhotoBoothHashtagRepository } from './repository/photo-booth-hashtag.repository';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.reposi
     PhotoBoothRepository,
     HiddenBoothRepository,
     PhotoBoothBrandRepository,
+    PhotoBoothHashtagRepository,
   ],
 })
 export class PhotoBoothModule {}
