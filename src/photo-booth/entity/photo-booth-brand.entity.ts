@@ -131,6 +131,32 @@ export class Hashtag {
     (photoBoothHashtag: PhotoBoothHashtag) => photoBoothHashtag.hashtag,
   )
   photo_booth_hashtags: PhotoBoothHashtag[];
+
+  static of({ id, name }: FindHashtagOptionsProps): Hashtag {
+    const hashtag = new Hashtag();
+
+    hashtag.name = name;
+    hashtag.id = id;
+
+    return hashtag;
+  }
+
+  static create({ name }: HashtagCreateProps): Hashtag {
+    const hashtag = new Hashtag();
+
+    hashtag.name = name;
+
+    return hashtag;
+  }
+}
+
+export interface FindHashtagOptionsProps {
+  id?: number;
+  name: string;
+}
+
+export interface HashtagCreateProps {
+  name: string;
 }
 
 @Entity('photo_booth_hashtag')
@@ -151,5 +177,39 @@ export class PhotoBoothHashtag {
     { eager: true },
   )
   @JoinColumn({ name: 'hashtag_id' })
+  hashtag: Hashtag;
+
+  static of({ brandId }: FindPhotoBoothHashtagOptionsProps): PhotoBoothHashtag {
+    const photoBoothHashtag = new PhotoBoothHashtag();
+
+    photoBoothHashtag.photo_booth_brand = new PhotoBoothBrand();
+
+    photoBoothHashtag.photo_booth_brand.id = brandId;
+
+    return photoBoothHashtag;
+  }
+
+  static create({
+    brand,
+    hashtag,
+  }: PhotoBoothHashtagCreateProps): PhotoBoothHashtag {
+    const photoBoothHashtag = new PhotoBoothHashtag();
+
+    photoBoothHashtag.photo_booth_brand = new PhotoBoothBrand();
+    photoBoothHashtag.hashtag = new Hashtag();
+
+    photoBoothHashtag.hashtag = hashtag;
+    photoBoothHashtag.photo_booth_brand = brand;
+
+    return photoBoothHashtag;
+  }
+}
+
+export interface FindPhotoBoothHashtagOptionsProps {
+  brandId: number;
+}
+
+export interface PhotoBoothHashtagCreateProps {
+  brand: PhotoBoothBrand;
   hashtag: Hashtag;
 }
