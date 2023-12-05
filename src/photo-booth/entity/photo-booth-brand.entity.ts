@@ -179,12 +179,11 @@ export class PhotoBoothHashtag {
   @JoinColumn({ name: 'hashtag_id' })
   hashtag: Hashtag;
 
-  static of({ brandId }: FindPhotoBoothHashtagOptionsProps): PhotoBoothHashtag {
+  static of({ brand }: FindPhotoBoothHashtagOptionsProps): PhotoBoothHashtag {
     const photoBoothHashtag = new PhotoBoothHashtag();
 
     photoBoothHashtag.photo_booth_brand = new PhotoBoothBrand();
-
-    photoBoothHashtag.photo_booth_brand.id = brandId;
+    photoBoothHashtag.photo_booth_brand = brand;
 
     return photoBoothHashtag;
   }
@@ -206,7 +205,7 @@ export class PhotoBoothHashtag {
 }
 
 export interface FindPhotoBoothHashtagOptionsProps {
-  brandId: number;
+  brand: PhotoBoothBrand;
 }
 
 export interface PhotoBoothHashtagCreateProps {

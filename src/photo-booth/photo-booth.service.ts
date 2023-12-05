@@ -288,6 +288,16 @@ export class PhotoBoothService {
       (entity: PhotoBoothBrand) => new GetBoothBrandListDto(entity),
     );
   }
+  async findOneBrand(id: number): Promise<GetBoothBrandDetailDto> {
+    /**
+     * @param id - 포토부스 업체에 대한 id
+     * @desc 포토부스 업체의 이름, 대표사진, 지점 목록, 해시태그
+     */
+
+    const photoBoothBrand = await this.findOneBrandById(id);
+
+    return new GetBoothBrandDetailDto(photoBoothBrand);
+  }
 
   async findOneBrandByName(name: string): Promise<PhotoBoothBrand> {
     /**
@@ -306,21 +316,16 @@ export class PhotoBoothService {
     return photoBoothBrand;
   }
 
-  async findOneBrand(id: number): Promise<GetBoothBrandDetailDto> {
-    /**
-     * @param id - 포토부스 업체에 대한 id
-     * @desc 포토부스 업체의 이름, 대표사진, 지점 목록, 해시태그
-     */
-
-    const boothBrand = await this.photoBoothBrandRepository.findOneBrandBy(
+  async findOneBrandById(id: number): Promise<PhotoBoothBrand> {
+    const photoBoothBrand = await this.photoBoothBrandRepository.findOneBrandBy(
       PhotoBoothBrand.byId({ id }),
     );
 
-    if (!boothBrand) {
+    if (!photoBoothBrand) {
       throw new NotFoundException(`포토부스 업체를 찾지 못했습니다. ID: ${id}`);
     }
 
-    return new GetBoothBrandDetailDto(boothBrand);
+    return photoBoothBrand;
   }
 
   async createBrandWithHastags(
@@ -335,7 +340,6 @@ export class PhotoBoothService {
      *       - 해시태그와 브랜드 연결
      */
 
-    const hashtags = createProps.hashtags;
     const isExistBrand = await this.photoBoothBrandRepository.isExistBrand(
       PhotoBoothBrand.of({ name: createProps.name }),
     );
@@ -344,33 +348,15 @@ export class PhotoBoothService {
       throw new NotFoundException('이미 포토부스 업체가 존재합니다');
     }
 
-    const brand = await this.createBrand(createProps);
-    if (hashtags.length !== 0) {
-      const allHashtags = await this.createHashtags(createProps.hashtags);
-      await this.photoBoothHashtagRepository.saveBrandWithHashtags(
-        allHashtags.map((hashtag) =>
-          PhotoBoothHashtag.create({ brand, hashtag }),
-        ),
-      );
-    }
+    const brand = await this.photoBoothBrandRepository.saveBrand(
+      PhotoBoothBrand.create(createProps),
+    );
+    await this.handleBrandHashtags(brand, createProps.hashtags);
 
     return true;
   }
 
-  async createBrand(createProps: BrandCreateProps): Promise<PhotoBoothBrand> {
-    /**
-     * @param createProps
-     *       - 브랜드 생성 속성들
-     *       - 이벤트 여부, 업체명, 대표이미지, 해시태그들
-     * @desc - 브랜드 생성
-     */
-
-    return await this.photoBoothBrandRepository.saveBrand(
-      PhotoBoothBrand.create(createProps),
-    );
-  }
-
-  async updateBrand(
+  async updateBrandWithHastags(
     id: number,
     updateProps: BrandUpdateProps,
   ): Promise<boolean> {
@@ -379,8 +365,8 @@ export class PhotoBoothService {
      * @param updateProps
      *        - 수정이 필요한 데이터 일부
      *        - 업체명, 설명, 홈페이지 주소, 대표이미지, 이벤트 여부
-     * @desc 포토부스 업체의 이름, 대표이미지 수정
-     * @TODO 해시 태그 데이터를 수정
+     *        - 해시태그
+     * @desc 포토부스 업체의 이름, 설명, 업체 홈페이지 url, 해시태그, 대표이미지 수정
      * @TODO 포토부스 업체 이미지를 여러장 수정
      */
 
@@ -395,10 +381,13 @@ export class PhotoBoothService {
       );
     }
 
+    const brand = await this.findOneBrandById(id);
+    await this.handleBrandHashtags(brand, updateProps.hashtags);
+
     return true;
   }
 
-  async createHashtags(hashtags: string[]): Promise<Hashtag[]> {
+  private async createHashtags(hashtags: string[]): Promise<Hashtag[]> {
     /**
      * @param hashtags
      *       - 해시태그 여러개를 가진 배열
@@ -430,6 +419,29 @@ export class PhotoBoothService {
         : [];
 
     return [...existingHashtags, ...newHashtags];
+  }
+
+  private async handleBrandHashtags(
+    brand: PhotoBoothBrand,
+    hashtags: string[],
+  ): Promise<void> {
+    const allHashtagsOfBrand =
+      await this.photoBoothHashtagRepository.findManyHashtagsOfBrand(
+        PhotoBoothHashtag.of({ brand }),
+      );
+
+    await this.photoBoothHashtagRepository.removeAllHashtagsOfBrand(
+      allHashtagsOfBrand,
+    );
+
+    if (hashtags.length !== 0) {
+      const allHashtags = await this.createHashtags(hashtags);
+      await this.photoBoothHashtagRepository.saveBrandHashtags(
+        allHashtags.map((hashtag) =>
+          PhotoBoothHashtag.create({ brand, hashtag }),
+        ),
+      );
+    }
   }
 
   private async listPaginatedEntity<T, U>(

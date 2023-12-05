@@ -175,7 +175,10 @@ export class PhotoBoothController {
     @Param('id', ParseIntPipe) id: number,
     @Body() request: UpdateBoothBrandDto,
   ): Promise<ResponseEntity<string>> {
-    await this.photoBoothService.updateBrand(id, request.getUpdateProps());
+    await this.photoBoothService.updateBrandWithHastags(
+      id,
+      request.getUpdateProps(),
+    );
     return ResponseEntity.OK('포토부스 업체를 업데이트 했습니다.');
   }
 }
