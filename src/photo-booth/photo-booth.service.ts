@@ -335,6 +335,7 @@ export class PhotoBoothService {
      *       - 해시태그와 브랜드 연결
      */
 
+    const hashtags = createProps.hashtags;
     const isExistBrand = await this.photoBoothBrandRepository.isExistBrand(
       PhotoBoothBrand.of({ name: createProps.name }),
     );
@@ -344,13 +345,15 @@ export class PhotoBoothService {
     }
 
     const brand = await this.createBrand(createProps);
-    const allHashtags = await this.createHashtags(createProps.hashtags);
+    if (hashtags.length !== 0) {
+      const allHashtags = await this.createHashtags(createProps.hashtags);
+      await this.photoBoothHashtagRepository.saveBrandWithHashtags(
+        allHashtags.map((hashtag) =>
+          PhotoBoothHashtag.create({ brand, hashtag }),
+        ),
+      );
+    }
 
-    await this.photoBoothHashtagRepository.saveBrandWithHashtags(
-      allHashtags.map((hashtag) =>
-        PhotoBoothHashtag.create({ brand, hashtag }),
-      ),
-    );
     return true;
   }
 
