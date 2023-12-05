@@ -1,5 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsBoolean,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { MoveToOpenBoothProps } from './put-photo-booth.dto';
 
 export class UpdatePhotoBoothDto {
@@ -82,6 +88,16 @@ export class UpdateBoothBrandDto {
   @IsOptional()
   mainThumbnailImageUrl?: string;
 
+  @ApiProperty({
+    description: '포토부스 업체 해시태그 목록 (최대 4개)',
+    example: ['행사', '웨딩', '파티', '스냅'],
+  })
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
+  @IsString({ each: true })
+  hashtags?: string[];
+
   getUpdateProps(): BrandUpdateProps {
     return {
       name: this.name,
@@ -89,6 +105,7 @@ export class UpdateBoothBrandDto {
       photoBoothUrl: this.photoBoothUrl,
       mainThumbnailImageUrl: this.mainThumbnailImageUrl,
       isEvent: this.isEvent,
+      hashtags: this.hashtags,
     };
   }
 }
@@ -99,6 +116,7 @@ export interface BrandUpdateProps {
   photoBoothUrl: string;
   mainThumbnailImageUrl: string;
   isEvent: boolean;
+  hashtags: string[];
 }
 
 export interface PhotoBoothUpdateProps extends Partial<MoveToOpenBoothProps> {
