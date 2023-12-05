@@ -26,9 +26,14 @@ import {
   PhotoBoothUpdateProps,
 } from './dto/patch-photo-booth.dto';
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
-import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
+import {
+  Hashtag,
+  PhotoBoothBrand,
+  PhotoBoothHashtag,
+} from './entity/photo-booth-brand.entity';
 import { BrandCreateProps } from './dto/post-photo-booth.dto';
 import { MoveToOpenBoothProps } from './dto/put-photo-booth.dto';
+import { PhotoBoothHashtagRepository } from './repository/photo-booth-hashtag.repository';
 
 @Injectable()
 export class PhotoBoothService {
@@ -36,6 +41,7 @@ export class PhotoBoothService {
     private readonly photoBoothRepository: PhotoBoothRepository,
     private readonly hiddenBoothRepository: HiddenBoothRepository,
     private readonly photoBoothBrandRepository: PhotoBoothBrandRepository,
+    private readonly photoBoothHashtagRepository: PhotoBoothHashtagRepository,
   ) {}
 
   async findOpenBoothByQueryParam(
@@ -317,11 +323,43 @@ export class PhotoBoothService {
     return new GetBoothBrandDetailDto(boothBrand);
   }
 
+  async createBrandWithHastags(
+    createProps: BrandCreateProps,
+  ): Promise<boolean> {
+    /**
+     * @param createProps
+     *       - 브랜드 생성 속성들
+     *       - 이벤트 여부, 업체명, 대표이미지, 해시태그들
+     * @desc - 해시태그 생성
+     *       - 브랜드 생성
+     *       - 해시태그와 브랜드 연결
+     */
+
+    const isExistBrand = await this.photoBoothBrandRepository.isExistBrand(
+      PhotoBoothBrand.of({ name: createProps.name }),
+    );
+
+    if (isExistBrand) {
+      throw new NotFoundException('이미 포토부스 업체가 존재합니다');
+    }
+
+    const brand = await this.createBrand(createProps);
+    const allHashtags = await this.createHashtags(createProps.hashtags);
+
+    await this.photoBoothHashtagRepository.saveBrandWithHashtags(
+      allHashtags.map((hashtag) =>
+        PhotoBoothHashtag.create({ brand, hashtag }),
+      ),
+    );
+    return true;
+  }
+
   async createBrand(createProps: BrandCreateProps): Promise<PhotoBoothBrand> {
     /**
-     * @desc 포토부스 업체 생성
-     * @TODO 해시태그 데이터를 추가
-     * @TODO 포토부스 업체 이미지를 대표 이미지 외에 여러장 추가
+     * @param createProps
+     *       - 브랜드 생성 속성들
+     *       - 이벤트 여부, 업체명, 대표이미지, 해시태그들
+     * @desc - 브랜드 생성
      */
 
     return await this.photoBoothBrandRepository.saveBrand(
@@ -329,7 +367,10 @@ export class PhotoBoothService {
     );
   }
 
-  async updateBrand(id: number, updateProps: BrandUpdateProps) {
+  async updateBrand(
+    id: number,
+    updateProps: BrandUpdateProps,
+  ): Promise<boolean> {
     /**
      * @param id - 포토부스 업체에 대한 id
      * @param updateProps
@@ -352,6 +393,40 @@ export class PhotoBoothService {
     }
 
     return true;
+  }
+
+  async createHashtags(hashtags: string[]): Promise<Hashtag[]> {
+    /**
+     * @param hashtags
+     *       - 해시태그 여러개를 가진 배열
+     * @desc - 해시태그 배열 중 중복을 제거
+     *       - 이미 존재하는 해시태그 찾기
+     *       - 존재하지 않는 해시태그 필터링
+     *       - 존재하지 않는 해시태그 생성
+     *       - 이미 존재하는 해시태그와 새로 생성된 해시태그 합치기
+     */
+
+    const uniqueHashtags = [...new Set(hashtags || [])];
+
+    const existingHashtags =
+      await this.photoBoothHashtagRepository.findManyHashtagByOption(
+        uniqueHashtags.map((name) => Hashtag.of({ name })),
+      );
+
+    const existingHashtagSet = new Set(existingHashtags.map((tag) => tag.name));
+
+    const newHashtagNames = uniqueHashtags.filter(
+      (tag) => !existingHashtagSet.has(tag),
+    );
+
+    const newHashtags =
+      newHashtagNames.length > 0
+        ? await this.photoBoothHashtagRepository.saveHashtags(
+            newHashtagNames.map((name) => Hashtag.create({ name })),
+          )
+        : [];
+
+    return [...existingHashtags, ...newHashtags];
   }
 
   private async listPaginatedEntity<T, U>(

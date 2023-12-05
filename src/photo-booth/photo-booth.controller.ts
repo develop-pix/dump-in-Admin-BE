@@ -28,7 +28,6 @@ import {
   UpdateBoothBrandDto,
   UpdatePhotoBoothDto,
 } from './dto/patch-photo-booth.dto';
-import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 import { CreateBrandDto } from './dto/post-photo-booth.dto';
 import { MoveHiddenToOpenBoothDto } from './dto/put-photo-booth.dto';
 
@@ -164,14 +163,11 @@ export class PhotoBoothController {
   @Post('brand')
   async createBrand(
     @Body() request: CreateBrandDto,
-  ): Promise<ResponseEntity<PhotoBoothBrand>> {
-    const response = await this.photoBoothService.createBrand(
+  ): Promise<ResponseEntity<string>> {
+    await this.photoBoothService.createBrandWithHastags(
       request.getCreateProps(),
     );
-    return ResponseEntity.OK_WITH<PhotoBoothBrand>(
-      '포토부스 업체를 생성 했습니다.',
-      response,
-    );
+    return ResponseEntity.OK('포토부스 업체를 생성 했습니다.');
   }
 
   @Patch('brand/:id')
