@@ -41,7 +41,7 @@ export class BoothQueryDto extends PaginatedDto {
   }
 }
 
-export class BrandQueryDto extends PaginatedDto {
+export class BoothBrandQueryDto extends PaginatedDto {
   @ApiProperty({
     description: '포토부스 업체명',
     required: true,

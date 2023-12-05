@@ -9,7 +9,7 @@ import {
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateBrandDto {
+export class CreateBoothBrandDto {
   @ApiProperty({
     description: '포토부스 업체명',
     required: true,

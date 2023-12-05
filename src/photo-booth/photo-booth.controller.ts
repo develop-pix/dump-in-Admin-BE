@@ -18,7 +18,10 @@ import {
   GetPhotoBoothListDto,
 } from './dto/get-photo-booth-list.dto';
 import { ResponseEntity } from 'src/common/entity/response.entity';
-import { BoothQueryDto, BrandQueryDto } from './dto/get-photo-booth-query.dto';
+import {
+  BoothQueryDto,
+  BoothBrandQueryDto,
+} from './dto/get-photo-booth-query.dto';
 import { Page } from '../common/dto/paginated-res.dto';
 import {
   GetBoothBrandDetailDto,
@@ -28,7 +31,7 @@ import {
   UpdateBoothBrandDto,
   UpdatePhotoBoothDto,
 } from './dto/patch-photo-booth.dto';
-import { CreateBrandDto } from './dto/post-photo-booth.dto';
+import { CreateBoothBrandDto } from './dto/post-photo-booth.dto';
 import { MoveHiddenToOpenBoothDto } from './dto/put-photo-booth.dto';
 
 @ApiTags('포토부스')
@@ -124,7 +127,7 @@ export class PhotoBoothController {
       id,
       request.getUpdateProps(),
     );
-    return ResponseEntity.OK('비공개 포토부스를 이동 했습니다.');
+    return ResponseEntity.OK('비공개 포토부스를 공개 했습니다.');
   }
 
   @Delete('raw/:id')
@@ -137,14 +140,14 @@ export class PhotoBoothController {
 
   @Get('brand')
   async findBrandByQueryParam(
-    @Query() request: BrandQueryDto,
+    @Query() request: BoothBrandQueryDto,
   ): Promise<ResponseEntity<Page<GetBoothBrandListDto>>> {
     const response = await this.photoBoothService.findBrandByQueryParam(
       request.getPageProps(),
       request.getQueryProps(),
     );
     return ResponseEntity.OK_WITH<Page<GetBoothBrandListDto>>(
-      '공개된 포토부스 목록을 반환합니다.',
+      '포토부스 업체 목록을 반환합니다.',
       response,
     );
   }
@@ -155,14 +158,14 @@ export class PhotoBoothController {
   ): Promise<ResponseEntity<GetBoothBrandDetailDto>> {
     const response = await this.photoBoothService.findOneBrand(id);
     return ResponseEntity.OK_WITH<GetBoothBrandDetailDto>(
-      '공개되지 않은 포토부스 목록을 반환합니다.',
+      '요청한 포토부스 업체를 반환합니다.',
       response,
     );
   }
 
   @Post('brand')
   async createBrand(
-    @Body() request: CreateBrandDto,
+    @Body() request: CreateBoothBrandDto,
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.createBrandWithHastags(
       request.getCreateProps(),

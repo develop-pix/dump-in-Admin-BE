@@ -405,10 +405,12 @@ export class PhotoBoothService {
         uniqueHashtags.map((name) => Hashtag.of({ name })),
       );
 
-    const existingHashtagSet = new Set(existingHashtags.map((tag) => tag.name));
+    const existingHashtagNameSet = new Set(
+      existingHashtags.map((tag) => tag.name),
+    );
 
     const newHashtagNames = uniqueHashtags.filter(
-      (tag) => !existingHashtagSet.has(tag),
+      (tag) => !existingHashtagNameSet.has(tag),
     );
 
     const newHashtags =
@@ -425,6 +427,15 @@ export class PhotoBoothService {
     brand: PhotoBoothBrand,
     hashtags: string[],
   ): Promise<void> {
+    /**
+     * @param brand - 포토부스 업체 정보
+     * @param hashtags
+     *       - 해시태그 여러개를 가진 배열
+     * @desc - 포토부스 업체와 연결된 포토부스 모든 해시태그 반환
+     *       - 포토부스 업체와 연결된 모든 해시태그 연결을 삭제
+     *       - hashtags 배열 내부의 해시태그가 존재하면 해시태그 생성 메서드 실행
+     */
+
     const allHashtagsOfBrand =
       await this.photoBoothHashtagRepository.findManyHashtagsOfBrand(
         PhotoBoothHashtag.of({ brand }),
