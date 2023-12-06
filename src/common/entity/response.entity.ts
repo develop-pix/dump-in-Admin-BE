@@ -40,7 +40,6 @@ export class ResponseEntity<T> {
     description: '요청에 대한 응답 상태코드 필드입니다',
     enum: HttpStatus,
     example: HttpStatus.OK,
-    required: true,
   })
   @Expose()
   get code(): HttpStatus {
@@ -51,7 +50,6 @@ export class ResponseEntity<T> {
     description: '요청에 대한 응답 메시지 필드 입니다',
     type: String,
     example: '요청에 성공하였습니다',
-    required: true,
   })
   @Expose()
   get message(): string {
@@ -62,13 +60,17 @@ export class ResponseEntity<T> {
     description: '요청에 대한 성공 여부 필드 입니다',
     type: Boolean,
     example: true,
-    required: true,
   })
   @Expose()
   get success(): boolean {
     return this._success;
   }
 
+  @ApiProperty({
+    description: '요청에 대한 데이터 필드 입니다',
+    type: Object,
+    required: false,
+  })
   @Expose()
   get data(): T {
     return this._data;
