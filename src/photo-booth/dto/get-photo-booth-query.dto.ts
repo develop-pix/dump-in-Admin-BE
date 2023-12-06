@@ -7,6 +7,7 @@ import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
 export class BoothQueryDto extends PaginatedDto {
   @ApiProperty({
     description: '포토부스에서 지역을 검색하는 쿼리스트링',
+    required: false,
     example: '서울',
   })
   @IsString()
@@ -16,6 +17,7 @@ export class BoothQueryDto extends PaginatedDto {
 
   @ApiProperty({
     description: '포토부스에서 지점명을 검색하는 쿼리스트링',
+    required: false,
     example: '하루필름 홍대 1호점',
   })
   @IsString()
@@ -25,6 +27,7 @@ export class BoothQueryDto extends PaginatedDto {
 
   @ApiProperty({
     description: '포토부스에서 업체명을 검색하는 쿼리스트링',
+    required: false,
     example: '하루필름',
   })
   @IsString()
@@ -44,7 +47,7 @@ export class BoothQueryDto extends PaginatedDto {
 export class BoothBrandQueryDto extends PaginatedDto {
   @ApiProperty({
     description: '포토부스 업체명',
-    required: true,
+    required: false,
     example: '포토그레이',
   })
   @IsString()
@@ -55,6 +58,7 @@ export class BoothBrandQueryDto extends PaginatedDto {
 
   @ApiProperty({
     description: '포토부스 업체의 이벤트 허용 여부',
+    required: false,
     example: true,
   })
   @IsOptional()
@@ -64,6 +68,7 @@ export class BoothBrandQueryDto extends PaginatedDto {
 
   @ApiProperty({
     description: '포토부스 업체의 해시태그',
+    required: false,
     example: '카페,스튜디오,이벤트',
   })
   @IsOptional()

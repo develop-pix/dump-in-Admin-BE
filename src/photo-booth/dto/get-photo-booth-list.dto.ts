@@ -21,7 +21,7 @@ export class GetPhotoBoothListDto {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
   }
 
-  @ApiProperty({ description: '포토부스의 고유한 uuid 값' })
+  @ApiProperty({ description: '포토부스의 고유한 uuid 값', example: 'uuid' })
   @Expose()
   get id(): string {
     return this._id;
@@ -47,6 +47,7 @@ export class GetPhotoBoothListDto {
 
   @ApiProperty({
     description: '포토부스의 지번 주소',
+    example: '지번 주소',
   })
   @Expose()
   get streetAddress(): string | null {
@@ -55,6 +56,7 @@ export class GetPhotoBoothListDto {
 
   @ApiProperty({
     description: '포토부스의 도로명 주소',
+    example: '도로명 주소',
   })
   @Expose()
   get roadAddress(): string | null {
@@ -63,6 +65,7 @@ export class GetPhotoBoothListDto {
 
   @ApiProperty({
     description: '포토부스 업체명',
+    example: '업체명',
   })
   @Expose()
   @Type(() => PhotoBoothBrand)

@@ -168,7 +168,7 @@ export class PhotoBoothService {
 
     if (hiddenBooths[0].length === 0) {
       throw new NotFoundException(
-        '공개되지 않은 포토부스 지점을 찾지 못했습니다',
+        '공개되지 않은 포토부스 지점 목록을 찾지 못했습니다',
       );
     }
 
@@ -190,7 +190,9 @@ export class PhotoBoothService {
     );
 
     if (!hiddenBooth) {
-      throw new NotFoundException(`포토부스 지점을 찾지 못했습니다. ID: ${id}`);
+      throw new NotFoundException(
+        `공개되지 않은 포토부스 지점을 찾지 못했습니다. ID: ${id}`,
+      );
     }
 
     return new GetPhotoBoothDetailDto(hiddenBooth);
