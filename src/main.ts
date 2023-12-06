@@ -50,7 +50,7 @@ async function bootstrap(): Promise<void> {
 
   const config = new DocumentBuilder()
     .setTitle('Dump-In-Admin API')
-    .setDescription('The Example API description')
+    .setDescription('The Dump-In-Admin API document')
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
@@ -61,10 +61,11 @@ async function bootstrap(): Promise<void> {
     .useGlobalPipes(new ValidationPipe(validationPipeOptions))
     .useGlobalFilters(new HttpExceptionFilter(new Logger()))
     .enableCors(corsOptions);
+  app.setGlobalPrefix('api');
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
-  SwaggerModule.setup('api-docs', app, document);
+  SwaggerModule.setup('api/swagger', app, document);
   await app.listen(+process.env.APP_SERVER_PORT);
 }
 bootstrap();
