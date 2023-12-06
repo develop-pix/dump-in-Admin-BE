@@ -130,7 +130,9 @@ export class PhotoBoothService {
      */
 
     const photoBoothDetail = await this.findOneOpenBooth(id);
-    const isDeleted = await this.photoBoothRepository.deletePhotoBooth(id);
+    const isDeleted = await this.photoBoothRepository.deletePhotoBooth(
+      photoBoothDetail.id,
+    );
 
     if (!isDeleted) {
       throw new NotFoundException(`포토부스 삭제가 불가능합니다. ID:${id}`);
@@ -288,6 +290,7 @@ export class PhotoBoothService {
       (entity: PhotoBoothBrand) => new GetBoothBrandListDto(entity),
     );
   }
+
   async findOneBrand(id: number): Promise<GetBoothBrandDetailDto> {
     /**
      * @param id - 포토부스 업체에 대한 id
