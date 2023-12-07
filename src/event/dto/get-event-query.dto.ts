@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
-import { PaginatedDto } from '../../common/dto/paginated-req.dto';
+import { PaginationDto } from '../../common/dto/pagination-req.dto';
+import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
 
-export class BoothBrandQueryDto extends PaginatedDto {
+export class EventQueryDto extends PaginationDto {
   @ApiProperty({
     description: '포토부스 업체명',
     required: false,
@@ -33,6 +34,7 @@ export class BoothBrandQueryDto extends PaginatedDto {
 }
 
 export interface FindEventOptionProps {
+  brand?: PhotoBoothBrand;
   brandName?: string;
   title?: string;
 }
