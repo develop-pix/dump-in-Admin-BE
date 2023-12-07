@@ -5,7 +5,6 @@ import { HiddenBoothRepository } from './repository/photo-booth-hidden.repositor
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
 import { PhotoBooth } from './entity/photo-booth.entity';
 import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
-import { Page } from '../common/dto/pagination-res.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
 import { PhotoBoothHashtagRepository } from './repository/photo-booth-hashtag.repository';
@@ -215,22 +214,15 @@ describe('PhotoBoothService', () => {
         page: 1,
       };
 
-      const [photoBoothsInDb, count] =
+      const [photoBoothsInDb] =
         await photoBoothRepository.findBoothByOptionAndCount(booth, pageProps);
 
-      const photoBoothResult = photoBoothsInDb.map(
+      const expectedResult = photoBoothsInDb.map(
         (photoBooth) => new GetPhotoBoothListDto(photoBooth),
       );
 
-      const expectedResult = new Page<GetPhotoBoothListDto>(
-        pageProps.page,
-        pageProps.take,
-        count,
-        photoBoothResult,
-      );
-
       // When
-      const result = await photoBoothService.findOpenBoothByQueryParam(
+      const [result] = await photoBoothService.findOpenBoothByQueryParam(
         pageProps,
         booth,
       );
@@ -250,22 +242,15 @@ describe('PhotoBoothService', () => {
 
       booth.name = '포토그레이';
 
-      const [photoBoothsInDb, count] =
+      const [photoBoothsInDb] =
         await photoBoothRepository.findBoothByOptionAndCount(booth, pageProps);
 
-      const photoBoothResult = photoBoothsInDb.map(
+      const expectedResult = photoBoothsInDb.map(
         (photoBooth) => new GetPhotoBoothListDto(photoBooth),
       );
 
-      const expectedResult = new Page<GetPhotoBoothListDto>(
-        pageProps.page,
-        pageProps.take,
-        count,
-        photoBoothResult,
-      );
-
       // When
-      const result = await photoBoothService.findOpenBoothByQueryParam(
+      const [result] = await photoBoothService.findOpenBoothByQueryParam(
         pageProps,
         booth,
       );

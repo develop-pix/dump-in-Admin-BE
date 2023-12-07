@@ -9,7 +9,6 @@ import {
   GetBoothBrandListDto,
   GetPhotoBoothListDto,
 } from './dto/get-photo-booth-list.dto';
-import { Page } from '../common/dto/pagination-res.dto';
 import {
   GetBoothBrandDetailDto,
   GetPhotoBoothDetailDto,
@@ -34,7 +33,6 @@ import { BrandCreateProps } from './dto/post-photo-booth.dto';
 import { MoveToOpenBoothProps } from './dto/put-photo-booth.dto';
 import { PhotoBoothHashtagRepository } from './repository/photo-booth-hashtag.repository';
 import { HashtagService } from '../hashtag/hashtag.service';
-import { listPaginatedEntity } from '../common/entity/pagination.entity';
 
 @Injectable()
 export class PhotoBoothService {
@@ -49,7 +47,7 @@ export class PhotoBoothService {
   async findOpenBoothByQueryParam(
     pageProps: PaginationProps,
     query: FindBoothOptionProps,
-  ): Promise<Page<GetPhotoBoothListDto>> {
+  ): Promise<[GetPhotoBoothListDto[], number]> {
     /**
      * @param pageProps - pagination - skip, take
      * @param query - request query string - 지점명, 지역
@@ -57,27 +55,24 @@ export class PhotoBoothService {
      *       - 쿼리 옵션이 없으면 전체 포토부스 데이터 반환
      */
 
-    const photoBoothBrand = query.brandName
+    query.brand = query.brandName
       ? await this.findOneBrandByName(query.brandName)
       : undefined;
 
-    query.brand = photoBoothBrand;
-
-    const photoBooths =
+    const [results, count] =
       await this.photoBoothRepository.findBoothByOptionAndCount(
         PhotoBooth.of(query),
         pageProps,
       );
 
-    if (photoBooths[0].length === 0) {
+    if (results.length === 0) {
       throw new NotFoundException('공개된 포토부스 지점을 찾지 못했습니다');
     }
 
-    return await listPaginatedEntity(
-      pageProps,
-      photoBooths,
-      (entity: PhotoBooth) => new GetPhotoBoothListDto(entity),
-    );
+    return [
+      results.map((result: PhotoBooth) => new GetPhotoBoothListDto(result)),
+      count,
+    ];
   }
 
   async findOneOpenBooth(id: string): Promise<GetPhotoBoothDetailDto> {
@@ -107,11 +102,9 @@ export class PhotoBoothService {
      * @desc 포토부스 지점에 대한 데이터 수정
      */
 
-    const photoBoothBrand = updateProps.brandName
+    updateProps.brand = updateProps.brandName
       ? await this.findOneBrandByName(updateProps.brandName)
       : undefined;
-
-    updateProps.brand = photoBoothBrand;
 
     const isUpdated = await this.photoBoothRepository.updatePhotoBooth(
       id,
@@ -154,7 +147,7 @@ export class PhotoBoothService {
   async findHiddenBoothByQueryParam(
     pageProps: PaginationProps,
     query: FindBoothOptionProps,
-  ): Promise<Page<GetPhotoBoothListDto>> {
+  ): Promise<[GetPhotoBoothListDto[], number]> {
     /**
      * @param pageProps - pagination - 항목수, 페이지
      * @param query - request query string - 지점명, 지역
@@ -162,23 +155,24 @@ export class PhotoBoothService {
      *       - 쿼리 옵션이 없으면 공개되지 않은 전체 포토부스 데이터 반환
      */
 
-    const hiddenBooths =
+    const [results, count] =
       await this.hiddenBoothRepository.findHiddenBoothByOptionAndCount(
         HiddenPhotoBooth.of(query),
         pageProps,
       );
 
-    if (hiddenBooths[0].length === 0) {
+    if (results.length === 0) {
       throw new NotFoundException(
         '공개되지 않은 포토부스 지점 목록을 찾지 못했습니다',
       );
     }
 
-    return await listPaginatedEntity(
-      pageProps,
-      hiddenBooths,
-      (entity: HiddenPhotoBooth) => new GetPhotoBoothListDto(entity),
-    );
+    return [
+      results.map(
+        (result: HiddenPhotoBooth) => new GetPhotoBoothListDto(result),
+      ),
+      count,
+    ];
   }
 
   async findOneHiddenBooth(id: string): Promise<GetPhotoBoothDetailDto> {
@@ -269,7 +263,7 @@ export class PhotoBoothService {
   async findBrandByQueryParam(
     pageProps: PaginationProps,
     query: FindBrandOptionProps,
-  ): Promise<Page<GetBoothBrandListDto>> {
+  ): Promise<[GetBoothBrandListDto[], number]> {
     /**
      * @param pageProps - pagination - 항목수, 페이지
      * @param query - request query string - 업체명, 이벤트 허용 여부
@@ -278,21 +272,22 @@ export class PhotoBoothService {
      *       - 해시태그들로 업체명 찾기
      */
 
-    const boothBrands =
+    const [results, count] =
       await this.photoBoothBrandRepository.findBrandByOptionAndCount(
         PhotoBoothBrand.of(query),
         pageProps,
       );
 
-    if (boothBrands[0].length === 0) {
+    if (results.length === 0) {
       throw new NotFoundException('포토부스 업체를 찾지 못했습니다');
     }
 
-    return await listPaginatedEntity(
-      pageProps,
-      boothBrands,
-      (entity: PhotoBoothBrand) => new GetBoothBrandListDto(entity),
-    );
+    return [
+      results.map(
+        (entity: PhotoBoothBrand) => new GetBoothBrandListDto(entity),
+      ),
+      count,
+    ];
   }
 
   async findOneBrand(id: number): Promise<GetBoothBrandDetailDto> {

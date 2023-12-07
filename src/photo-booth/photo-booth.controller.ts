@@ -46,13 +46,14 @@ export class PhotoBoothController {
   async findOpenBoothByQueryParam(
     @Query() request: BoothQueryDto,
   ): Promise<ResponseEntity<Page<GetPhotoBoothListDto>>> {
-    const response = await this.photoBoothService.findOpenBoothByQueryParam(
-      request.getPageProps(),
-      request.getQueryProps(),
-    );
+    const [response, count] =
+      await this.photoBoothService.findOpenBoothByQueryParam(
+        request.getPageProps(),
+        request.getQueryProps(),
+      );
     return ResponseEntity.OK_WITH<Page<GetPhotoBoothListDto>>(
       '공개된 포토부스 목록을 반환합니다.',
-      response,
+      Page.create(request.getPageProps(), count, response),
     );
   }
 
@@ -92,13 +93,14 @@ export class PhotoBoothController {
   async findHiddenBoothByQueryParam(
     @Query() request: BoothQueryDto,
   ): Promise<ResponseEntity<Page<GetPhotoBoothListDto>>> {
-    const response = await this.photoBoothService.findHiddenBoothByQueryParam(
-      request.getPageProps(),
-      request.getQueryProps(),
-    );
+    const [response, count] =
+      await this.photoBoothService.findHiddenBoothByQueryParam(
+        request.getPageProps(),
+        request.getQueryProps(),
+      );
     return ResponseEntity.OK_WITH<Page<GetPhotoBoothListDto>>(
       '비공개 포토부스 목록을 반환합니다.',
-      response,
+      Page.create(request.getPageProps(), count, response),
     );
   }
 
@@ -154,13 +156,14 @@ export class PhotoBoothController {
   async findBrandByQueryParam(
     @Query() request: BoothBrandQueryDto,
   ): Promise<ResponseEntity<Page<GetBoothBrandListDto>>> {
-    const response = await this.photoBoothService.findBrandByQueryParam(
-      request.getPageProps(),
-      request.getQueryProps(),
-    );
+    const [response, count] =
+      await this.photoBoothService.findBrandByQueryParam(
+        request.getPageProps(),
+        request.getQueryProps(),
+      );
     return ResponseEntity.OK_WITH<Page<GetBoothBrandListDto>>(
       '포토부스 업체 목록을 반환합니다.',
-      response,
+      Page.create(request.getPageProps(), count, response),
     );
   }
 
