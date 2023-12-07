@@ -33,11 +33,11 @@ import { HashtagService } from '../hashtag/hashtag.service';
 @Injectable()
 export class PhotoBoothService {
   constructor(
+    private readonly hashtagService: HashtagService,
     private readonly photoBoothRepository: PhotoBoothRepository,
     private readonly hiddenBoothRepository: HiddenBoothRepository,
     private readonly photoBoothBrandRepository: PhotoBoothBrandRepository,
     private readonly photoBoothHashtagRepository: PhotoBoothHashtagRepository,
-    private readonly hashtagService: HashtagService,
   ) {}
 
   async findOpenBoothByQueryParam(
@@ -51,9 +51,7 @@ export class PhotoBoothService {
      *       - 쿼리 옵션이 없으면 전체 포토부스 데이터 반환
      */
 
-    query.brand = query.brandName
-      ? await this.findOneBrandByName(query.brandName)
-      : undefined;
+    query.brand = await this.findOneBrandByName(query.brandName);
 
     const [results, count] =
       await this.photoBoothRepository.findBoothByOptionAndCount(
@@ -98,9 +96,7 @@ export class PhotoBoothService {
      * @desc 포토부스 지점에 대한 데이터 수정
      */
 
-    updateProps.brand = updateProps.brandName
-      ? await this.findOneBrandByName(updateProps.brandName)
-      : undefined;
+    updateProps.brand = await this.findOneBrandByName(updateProps.brandName);
 
     const isUpdated = await this.photoBoothRepository.updatePhotoBooth(
       id,
@@ -280,6 +276,7 @@ export class PhotoBoothService {
      * @param name 포토부스 업체명
      * @desc - 이름으로 포토부스 업체명 검색 후 포토부스 업체 정보 반환
      */
+    if (typeof name === 'undefined') return undefined;
 
     const photoBoothBrand = await this.photoBoothBrandRepository.findOneBrandBy(
       PhotoBoothBrand.byName(name),
