@@ -10,6 +10,7 @@ import { PhotoBooth } from './photo-booth.entity';
 import { FindBrandOptionProps } from '../dto/get-photo-booth-query.dto';
 import { BrandCreateProps } from '../dto/post-photo-booth.dto';
 import { BrandUpdateProps } from '../dto/patch-photo-booth.dto';
+import { EventHashtag, Events } from '../../event/entity/event.entity';
 
 @Entity('photo_booth_brand')
 export class PhotoBoothBrand {
@@ -43,6 +44,9 @@ export class PhotoBoothBrand {
       photoBoothHashtag.photo_booth_brand,
   )
   photo_booth_hashtags: PhotoBoothHashtag[];
+
+  @OneToMany(() => Events, (event: Events) => event.photo_booth_brand)
+  events: Events[];
 
   static create({
     name,
@@ -131,6 +135,12 @@ export class Hashtag {
     (photoBoothHashtag: PhotoBoothHashtag) => photoBoothHashtag.hashtag,
   )
   photo_booth_hashtags: PhotoBoothHashtag[];
+
+  @OneToMany(
+    () => EventHashtag,
+    (eventHashtag: EventHashtag) => eventHashtag.hashtag,
+  )
+  event_hashtag: EventHashtag[];
 
   static of({ id, name }: FindHashtagOptionsProps): Hashtag {
     const hashtag = new Hashtag();
