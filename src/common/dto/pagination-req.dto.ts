@@ -8,7 +8,7 @@ export interface PaginationProps {
   page: number;
 }
 
-export class PaginatedDto {
+export class PaginationDto {
   @ApiProperty({
     description: '리스트에 요구할 페이지 숫자',
     required: false,

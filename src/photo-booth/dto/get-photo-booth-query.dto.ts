@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
-import { PaginatedDto } from '../../common/dto/paginated-req.dto';
+import { PaginationDto } from '../../common/dto/pagination-req.dto';
 import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
 
-export class BoothQueryDto extends PaginatedDto {
+export class BoothQueryDto extends PaginationDto {
   @ApiProperty({
     description: '포토부스에서 지역을 검색하는 쿼리스트링',
     required: false,
@@ -44,7 +44,7 @@ export class BoothQueryDto extends PaginatedDto {
   }
 }
 
-export class BoothBrandQueryDto extends PaginatedDto {
+export class BoothBrandQueryDto extends PaginationDto {
   @ApiProperty({
     description: '포토부스 업체명',
     required: false,

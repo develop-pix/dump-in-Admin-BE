@@ -8,7 +8,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HiddenPhotoBooth } from '../entity/photo-booth-hidden.entity';
-import { PaginationProps } from '../../common/dto/paginated-req.dto';
+import { PaginationProps } from '../../common/dto/pagination-req.dto';
 
 @Injectable()
 export class HiddenBoothRepository {

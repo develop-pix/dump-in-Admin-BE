@@ -5,7 +5,7 @@ import { HiddenBoothRepository } from './repository/photo-booth-hidden.repositor
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
 import { PhotoBooth } from './entity/photo-booth.entity';
 import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
-import { Page } from '../common/dto/paginated-res.dto';
+import { Page } from '../common/dto/pagination-res.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
 import { PhotoBoothHashtagRepository } from './repository/photo-booth-hashtag.repository';

@@ -9,13 +9,13 @@ import {
   GetBoothBrandListDto,
   GetPhotoBoothListDto,
 } from './dto/get-photo-booth-list.dto';
-import { Page } from '../common/dto/paginated-res.dto';
+import { Page } from '../common/dto/pagination-res.dto';
 import {
   GetBoothBrandDetailDto,
   GetPhotoBoothDetailDto,
 } from './dto/get-photo-booth-detail.dto';
 import { PhotoBooth } from './entity/photo-booth.entity';
-import { PaginationProps } from 'src/common/dto/paginated-req.dto';
+import { PaginationProps } from 'src/common/dto/pagination-req.dto';
 import {
   FindBoothOptionProps,
   FindBrandOptionProps,
@@ -34,6 +34,7 @@ import { BrandCreateProps } from './dto/post-photo-booth.dto';
 import { MoveToOpenBoothProps } from './dto/put-photo-booth.dto';
 import { PhotoBoothHashtagRepository } from './repository/photo-booth-hashtag.repository';
 import { HashtagService } from '../hashtag/hashtag.service';
+import { listPaginatedEntity } from '../common/entity/pagination.entity';
 
 @Injectable()
 export class PhotoBoothService {
@@ -72,7 +73,7 @@ export class PhotoBoothService {
       throw new NotFoundException('공개된 포토부스 지점을 찾지 못했습니다');
     }
 
-    return await this.listPaginatedEntity(
+    return await listPaginatedEntity(
       pageProps,
       photoBooths,
       (entity: PhotoBooth) => new GetPhotoBoothListDto(entity),
@@ -173,7 +174,7 @@ export class PhotoBoothService {
       );
     }
 
-    return await this.listPaginatedEntity(
+    return await listPaginatedEntity(
       pageProps,
       hiddenBooths,
       (entity: HiddenPhotoBooth) => new GetPhotoBoothListDto(entity),
@@ -287,7 +288,7 @@ export class PhotoBoothService {
       throw new NotFoundException('포토부스 업체를 찾지 못했습니다');
     }
 
-    return await this.listPaginatedEntity(
+    return await listPaginatedEntity(
       pageProps,
       boothBrands,
       (entity: PhotoBoothBrand) => new GetBoothBrandListDto(entity),
@@ -423,19 +424,5 @@ export class PhotoBoothService {
         ),
       );
     }
-  }
-
-  private async listPaginatedEntity<T, U>(
-    pageProps: PaginationProps,
-    results: [T[], number],
-    mapper: (entity: T) => U,
-  ): Promise<Page<U>> {
-    const { page, take } = pageProps;
-
-    const [entities, count] = results;
-
-    const entityResult = entities.map(mapper);
-
-    return new Page<U>(page, take, count, entityResult);
   }
 }

@@ -22,7 +22,7 @@ import {
   BoothQueryDto,
   BoothBrandQueryDto,
 } from './dto/get-photo-booth-query.dto';
-import { Page } from '../common/dto/paginated-res.dto';
+import { Page } from '../common/dto/pagination-res.dto';
 import {
   GetBoothBrandDetailDto,
   GetPhotoBoothDetailDto,
@@ -33,8 +33,8 @@ import {
 } from './dto/patch-photo-booth.dto';
 import { CreateBoothBrandDto } from './dto/post-photo-booth.dto';
 import { MoveHiddenToOpenBoothDto } from './dto/put-photo-booth.dto';
-import { SwaggerListByQueryParam } from './decorator/swagger/query-list.decorator';
-import { SwaggerAPI } from './decorator/swagger/api.decorator';
+import { SwaggerListByQueryParam } from '../common/swagger/query-list.decorator';
+import { SwaggerAPI } from '../common/swagger/api.decorator';
 
 @ApiTags('포토부스')
 @Controller('photo-booth')
