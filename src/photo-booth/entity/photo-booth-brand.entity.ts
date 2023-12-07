@@ -10,7 +10,8 @@ import { PhotoBooth } from './photo-booth.entity';
 import { FindBrandOptionProps } from '../dto/get-photo-booth-query.dto';
 import { BrandCreateProps } from '../dto/post-photo-booth.dto';
 import { BrandUpdateProps } from '../dto/patch-photo-booth.dto';
-import { EventHashtag, Events } from '../../event/entity/event.entity';
+import { Events } from '../../event/entity/event.entity';
+import { Hashtag } from '../../hashtag/entity/hashtag.entity';
 
 @Entity('photo_booth_brand')
 export class PhotoBoothBrand {
@@ -114,59 +115,6 @@ export class PhotoBoothBrand {
 
     return brand;
   }
-}
-
-@Entity('hashtag')
-export class Hashtag {
-  @PrimaryGeneratedColumn({ name: 'id' })
-  id: number;
-
-  @Column({ type: 'varchar', length: 32 })
-  name: string;
-
-  @Column({ type: 'varchar', length: 128, nullable: true })
-  description: string;
-
-  @Column({ type: 'int', nullable: true })
-  order_number: number;
-
-  @OneToMany(
-    () => PhotoBoothHashtag,
-    (photoBoothHashtag: PhotoBoothHashtag) => photoBoothHashtag.hashtag,
-  )
-  photo_booth_hashtags: PhotoBoothHashtag[];
-
-  @OneToMany(
-    () => EventHashtag,
-    (eventHashtag: EventHashtag) => eventHashtag.hashtag,
-  )
-  event_hashtag: EventHashtag[];
-
-  static of({ id, name }: FindHashtagOptionsProps): Hashtag {
-    const hashtag = new Hashtag();
-
-    hashtag.name = name;
-    hashtag.id = id;
-
-    return hashtag;
-  }
-
-  static create({ name }: HashtagCreateProps): Hashtag {
-    const hashtag = new Hashtag();
-
-    hashtag.name = name;
-
-    return hashtag;
-  }
-}
-
-export interface FindHashtagOptionsProps {
-  id?: number;
-  name: string;
-}
-
-export interface HashtagCreateProps {
-  name: string;
 }
 
 @Entity('photo_booth_hashtag')

@@ -27,13 +27,13 @@ import {
 } from './dto/patch-photo-booth.dto';
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
 import {
-  Hashtag,
   PhotoBoothBrand,
   PhotoBoothHashtag,
 } from './entity/photo-booth-brand.entity';
 import { BrandCreateProps } from './dto/post-photo-booth.dto';
 import { MoveToOpenBoothProps } from './dto/put-photo-booth.dto';
 import { PhotoBoothHashtagRepository } from './repository/photo-booth-hashtag.repository';
+import { HashtagService } from '../hashtag/hashtag.service';
 
 @Injectable()
 export class PhotoBoothService {
@@ -42,6 +42,7 @@ export class PhotoBoothService {
     private readonly hiddenBoothRepository: HiddenBoothRepository,
     private readonly photoBoothBrandRepository: PhotoBoothBrandRepository,
     private readonly photoBoothHashtagRepository: PhotoBoothHashtagRepository,
+    private readonly hashtagService: HashtagService,
   ) {}
 
   async findOpenBoothByQueryParam(
@@ -392,42 +393,6 @@ export class PhotoBoothService {
     return true;
   }
 
-  private async createHashtags(hashtags: string[]): Promise<Hashtag[]> {
-    /**
-     * @param hashtags
-     *       - 해시태그 여러개를 가진 배열
-     * @desc - 해시태그 배열 중 중복을 제거
-     *       - 이미 존재하는 해시태그 찾기
-     *       - 존재하지 않는 해시태그 필터링
-     *       - 존재하지 않는 해시태그 생성
-     *       - 이미 존재하는 해시태그와 새로 생성된 해시태그 합치기
-     */
-
-    const uniqueHashtags = [...new Set(hashtags || [])];
-
-    const existingHashtags =
-      await this.photoBoothHashtagRepository.findManyHashtagByOption(
-        uniqueHashtags.map((name) => Hashtag.of({ name })),
-      );
-
-    const existingHashtagNameSet = new Set(
-      existingHashtags.map((tag) => tag.name),
-    );
-
-    const newHashtagNames = uniqueHashtags.filter(
-      (tag) => !existingHashtagNameSet.has(tag),
-    );
-
-    const newHashtags =
-      newHashtagNames.length > 0
-        ? await this.photoBoothHashtagRepository.saveHashtags(
-            newHashtagNames.map((name) => Hashtag.create({ name })),
-          )
-        : [];
-
-    return [...existingHashtags, ...newHashtags];
-  }
-
   private async handleBrandHashtags(
     brand: PhotoBoothBrand,
     hashtags: string[],
@@ -451,7 +416,7 @@ export class PhotoBoothService {
     );
 
     if (hashtags.length !== 0) {
-      const allHashtags = await this.createHashtags(hashtags);
+      const allHashtags = await this.hashtagService.createHashtags(hashtags);
       await this.photoBoothHashtagRepository.saveBrandHashtags(
         allHashtags.map((hashtag) =>
           PhotoBoothHashtag.create({ brand, hashtag }),
