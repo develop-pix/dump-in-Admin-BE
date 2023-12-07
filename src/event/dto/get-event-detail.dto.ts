@@ -1,76 +1,83 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
+import { Events } from '../entity/event.entity';
 
-export class GetBoothBrandDetailDto {
+export class GetEventDetailDto {
   @Exclude() private readonly _id: number;
-  @Exclude() private readonly _name: string;
-  @Exclude() private readonly _main_thumbnail_image_url?: string | null;
-  @Exclude() private readonly _description?: string | null;
-  @Exclude() private readonly _photo_booth_url?: string | null;
-  @Exclude() private readonly _is_event: boolean;
+  @Exclude() private readonly _title: string;
+  @Exclude() private readonly _content: string;
+  @Exclude() private readonly _main_thumbnail_url: string;
+  @Exclude() private readonly _view_count: number;
+  @Exclude() private readonly _likes_count: number;
+  @Exclude() private readonly _is_public: boolean;
   @Exclude()
-  @Type(() => PhotoBoothHashtag)
-  private readonly _photo_booth_hashtags: PhotoBoothHashtag[] | null;
+  @Type(() => PhotoBoothBrand)
+  private readonly _photo_booth_brand: PhotoBoothBrand;
 
-  constructor(data: PhotoBoothBrand) {
+  constructor(data: Events) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
   }
 
-  @ApiProperty({ description: '포토부스 업체의 id 값' })
+  @ApiProperty({ description: '이벤트의 id 값' })
   @Expose()
   get id(): number {
     return this._id;
   }
 
   @ApiProperty({
-    description: '포토부스의 업체명',
-    example: '하루필름',
+    description: '이벤트의 제목',
   })
   @Expose()
-  get name(): string {
-    return this._name;
+  get title(): string {
+    return this._title;
   }
 
   @ApiProperty({
-    description: '포토부스의 업체 설명',
+    description: '이벤트의 내용',
   })
   @Expose()
-  get description(): string | null {
-    return this._description;
+  get content(): string {
+    return this._content;
   }
 
   @ApiProperty({
-    description: '포토부스의 업체 관련 홈페이지 주소',
+    description: '이벤트의 대표 이미지',
   })
   @Expose()
-  get photoBoothUrl(): string | null {
-    return this._photo_booth_url;
+  get mainThumbnailUrl(): string {
+    return this._main_thumbnail_url;
   }
 
   @ApiProperty({
-    description: '포토부스의 업체 이벤트 허용 여부',
-    example: true,
+    description: '이벤트의 조회수',
   })
   @Expose()
-  get isEvent(): boolean {
-    return this._is_event;
+  get viewCount(): number {
+    return this._view_count;
   }
 
   @ApiProperty({
-    description: '포토부스의 대표 이미지',
+    description: '이벤트의 좋아요수',
   })
   @Expose()
-  get mainThumbnailImageUrl(): string | null {
-    return this._main_thumbnail_image_url;
+  get likesCount(): number {
+    return this._likes_count;
   }
 
   @ApiProperty({
-    description: '포토부스의 해시태그',
+    description: '이벤트의 공개 여부',
   })
   @Expose()
-  get hashtags(): string[] {
-    return (
-      this._photo_booth_hashtags?.map((hashtags) => hashtags.hashtag.name) || []
-    );
+  get isPublic(): boolean {
+    return this._is_public;
+  }
+
+  @ApiProperty({
+    description: '이벤트와 관련된 포토부스 업체명',
+  })
+  @Expose()
+  get brandName(): string {
+    return this._photo_booth_brand.name;
   }
 }

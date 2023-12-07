@@ -1,54 +1,38 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString } from 'class-validator';
 import { PaginatedDto } from '../../common/dto/paginated-req.dto';
 
 export class BoothBrandQueryDto extends PaginatedDto {
   @ApiProperty({
     description: '포토부스 업체명',
     required: false,
-    example: '포토그레이',
+    example: '하루필름',
   })
   @IsString()
   @IsOptional()
   @IsString()
   @Type(() => String)
-  name: string;
+  brandName?: string;
 
   @ApiProperty({
-    description: '포토부스 업체의 이벤트 허용 여부',
+    description: '이벤트의 제목',
     required: false,
-    example: true,
-  })
-  @IsOptional()
-  @IsBoolean()
-  @Type(() => Boolean)
-  isEvent: boolean = false;
-
-  @ApiProperty({
-    description: '포토부스 업체의 해시태그',
-    required: false,
-    example: '카페,스튜디오,이벤트',
   })
   @IsOptional()
   @IsString()
   @Type(() => String)
-  hashtags?: string;
+  title?: string;
 
-  getQueryProps(): FindBrandOptionProps {
+  getQueryProps(): FindEventOptionProps {
     return {
-      name: this.name,
-      isEvent: this.isEvent,
-      hashtags: this.hashtags
-        ? this.hashtags.split(',').map((tag) => tag.trim())
-        : [],
+      brandName: this.brandName,
+      title: this.title,
     };
   }
 }
 
-export interface FindBrandOptionProps {
-  id?: number;
-  name?: string;
-  isEvent?: boolean;
-  hashtags?: string[];
+export interface FindEventOptionProps {
+  brandName?: string;
+  title?: string;
 }
