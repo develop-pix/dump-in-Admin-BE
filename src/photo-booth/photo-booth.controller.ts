@@ -65,7 +65,7 @@ export class PhotoBoothController {
     const response = await this.photoBoothService.findOneOpenBooth(id);
     return ResponseEntity.OK_WITH<GetPhotoBoothDetailDto>(
       '공개된 포토부스 지점을 상세 조회합니다.',
-      response,
+      new GetPhotoBoothDetailDto(response),
     );
   }
 
@@ -112,7 +112,7 @@ export class PhotoBoothController {
     const response = await this.photoBoothService.findOneHiddenBooth(id);
     return ResponseEntity.OK_WITH<GetPhotoBoothDetailDto>(
       '비공개 포토부스 목록을 반환합니다.',
-      response,
+      new GetPhotoBoothDetailDto(response),
     );
   }
 
@@ -172,10 +172,10 @@ export class PhotoBoothController {
   async findOneBrand(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ResponseEntity<GetBoothBrandDetailDto>> {
-    const response = await this.photoBoothService.findOneBrand(id);
+    const response = await this.photoBoothService.findOneBrandById(id);
     return ResponseEntity.OK_WITH<GetBoothBrandDetailDto>(
       '요청한 포토부스 업체를 반환합니다.',
-      response,
+      new GetBoothBrandDetailDto(response),
     );
   }
 
