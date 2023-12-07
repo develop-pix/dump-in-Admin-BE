@@ -16,6 +16,10 @@ import {
   PhotoBoothBrand,
   PhotoBoothHashtag,
 } from './photo-booth/entity/photo-booth-brand.entity';
+import { EventModule } from './event/event.module';
+import { EventImage } from './event/entity/event-image.entity';
+import { Events } from './event/entity/event.entity';
+import { HashtagModule } from './hashtag/hashtag.module';
 
 @Module({
   imports: [
@@ -34,6 +38,8 @@ import {
       synchronize: process.env.NODE_ENV === 'local',
       logging: process.env.NODE_ENV !== 'production',
       entities: [
+        EventImage,
+        Events,
         User,
         Session,
         PhotoBooth,
@@ -65,6 +71,8 @@ import {
     PhotoBoothModule,
     ExceptionModule,
     AuthModule,
+    EventModule,
+    HashtagModule,
   ],
 })
 export class AppModule {}
