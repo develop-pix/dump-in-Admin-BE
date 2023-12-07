@@ -41,7 +41,7 @@ export class HiddenPhotoBooth extends BaseDateEntity {
     return hiddenBooth;
   }
 
-  static byId({ id }: FindBoothOptionProps): HiddenPhotoBooth {
+  static byId(id: string): HiddenPhotoBooth {
     const hiddenBooth = new HiddenPhotoBooth();
 
     hiddenBooth.id = id;

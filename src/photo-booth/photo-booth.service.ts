@@ -78,7 +78,7 @@ export class PhotoBoothService {
      */
 
     const photoBooth = await this.photoBoothRepository.findOneBoothBy(
-      PhotoBooth.byId({ id }),
+      PhotoBooth.byId(id),
     );
 
     if (!photoBooth) {
@@ -169,7 +169,7 @@ export class PhotoBoothService {
      */
 
     const hiddenBooth = await this.hiddenBoothRepository.findOneHiddenBoothBy(
-      HiddenPhotoBooth.byId({ id }),
+      HiddenPhotoBooth.byId(id),
     );
 
     if (!hiddenBooth) {
@@ -218,7 +218,7 @@ export class PhotoBoothService {
      */
 
     const isPhotoBoothExist = await this.photoBoothRepository.photoBoothHasId(
-      PhotoBooth.byId({ id }),
+      PhotoBooth.byId(id),
     );
 
     if (isPhotoBoothExist) {
@@ -282,7 +282,7 @@ export class PhotoBoothService {
      */
 
     const photoBoothBrand = await this.photoBoothBrandRepository.findOneBrandBy(
-      PhotoBoothBrand.byName({ name }),
+      PhotoBoothBrand.byName(name),
     );
 
     if (!photoBoothBrand) {
@@ -294,7 +294,7 @@ export class PhotoBoothService {
 
   async findOneBrandById(id: number): Promise<PhotoBoothBrand> {
     const photoBoothBrand = await this.photoBoothBrandRepository.findOneBrandBy(
-      PhotoBoothBrand.byId({ id }),
+      PhotoBoothBrand.byId(id),
     );
 
     if (!photoBoothBrand) {
@@ -378,7 +378,7 @@ export class PhotoBoothService {
 
     const allHashtagsOfBrand =
       await this.photoBoothHashtagRepository.findManyHashtagsOfBrand(
-        PhotoBoothHashtag.of({ brand }),
+        PhotoBoothHashtag.of(brand),
       );
 
     await this.photoBoothHashtagRepository.removeAllHashtagsOfBrand(

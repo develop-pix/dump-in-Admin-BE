@@ -100,7 +100,7 @@ export class PhotoBoothBrand {
     return brand;
   }
 
-  static byId({ id }: FindBrandOptionProps): PhotoBoothBrand {
+  static byId(id: number): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.id = id;
@@ -108,7 +108,7 @@ export class PhotoBoothBrand {
     return brand;
   }
 
-  static byName({ name }: FindBrandOptionProps): PhotoBoothBrand {
+  static byName(name: string): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.name = name;
@@ -137,7 +137,7 @@ export class PhotoBoothHashtag {
   @JoinColumn({ name: 'hashtag_id' })
   hashtag: Hashtag;
 
-  static of({ brand }: FindPhotoBoothHashtagOptionsProps): PhotoBoothHashtag {
+  static of(brand: PhotoBoothBrand): PhotoBoothHashtag {
     const photoBoothHashtag = new PhotoBoothHashtag();
 
     photoBoothHashtag.photo_booth_brand = new PhotoBoothBrand();
@@ -160,10 +160,6 @@ export class PhotoBoothHashtag {
 
     return photoBoothHashtag;
   }
-}
-
-export interface FindPhotoBoothHashtagOptionsProps {
-  brand: PhotoBoothBrand;
 }
 
 export interface PhotoBoothHashtagCreateProps {

@@ -50,7 +50,7 @@ export class PhotoBooth extends BaseDateEntity {
   @JoinColumn({ name: 'photo_booth_brand_id' })
   photo_booth_brand: PhotoBoothBrand;
 
-  static byId({ id }: FindBoothOptionProps) {
+  static byId(id: string) {
     const photoBooth = new PhotoBooth();
 
     photoBooth.id = id;

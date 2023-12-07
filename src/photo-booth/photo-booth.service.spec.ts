@@ -283,7 +283,7 @@ describe('PhotoBoothService', () => {
       const id = 'uuid';
 
       const photoBoothInDb = await photoBoothRepository.findOneBoothBy(
-        PhotoBooth.byId({ id }),
+        PhotoBooth.byId(id),
       );
 
       // When
@@ -478,7 +478,7 @@ describe('PhotoBoothService', () => {
       const id = 'uuid';
 
       const isPhotoBoothExist = await photoBoothRepository.photoBoothHasId(
-        PhotoBooth.byId({ id }),
+        PhotoBooth.byId(id),
       );
 
       // When
