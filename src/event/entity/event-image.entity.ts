@@ -6,7 +6,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Events } from './event.entity';
-import { BaseDateEntity } from 'src/common/entity/common-date.entity';
+import { BaseDateEntity } from '../../common/entity/common-date.entity';
 
 @Entity('event_image')
 export class EventImage extends BaseDateEntity {

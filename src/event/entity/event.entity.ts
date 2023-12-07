@@ -7,20 +7,16 @@ import {
   OneToMany,
 } from 'typeorm';
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
-import {
-  Hashtag,
-  PhotoBoothBrand,
-} from '../../photo-booth/entity/photo-booth-brand.entity';
+import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
 import { EventImage } from './event-image.entity';
+import { Hashtag } from '../../hashtag/entity/hashtag.entity';
+import { EventCreateProps } from '../dto/post-event.dto';
+import { EventUpdateProps } from '../dto/patch-event.dto';
 
 @Entity('event')
 export class Events extends BaseDateEntity {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @ManyToOne(() => PhotoBoothBrand, (photoBooth) => photoBooth.events)
-  @JoinColumn({ name: 'photo_booth_brand_id' })
-  photo_booth_brand: PhotoBoothBrand;
 
   @Column()
   title: string;
@@ -42,6 +38,10 @@ export class Events extends BaseDateEntity {
 
   @Column()
   is_public: boolean;
+
+  @ManyToOne(() => PhotoBoothBrand, (photoBooth) => photoBooth.events)
+  @JoinColumn({ name: 'photo_booth_brand_id' })
+  photo_booth_brand: PhotoBoothBrand;
 
   @OneToMany(() => EventImage, (eventImage: EventImage) => eventImage.event)
   event_images: EventImage[];
@@ -65,14 +65,40 @@ export class Events extends BaseDateEntity {
     return event;
   }
 
-  static create({ title, brandName, content, main_thumbnail_url }): Events {
+  static create({
+    title,
+    brand,
+    content,
+    isPublic,
+    mainThumbnailUrl,
+  }: EventCreateProps): Events {
     const event = new Events();
     event.photo_booth_brand = new PhotoBoothBrand();
 
     event.title = title;
     event.content = content;
-    event.main_thumbnail_url = main_thumbnail_url;
-    event.photo_booth_brand.name = brandName;
+    event.main_thumbnail_url = mainThumbnailUrl;
+    event.photo_booth_brand = brand;
+    event.is_public = isPublic;
+
+    return event;
+  }
+
+  static updateBy({
+    title,
+    brand,
+    content,
+    isPublic,
+    mainThumbnailUrl,
+  }: EventUpdateProps): Events {
+    const event = new Events();
+    event.photo_booth_brand = new PhotoBoothBrand();
+
+    event.title = title;
+    event.content = content;
+    event.main_thumbnail_url = mainThumbnailUrl;
+    event.photo_booth_brand = brand;
+    event.is_public = isPublic;
 
     return event;
   }
@@ -96,7 +122,6 @@ export class EventHashtag {
   static of({ event }): EventHashtag {
     const eventHashtag = new EventHashtag();
 
-    eventHashtag.event = new Events();
     eventHashtag.event = event;
 
     return eventHashtag;
