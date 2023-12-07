@@ -21,13 +21,9 @@ import {
   PhotoBoothUpdateProps,
 } from './dto/patch-photo-booth.dto';
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
-import {
-  PhotoBoothBrand,
-  PhotoBoothHashtag,
-} from './entity/photo-booth-brand.entity';
+import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 import { BrandCreateProps } from './dto/post-photo-booth.dto';
 import { MoveToOpenBoothProps } from './dto/put-photo-booth.dto';
-import { PhotoBoothHashtagRepository } from './repository/photo-booth-hashtag.repository';
 import { HashtagService } from '../hashtag/hashtag.service';
 
 @Injectable()
@@ -37,7 +33,6 @@ export class PhotoBoothService {
     private readonly photoBoothRepository: PhotoBoothRepository,
     private readonly hiddenBoothRepository: HiddenBoothRepository,
     private readonly photoBoothBrandRepository: PhotoBoothBrandRepository,
-    private readonly photoBoothHashtagRepository: PhotoBoothHashtagRepository,
   ) {}
 
   async findOpenBoothByQueryParam(
@@ -324,7 +319,7 @@ export class PhotoBoothService {
     const brand = await this.photoBoothBrandRepository.saveBrand(
       PhotoBoothBrand.create(createProps),
     );
-    await this.handleBrandHashtags(brand, createProps.hashtags);
+    await this.hashtagService.handleHashtags(brand, createProps.hashtags);
 
     return true;
   }
@@ -355,40 +350,8 @@ export class PhotoBoothService {
     }
 
     const brand = await this.findOneBrandById(id);
-    await this.handleBrandHashtags(brand, updateProps.hashtags);
+    await this.hashtagService.handleHashtags(brand, updateProps.hashtags);
 
     return true;
-  }
-
-  private async handleBrandHashtags(
-    brand: PhotoBoothBrand,
-    hashtags: string[],
-  ): Promise<void> {
-    /**
-     * @param brand - 포토부스 업체 정보
-     * @param hashtags
-     *       - 해시태그 여러개를 가진 배열
-     * @desc - 포토부스 업체와 연결된 포토부스 모든 해시태그 반환
-     *       - 포토부스 업체와 연결된 모든 해시태그 연결을 삭제
-     *       - hashtags 배열 내부의 해시태그가 존재하면 해시태그 생성 메서드 실행
-     */
-
-    const allHashtagsOfBrand =
-      await this.photoBoothHashtagRepository.findManyHashtagsOfBrand(
-        PhotoBoothHashtag.of(brand),
-      );
-
-    await this.photoBoothHashtagRepository.removeAllHashtagsOfBrand(
-      allHashtagsOfBrand,
-    );
-
-    if (hashtags.length !== 0) {
-      const allHashtags = await this.hashtagService.createHashtags(hashtags);
-      await this.photoBoothHashtagRepository.saveBrandHashtags(
-        allHashtags.map((hashtag) =>
-          PhotoBoothHashtag.create({ brand, hashtag }),
-        ),
-      );
-    }
   }
 }

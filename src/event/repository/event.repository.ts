@@ -6,16 +6,14 @@ import {
 } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { EventHashtag, Events } from '../entity/event.entity';
-import { PaginationProps } from '../../common/dto/paginated-req.dto';
+import { Events } from '../entity/event.entity';
+import { PaginationProps } from '../../common/dto/pagination-req.dto';
 
 @Injectable()
 export class EventRepository {
   constructor(
     @InjectRepository(Events)
     private readonly eventRepository: Repository<Events>,
-    @InjectRepository(EventHashtag)
-    private readonly eventHashtagRepository: Repository<EventHashtag>,
   ) {}
 
   async saveEvent(event: Events): Promise<Events> {
@@ -69,37 +67,6 @@ export class EventRepository {
       id: event.id,
       title: event.title,
       photo_booth_brand: event.photo_booth_brand,
-    };
-  }
-
-  async saveEventHashtags(
-    eventWithTags: EventHashtag[],
-  ): Promise<EventHashtag[]> {
-    return await this.eventHashtagRepository.save(eventWithTags);
-  }
-
-  async findManyHashtagsOfEvent(
-    eventHashtag: EventHashtag,
-  ): Promise<EventHashtag[]> {
-    const where = this.findEventHashtagOptionsWhere(eventHashtag);
-    return await this.eventHashtagRepository.findBy(where);
-  }
-
-  async removeAllHashtagsOfEvent(
-    eventHashtags: EventHashtag[],
-  ): Promise<boolean> {
-    if (eventHashtags.length === 0) {
-      return false;
-    }
-    const result = await this.eventHashtagRepository.remove(eventHashtags);
-    return result.length > 0;
-  }
-
-  private findEventHashtagOptionsWhere(
-    tag: EventHashtag,
-  ): FindOptionsWhere<EventHashtag> {
-    return {
-      event: tag.event,
     };
   }
 }

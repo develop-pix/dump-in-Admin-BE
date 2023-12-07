@@ -1,10 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { Hashtag } from './entity/hashtag.entity';
-import { HashtagRepository } from './repository/hastag.repository';
+import {
+  HashtagRepository,
+  EntityHashtagRepositoryInterface,
+} from './repository/hastag.repository';
+import { Events } from '../event/entity/event.entity';
+import { EventHashtag } from './entity/event-hashtag.entity';
+import { BrandHashtag } from './entity/photo-booth-hashtag.entity';
+import { PhotoBoothBrand } from '../photo-booth/entity/photo-booth-brand.entity';
 
 @Injectable()
 export class HashtagService {
-  constructor(private readonly hashtagRepository: HashtagRepository) {}
+  constructor(
+    private readonly hashtagRepository: HashtagRepository,
+    private readonly unifiedEntityHashtagRepository: EntityHashtagRepositoryInterface<
+      BrandHashtag | EventHashtag
+    >,
+  ) {}
 
   create() {
     return 'This action adds a new hashtag';
@@ -48,5 +60,37 @@ export class HashtagService {
         : [];
 
     return [...existingHashtags, ...newHashtags];
+  }
+
+  async handleHashtags(
+    entity: PhotoBoothBrand | Events,
+    hashtags: string[],
+  ): Promise<void> {
+    /**
+     * @param entity - 브랜드 또는 이벤트 엔티티
+     * @desc - 연결된 모든 해시태그 가져오기
+     *       - 엔티티와 관련된 해시태그 모두 삭제
+     *       - 새로운 해시태그 생성 및 연결
+     */
+
+    const allHashtags =
+      await this.unifiedEntityHashtagRepository.findManyHashtags(
+        entity instanceof PhotoBoothBrand
+          ? BrandHashtag.of(entity)
+          : EventHashtag.of(entity),
+      );
+
+    await this.unifiedEntityHashtagRepository.removeAllHashtags(allHashtags);
+
+    if (hashtags.length !== 0) {
+      const newHashtags = await this.createHashtags(hashtags);
+      await this.unifiedEntityHashtagRepository.saveHashtags(
+        newHashtags.map((hashtag) =>
+          entity instanceof PhotoBoothBrand
+            ? BrandHashtag.create(entity, hashtag)
+            : EventHashtag.create(entity, hashtag),
+        ),
+      );
+    }
   }
 }

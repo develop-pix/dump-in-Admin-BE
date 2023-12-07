@@ -6,7 +6,7 @@ import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.reposi
 import { PhotoBooth } from './entity/photo-booth.entity';
 import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { PhotoBoothHashtagRepository } from './repository/photo-booth-hashtag.repository';
+import { BrandHashtagRepository } from '../hashtag/repository/photo-booth-hashtag.repository';
 import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
 import { HashtagService } from '../hashtag/hashtag.service';
@@ -50,7 +50,7 @@ describe('PhotoBoothService', () => {
   let photoBoothRepository: PhotoBoothRepository;
   let photoBoothHiddenRepository: HiddenBoothRepository;
   let photoBoothBrandRepository: PhotoBoothBrandRepository;
-  let photoBoothHashtagRepository: PhotoBoothHashtagRepository;
+  let photoBoothHashtagRepository: BrandHashtagRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -68,7 +68,7 @@ describe('PhotoBoothService', () => {
           useClass: MockPhotoBoothBrandRepository,
         },
         {
-          provide: PhotoBoothHashtagRepository,
+          provide: BrandHashtagRepository,
           useClass: MockPhotoBoothHashtagRepository,
         },
       ],
@@ -85,8 +85,8 @@ describe('PhotoBoothService', () => {
     photoBoothBrandRepository = module.get<PhotoBoothBrandRepository>(
       PhotoBoothBrandRepository,
     );
-    photoBoothHashtagRepository = module.get<PhotoBoothHashtagRepository>(
-      PhotoBoothHashtagRepository,
+    photoBoothHashtagRepository = module.get<BrandHashtagRepository>(
+      BrandHashtagRepository,
     );
 
     jest

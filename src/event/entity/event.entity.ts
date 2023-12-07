@@ -9,9 +9,10 @@ import {
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
 import { EventImage } from './event-image.entity';
-import { Hashtag } from '../../hashtag/entity/hashtag.entity';
 import { EventCreateProps } from '../dto/post-event.dto';
 import { EventUpdateProps } from '../dto/patch-event.dto';
+import { FindEventOptionProps } from '../dto/get-event-query.dto';
+import { EventHashtag } from '../../hashtag/entity/event-hashtag.entity';
 
 @Entity('event')
 export class Events extends BaseDateEntity {
@@ -56,7 +57,23 @@ export class Events extends BaseDateEntity {
   // @JoinColumn({ name: 'user_id' })
   // users: User[];
 
-  static of({ title, brand }): Events {
+  static byId(id: number): Events {
+    const event = new Events();
+
+    event.id = id;
+
+    return event;
+  }
+
+  static byTitle(title: string): Events {
+    const event = new Events();
+
+    event.title = title;
+
+    return event;
+  }
+
+  static of({ title, brand }: FindEventOptionProps): Events {
     const event = new Events();
 
     event.title = title;
@@ -101,41 +118,5 @@ export class Events extends BaseDateEntity {
     event.is_public = isPublic;
 
     return event;
-  }
-}
-
-@Entity('event_hashtag')
-export class EventHashtag {
-  @PrimaryGeneratedColumn()
-  id: number;
-
-  @ManyToOne(() => Events, (photoBoothBrand: Events) => photoBoothBrand.events)
-  @JoinColumn({ name: 'event_id' })
-  event: Events;
-
-  @ManyToOne(() => Hashtag, (hashtag: Hashtag) => hashtag.event_hashtag, {
-    eager: true,
-  })
-  @JoinColumn({ name: 'hashtag_id' })
-  hashtag: Hashtag;
-
-  static of({ event }): EventHashtag {
-    const eventHashtag = new EventHashtag();
-
-    eventHashtag.event = event;
-
-    return eventHashtag;
-  }
-
-  static create({ event, hashtag }): EventHashtag {
-    const eventHashtag = new EventHashtag();
-
-    eventHashtag.event = new Events();
-    eventHashtag.hashtag = new Hashtag();
-
-    eventHashtag.event = event;
-    eventHashtag.hashtag = hashtag;
-
-    return eventHashtag;
   }
 }
