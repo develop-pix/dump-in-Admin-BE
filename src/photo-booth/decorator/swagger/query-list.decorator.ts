@@ -9,9 +9,11 @@ import {
   GetPhotoBoothListDto,
 } from '../../dto/get-photo-booth-list.dto';
 
+type ListDtos = GetPhotoBoothListDto | GetBoothBrandListDto;
+
 export const SwaggerListByQueryParam = (
   name: string,
-  reponse: Type<GetPhotoBoothListDto | GetBoothBrandListDto>,
+  reponse: Type<ListDtos>,
 ): MethodDecorator =>
   applyDecorators(
     ApiOperation({

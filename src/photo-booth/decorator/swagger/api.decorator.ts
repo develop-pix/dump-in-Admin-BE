@@ -10,11 +10,15 @@ import {
 } from '../../dto/get-photo-booth-detail.dto';
 import { ResponseEntity } from '../../../common/entity/response.entity';
 
+type DetailDtos =
+  | GetPhotoBoothDetailDto
+  | GetBoothBrandDetailDto
+  | ResponseEntity<string>;
+
 export const SwaggerAPI = (
   name: string,
-  response?: Type<
-    GetPhotoBoothDetailDto | GetBoothBrandDetailDto | ResponseEntity<string>
-  >,
+  status: number = HttpStatus.OK,
+  response?: Type<DetailDtos>,
 ): MethodDecorator =>
   applyDecorators(
     ApiOperation({
@@ -22,7 +26,7 @@ export const SwaggerAPI = (
     }),
 
     ApiResponse({
-      status: 200,
+      status,
       type: response || ResponseEntity,
       description: '성공 시 OK 응답을 반환합니다.',
     }),

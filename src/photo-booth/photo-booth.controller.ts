@@ -57,7 +57,7 @@ export class PhotoBoothController {
   }
 
   @Get(':id')
-  @SwaggerAPI('앱에 공개된 포토부스 상세 조회', GetPhotoBoothDetailDto)
+  @SwaggerAPI('앱에 공개된 포토부스 상세 조회', 200, GetPhotoBoothDetailDto)
   async findOneOpenBooth(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<ResponseEntity<GetPhotoBoothDetailDto>> {
@@ -103,7 +103,7 @@ export class PhotoBoothController {
   }
 
   @Get('raw/:id')
-  @SwaggerAPI('비공개 포토부스 조회', GetPhotoBoothDetailDto)
+  @SwaggerAPI('비공개 포토부스 조회', 200, GetPhotoBoothDetailDto)
   async findOneHiddenBooth(
     @Param('id', ParseUUIDPipe) id: string,
   ): Promise<ResponseEntity<GetPhotoBoothDetailDto>> {
@@ -128,7 +128,7 @@ export class PhotoBoothController {
   }
 
   @Put('raw/:id')
-  @SwaggerAPI('비공개 포토부스를 앱에 노출')
+  @SwaggerAPI('비공개 포토부스를 앱에 노출', 201)
   async moveHiddenToOpenBooth(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() request: MoveHiddenToOpenBoothDto,
@@ -165,7 +165,7 @@ export class PhotoBoothController {
   }
 
   @Get('brand/:id')
-  @SwaggerAPI('포토부스 업체', GetBoothBrandDetailDto)
+  @SwaggerAPI('포토부스 업체', 200, GetBoothBrandDetailDto)
   async findOneBrand(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ResponseEntity<GetBoothBrandDetailDto>> {
@@ -177,7 +177,7 @@ export class PhotoBoothController {
   }
 
   @Post('brand')
-  @SwaggerAPI('포토부스 업체 생성')
+  @SwaggerAPI('포토부스 업체 생성', 201)
   async createBrand(
     @Body() request: CreateBoothBrandDto,
   ): Promise<ResponseEntity<string>> {
