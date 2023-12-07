@@ -1,5 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import {
+  ArrayMaxSize,
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 import { EventCreateProps } from './post-event.dto';
 
 export class UpdateEventDto {
@@ -38,6 +45,16 @@ export class UpdateEventDto {
   @IsOptional()
   isPublic: boolean;
 
+  @ApiProperty({
+    description: '포토부스 업체 해시태그 목록 (최대 4개)',
+    example: ['캐릭터', '콜라보', '연예인', '스냅', '이달의프레임'],
+  })
+  @IsNotEmpty()
+  @IsArray()
+  @ArrayMaxSize(5, { message: '해시태그는 최대 5개까지 입력 가능합니다.' })
+  @IsString({ each: true })
+  hashtags: string[];
+
   getUpdateProps(): EventUpdateProps {
     return {
       title: this.title,
@@ -45,6 +62,7 @@ export class UpdateEventDto {
       mainThumbnailUrl: this.mainThumbnailUrl,
       brandName: this.brandName,
       isPublic: this.isPublic,
+      hashtags: (this.hashtags || []).filter((tag) => tag.trim() !== ''),
     };
   }
 }

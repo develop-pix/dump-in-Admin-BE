@@ -1,6 +1,6 @@
-import { EventHashtag } from '../../event/entity/event.entity';
-import { PhotoBoothHashtag } from '../../photo-booth/entity/photo-booth-brand.entity';
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
+import { EventHashtag } from './event-hashtag.entity';
+import { BrandHashtag } from './photo-booth-hashtag.entity';
 
 @Entity('hashtag')
 export class Hashtag {
@@ -17,10 +17,10 @@ export class Hashtag {
   order_number: number;
 
   @OneToMany(
-    () => PhotoBoothHashtag,
-    (photoBoothHashtag: PhotoBoothHashtag) => photoBoothHashtag.hashtag,
+    () => BrandHashtag,
+    (photoBoothHashtag: BrandHashtag) => photoBoothHashtag.hashtag,
   )
-  photo_booth_hashtags: PhotoBoothHashtag[];
+  photo_booth_hashtags: BrandHashtag[];
 
   @OneToMany(
     () => EventHashtag,
