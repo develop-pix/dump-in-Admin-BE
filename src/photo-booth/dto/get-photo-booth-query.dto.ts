@@ -2,16 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { PaginatedDto } from '../../common/dto/paginated-req.dto';
-
-export interface FindBoothOptionProps {
-  id?: string;
-  name?: string;
-  location?: string;
-}
+import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
 
 export class BoothQueryDto extends PaginatedDto {
   @ApiProperty({
     description: '포토부스에서 지역을 검색하는 쿼리스트링',
+    required: false,
     example: '서울',
   })
   @IsString()
@@ -21,6 +17,7 @@ export class BoothQueryDto extends PaginatedDto {
 
   @ApiProperty({
     description: '포토부스에서 지점명을 검색하는 쿼리스트링',
+    required: false,
     example: '하루필름 홍대 1호점',
   })
   @IsString()
@@ -28,24 +25,29 @@ export class BoothQueryDto extends PaginatedDto {
   @Type(() => String)
   name?: string;
 
+  @ApiProperty({
+    description: '포토부스에서 업체명을 검색하는 쿼리스트링',
+    required: false,
+    example: '하루필름',
+  })
+  @IsString()
+  @IsOptional()
+  @Type(() => String)
+  brandName?: string;
+
   getQueryProps(): FindBoothOptionProps {
     return {
       location: this.location,
       name: this.name,
+      brandName: this.brandName,
     };
   }
 }
 
-export interface FindBrandOptionProps {
-  id?: number;
-  name?: string;
-  is_event?: boolean;
-}
-
-export class BrandQueryDto extends PaginatedDto {
+export class BoothBrandQueryDto extends PaginatedDto {
   @ApiProperty({
     description: '포토부스 업체명',
-    required: true,
+    required: false,
     example: '포토그레이',
   })
   @IsString()
@@ -56,6 +58,7 @@ export class BrandQueryDto extends PaginatedDto {
 
   @ApiProperty({
     description: '포토부스 업체의 이벤트 허용 여부',
+    required: false,
     example: true,
   })
   @IsOptional()
@@ -63,10 +66,38 @@ export class BrandQueryDto extends PaginatedDto {
   @Type(() => Boolean)
   isEvent: boolean = false;
 
+  @ApiProperty({
+    description: '포토부스 업체의 해시태그',
+    required: false,
+    example: '카페,스튜디오,이벤트',
+  })
+  @IsOptional()
+  @IsString()
+  @Type(() => String)
+  hashtags?: string;
+
   getQueryProps(): FindBrandOptionProps {
     return {
       name: this.name,
-      is_event: this.isEvent,
+      isEvent: this.isEvent,
+      hashtags: this.hashtags
+        ? this.hashtags.split(',').map((tag) => tag.trim())
+        : [],
     };
   }
+}
+
+export interface FindBrandOptionProps {
+  id?: number;
+  name?: string;
+  isEvent?: boolean;
+  hashtags?: string[];
+}
+
+export interface FindBoothOptionProps {
+  id?: string;
+  name?: string;
+  location?: string;
+  brandName?: string;
+  brand?: PhotoBoothBrand;
 }

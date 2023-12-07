@@ -8,20 +8,8 @@ import {
 } from 'typeorm';
 import { PhotoBooth } from './photo-booth.entity';
 import { FindBrandOptionProps } from '../dto/get-photo-booth-query.dto';
-
-export interface BrandCreateProps {
-  name: string;
-  main_thumbnail_image_url: string;
-  is_event: boolean;
-}
-
-export interface BrandUpdateProps {
-  name: string;
-  description: string;
-  photo_booth_url: string;
-  main_thumbnail_image_url: string;
-  is_event: boolean;
-}
+import { BrandCreateProps } from '../dto/post-photo-booth.dto';
+import { BrandUpdateProps } from '../dto/patch-photo-booth.dto';
 
 @Entity('photo_booth_brand')
 export class PhotoBoothBrand {
@@ -58,14 +46,14 @@ export class PhotoBoothBrand {
 
   static create({
     name,
-    main_thumbnail_image_url,
-    is_event,
+    mainThumbnailImageUrl,
+    isEvent,
   }: BrandCreateProps): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.name = name;
-    brand.main_thumbnail_image_url = main_thumbnail_image_url;
-    brand.is_event = is_event;
+    brand.main_thumbnail_image_url = mainThumbnailImageUrl;
+    brand.is_event = isEvent;
 
     return brand;
   }
@@ -73,26 +61,36 @@ export class PhotoBoothBrand {
   static updateBy({
     name,
     description,
-    photo_booth_url,
-    main_thumbnail_image_url,
-    is_event,
+    photoBoothUrl,
+    mainThumbnailImageUrl,
+    isEvent,
   }: BrandUpdateProps): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.name = name;
     brand.description = description;
-    brand.photo_booth_url = photo_booth_url;
-    brand.main_thumbnail_image_url = main_thumbnail_image_url;
-    brand.is_event = is_event;
+    brand.photo_booth_url = photoBoothUrl;
+    brand.main_thumbnail_image_url = mainThumbnailImageUrl;
+    brand.is_event = isEvent;
 
     return brand;
   }
 
-  static of({ name, is_event }: FindBrandOptionProps): PhotoBoothBrand {
+  static of({
+    name,
+    isEvent,
+    hashtags,
+  }: FindBrandOptionProps): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.name = name;
-    brand.is_event = is_event;
+    brand.is_event = isEvent;
+    brand.photo_booth_hashtags = hashtags.map((tag) => {
+      const hashtag = new PhotoBoothHashtag();
+      hashtag.hashtag = new Hashtag();
+      hashtag.hashtag.name = tag;
+      return hashtag;
+    });
 
     return brand;
   }
@@ -133,6 +131,32 @@ export class Hashtag {
     (photoBoothHashtag: PhotoBoothHashtag) => photoBoothHashtag.hashtag,
   )
   photo_booth_hashtags: PhotoBoothHashtag[];
+
+  static of({ id, name }: FindHashtagOptionsProps): Hashtag {
+    const hashtag = new Hashtag();
+
+    hashtag.name = name;
+    hashtag.id = id;
+
+    return hashtag;
+  }
+
+  static create({ name }: HashtagCreateProps): Hashtag {
+    const hashtag = new Hashtag();
+
+    hashtag.name = name;
+
+    return hashtag;
+  }
+}
+
+export interface FindHashtagOptionsProps {
+  id?: number;
+  name: string;
+}
+
+export interface HashtagCreateProps {
+  name: string;
 }
 
 @Entity('photo_booth_hashtag')
@@ -153,5 +177,38 @@ export class PhotoBoothHashtag {
     { eager: true },
   )
   @JoinColumn({ name: 'hashtag_id' })
+  hashtag: Hashtag;
+
+  static of({ brand }: FindPhotoBoothHashtagOptionsProps): PhotoBoothHashtag {
+    const photoBoothHashtag = new PhotoBoothHashtag();
+
+    photoBoothHashtag.photo_booth_brand = new PhotoBoothBrand();
+    photoBoothHashtag.photo_booth_brand = brand;
+
+    return photoBoothHashtag;
+  }
+
+  static create({
+    brand,
+    hashtag,
+  }: PhotoBoothHashtagCreateProps): PhotoBoothHashtag {
+    const photoBoothHashtag = new PhotoBoothHashtag();
+
+    photoBoothHashtag.photo_booth_brand = new PhotoBoothBrand();
+    photoBoothHashtag.hashtag = new Hashtag();
+
+    photoBoothHashtag.hashtag = hashtag;
+    photoBoothHashtag.photo_booth_brand = brand;
+
+    return photoBoothHashtag;
+  }
+}
+
+export interface FindPhotoBoothHashtagOptionsProps {
+  brand: PhotoBoothBrand;
+}
+
+export interface PhotoBoothHashtagCreateProps {
+  brand: PhotoBoothBrand;
   hashtag: Hashtag;
 }

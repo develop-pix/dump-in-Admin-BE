@@ -1,12 +1,15 @@
 import { Expose } from 'class-transformer';
-import { IsBoolean, IsNotEmpty, IsOptional, IsString } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
 import {
-  BrandCreateProps,
-  PhotoBoothBrand,
-} from '../entity/photo-booth-brand.entity';
+  ArrayMaxSize,
+  IsArray,
+  IsBoolean,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
 
-export class CreateBrandDto {
+export class CreateBoothBrandDto {
   @ApiProperty({
     description: '포토부스 업체명',
     required: true,
@@ -34,13 +37,34 @@ export class CreateBrandDto {
   @IsBoolean()
   isEvent: boolean = false;
 
-  toEntity(): PhotoBoothBrand {
-    const brandCreateProps: BrandCreateProps = {
-      name: this.name,
-      main_thumbnail_image_url: this.mainThumbnailImageUrl,
-      is_event: this.isEvent,
-    };
+  @ApiProperty({
+    description: '포토부스 업체 해시태그 목록 (최대 4개)',
+    example: ['행사', '웨딩', '파티', '스냅'],
+  })
+  @Expose()
+  @IsOptional()
+  @IsArray()
+  @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
+  @IsString({ each: true })
+  hashtags?: string[];
 
-    return PhotoBoothBrand.create(brandCreateProps);
+  getCreateProps(): BrandCreateProps {
+    const cleanedHashtags = (this.hashtags || []).filter(
+      (tag) => tag.trim() !== '',
+    );
+
+    return {
+      name: this.name,
+      isEvent: this.isEvent,
+      mainThumbnailImageUrl: this.mainThumbnailImageUrl,
+      hashtags: cleanedHashtags,
+    };
   }
+}
+
+export interface BrandCreateProps {
+  name: string;
+  isEvent: boolean;
+  mainThumbnailImageUrl: string;
+  hashtags?: string[];
 }

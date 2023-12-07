@@ -28,14 +28,19 @@ export class PhotoBoothBrandRepository {
     return await this.photoBoothBrandRepository.findAndCount(options);
   }
 
-  async findOneBrandBy(booth: PhotoBoothBrand): Promise<PhotoBoothBrand> {
-    const where = this.findBrandOptionsWhere(booth);
+  async findOneBrandBy(brand: PhotoBoothBrand): Promise<PhotoBoothBrand> {
+    const where = this.findBrandOptionsWhere(brand);
     return await this.photoBoothBrandRepository.findOneBy(where);
   }
 
-  async updateBoothBrand(id: number, booth: PhotoBoothBrand): Promise<boolean> {
-    const result = await this.photoBoothBrandRepository.update({ id }, booth);
+  async updateBoothBrand(id: number, brand: PhotoBoothBrand): Promise<boolean> {
+    const result = await this.photoBoothBrandRepository.update({ id }, brand);
     return result.affected > 0;
+  }
+
+  async isExistBrand(brand: PhotoBoothBrand): Promise<boolean> {
+    const where = this.findBrandOptionsWhere(brand);
+    return await this.photoBoothBrandRepository.exist({ where });
   }
 
   private findBrandManyOptions(
@@ -68,6 +73,9 @@ export class PhotoBoothBrandRepository {
       id: brand.id,
       name: brand.name,
       is_event: brand.is_event,
+      photo_booth_hashtags: brand.photo_booth_hashtags?.map((hashtag) => ({
+        hashtag: { name: hashtag.hashtag.name },
+      })),
     };
   }
 }

@@ -29,9 +29,22 @@ export class PhotoBoothRepository {
     return await this.photoBoothRepository.findOneBy(where);
   }
 
+  async saveOpenBooth(booth: PhotoBooth): Promise<PhotoBooth> {
+    return await this.photoBoothRepository.save(booth);
+  }
+
   async updatePhotoBooth(id: string, booth: PhotoBooth): Promise<boolean> {
     const result = await this.photoBoothRepository.update({ id }, booth);
     return result.affected > 0;
+  }
+
+  async deletePhotoBooth(id: string): Promise<boolean> {
+    const result = await this.photoBoothRepository.delete({ id });
+    return result.affected > 0;
+  }
+
+  async photoBoothHasId(booth: PhotoBooth): Promise<boolean> {
+    return this.photoBoothRepository.hasId(booth);
   }
 
   private findBoothManyOptions(
@@ -61,6 +74,7 @@ export class PhotoBoothRepository {
       id: booth.id,
       location: booth.location,
       name: booth.name,
+      photo_booth_brand: booth.photo_booth_brand,
     };
   }
 }

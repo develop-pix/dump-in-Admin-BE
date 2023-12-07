@@ -9,6 +9,7 @@ import {
 import { PhotoBoothBrand } from './photo-booth-brand.entity';
 import { FindBoothOptionProps } from '../dto/get-photo-booth-query.dto';
 import { PhotoBoothUpdateProps } from '../dto/patch-photo-booth.dto';
+import { MoveToOpenBoothProps } from '../dto/put-photo-booth.dto';
 
 @Entity('photo_booth')
 export class PhotoBooth extends BaseDateEntity {
@@ -57,11 +58,12 @@ export class PhotoBooth extends BaseDateEntity {
     return photoBooth;
   }
 
-  static of({ location, name }: FindBoothOptionProps) {
+  static of({ location, name, brand }: FindBoothOptionProps) {
     const photoBooth = new PhotoBooth();
 
     photoBooth.location = location;
     photoBooth.name = name;
+    photoBooth.photo_booth_brand = brand;
 
     return photoBooth;
   }
@@ -69,15 +71,45 @@ export class PhotoBooth extends BaseDateEntity {
   static updateBy({
     name,
     location,
-    street_address,
-    road_address,
+    streetAddress,
+    roadAddress,
+    brand,
   }: PhotoBoothUpdateProps): PhotoBooth {
     const photoBooth = new PhotoBooth();
 
     photoBooth.name = name;
     photoBooth.location = location;
-    photoBooth.street_address = street_address;
-    photoBooth.road_address = road_address;
+    photoBooth.street_address = streetAddress;
+    photoBooth.road_address = roadAddress;
+    photoBooth.photo_booth_brand = brand;
+
+    return photoBooth;
+  }
+
+  static to(
+    id: string,
+    {
+      name,
+      location,
+      latitude,
+      longitude,
+      streetAddress,
+      roadAddress,
+      operationTime,
+      brand,
+    }: MoveToOpenBoothProps,
+  ): PhotoBooth {
+    const photoBooth = new PhotoBooth();
+
+    photoBooth.id = id;
+    photoBooth.name = name;
+    photoBooth.latitude = latitude;
+    photoBooth.location = location;
+    photoBooth.longitude = longitude;
+    photoBooth.road_address = roadAddress;
+    photoBooth.operation_time = operationTime;
+    photoBooth.street_address = streetAddress;
+    photoBooth.photo_booth_brand = brand;
 
     return photoBooth;
   }

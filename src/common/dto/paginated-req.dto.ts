@@ -11,6 +11,7 @@ export interface PaginationProps {
 export class PaginatedDto {
   @ApiProperty({
     description: '리스트에 요구할 페이지 숫자',
+    required: false,
     example: 1,
     default: 1,
   })
@@ -23,10 +24,12 @@ export class PaginatedDto {
 
   @ApiProperty({
     description: '리스트에 요구할 페이지당 항목 수',
+    required: false,
     example: 20,
     default: 10,
   })
   @IsInt()
+  @Min(0)
   @IsOptional()
   @Type(() => Number)
   @Expose()
