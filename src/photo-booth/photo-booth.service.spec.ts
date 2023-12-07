@@ -6,7 +6,6 @@ import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.reposi
 import { PhotoBooth } from './entity/photo-booth.entity';
 import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
 import { PhotoBoothHashtagRepository } from './repository/photo-booth-hashtag.repository';
 import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
@@ -287,13 +286,11 @@ describe('PhotoBoothService', () => {
         PhotoBooth.byId({ id }),
       );
 
-      const expectedResult = new GetPhotoBoothDetailDto(photoBoothInDb);
-
       // When
       const result = await photoBoothService.findOneOpenBooth(id);
 
       // Then
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(photoBoothInDb);
     });
 
     it('FAILURE: uuid 값이 존재하지 않을 때 404 에러', async () => {
@@ -411,9 +408,7 @@ describe('PhotoBoothService', () => {
       expect(async () => {
         await photoBoothService.deleteOpenBooth(notBoothId);
       }).rejects.toThrowError(
-        new NotFoundException(
-          `포토부스 지점을 찾지 못했습니다. ID: ${notBoothId}`,
-        ),
+        new NotFoundException(`포토부스 삭제가 불가능합니다. ID:${notBoothId}`),
       );
     });
   });
