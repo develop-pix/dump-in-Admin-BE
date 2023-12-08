@@ -34,7 +34,7 @@ export class Hashtag {
     return hashtag;
   }
 
-  static create({ name }: HashtagCreateProps): Hashtag {
+  static create(name: string): Hashtag {
     const hashtag = new Hashtag();
 
     hashtag.name = name;
@@ -45,9 +45,5 @@ export class Hashtag {
 
 export interface FindHashtagOptionsProps {
   id?: number;
-  name: string;
-}
-
-export interface HashtagCreateProps {
   name: string;
 }

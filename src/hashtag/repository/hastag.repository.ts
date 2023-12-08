@@ -2,13 +2,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere, In } from 'typeorm';
 import { Hashtag } from '../entity/hashtag.entity';
 
-export interface EntityHashtagRepositoryInterface<T> {
-  saveHashtags(tags: T[]): Promise<T[]>;
-  findManyHashtags(entity: T): Promise<T[]>;
-  removeAllHashtags(entities: T[]): Promise<boolean>;
-  findOptionsWhere(tag: T): FindOptionsWhere<T>;
-}
-
 export class HashtagRepository {
   constructor(
     @InjectRepository(Hashtag)
@@ -16,6 +9,10 @@ export class HashtagRepository {
   ) {}
   async saveHashtags(tags: Hashtag[]): Promise<Hashtag[]> {
     return await this.hashtagRepository.save(tags);
+  }
+
+  async findAll(): Promise<Hashtag[]> {
+    return await this.hashtagRepository.find();
   }
 
   async findManyHashtagByOption(tags: Hashtag[]): Promise<Hashtag[]> {

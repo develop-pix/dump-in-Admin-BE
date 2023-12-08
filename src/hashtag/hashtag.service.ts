@@ -14,8 +14,8 @@ export class HashtagService {
     private readonly entityToHashtagRepository: EntityToHashtagRepository,
   ) {}
 
-  findAll() {
-    return `This action returns all hashtag`;
+  async findAllHashtags(): Promise<Hashtag[]> {
+    return await this.hashtagRepository.findAll();
   }
 
   async createHashtags(hashtags: string[]): Promise<Hashtag[]> {
@@ -47,7 +47,7 @@ export class HashtagService {
     const newHashtags =
       newHashtagNames.length > 0
         ? await this.hashtagRepository.saveHashtags(
-            newHashtagNames.map((name) => Hashtag.create({ name })),
+            newHashtagNames.map((name) => Hashtag.create(name)),
           )
         : [];
 
