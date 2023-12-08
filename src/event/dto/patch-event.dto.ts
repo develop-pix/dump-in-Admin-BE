@@ -3,6 +3,7 @@ import {
   ArrayMaxSize,
   IsArray,
   IsBoolean,
+  IsDate,
   IsNotEmpty,
   IsOptional,
   IsString,
@@ -46,6 +47,20 @@ export class UpdateEventDto {
   isPublic: boolean;
 
   @ApiProperty({
+    description: '이벤트 시작일',
+  })
+  @IsDate()
+  @IsOptional()
+  startDate: Date;
+
+  @ApiProperty({
+    description: '이벤트 마감일',
+  })
+  @IsDate()
+  @IsOptional()
+  endDate: Date;
+
+  @ApiProperty({
     description: '포토부스 업체 해시태그 목록 (최대 4개)',
     example: ['캐릭터', '콜라보', '연예인', '스냅', '이달의프레임'],
   })
@@ -61,6 +76,8 @@ export class UpdateEventDto {
       content: this.content,
       mainThumbnailUrl: this.mainThumbnailUrl,
       brandName: this.brandName,
+      startDate: this.startDate,
+      endDate: this.endDate,
       isPublic: this.isPublic,
       hashtags: (this.hashtags || []).filter((tag) => tag.trim() !== ''),
     };

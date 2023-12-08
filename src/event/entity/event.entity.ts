@@ -29,7 +29,10 @@ export class Events extends BaseDateEntity {
   main_thumbnail_url: string;
 
   @Column()
-  period: string;
+  start_date: Date;
+
+  @Column()
+  end_date: Date;
 
   @Column()
   view_count: number;
@@ -88,6 +91,8 @@ export class Events extends BaseDateEntity {
     content,
     isPublic,
     mainThumbnailUrl,
+    startDate,
+    endDate,
   }: EventCreateProps): Events {
     const event = new Events();
     event.photo_booth_brand = new PhotoBoothBrand();
@@ -97,6 +102,8 @@ export class Events extends BaseDateEntity {
     event.main_thumbnail_url = mainThumbnailUrl;
     event.photo_booth_brand = brand;
     event.is_public = isPublic;
+    event.start_date = startDate;
+    event.end_date = endDate;
 
     return event;
   }
@@ -107,6 +114,8 @@ export class Events extends BaseDateEntity {
     content,
     isPublic,
     mainThumbnailUrl,
+    startDate,
+    endDate,
   }: EventUpdateProps): Events {
     const event = new Events();
     event.photo_booth_brand = new PhotoBoothBrand();
@@ -116,6 +125,8 @@ export class Events extends BaseDateEntity {
     event.main_thumbnail_url = mainThumbnailUrl;
     event.photo_booth_brand = brand;
     event.is_public = isPublic;
+    event.start_date = startDate;
+    event.end_date = endDate;
 
     return event;
   }
