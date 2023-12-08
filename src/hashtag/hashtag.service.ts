@@ -1,21 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { Hashtag } from './entity/hashtag.entity';
-import {
-  HashtagRepository,
-  EntityHashtagRepositoryInterface,
-} from './repository/hastag.repository';
+import { HashtagRepository } from './repository/hastag.repository';
 import { Events } from '../event/entity/event.entity';
 import { EventHashtag } from './entity/event-hashtag.entity';
 import { BrandHashtag } from './entity/photo-booth-hashtag.entity';
 import { PhotoBoothBrand } from '../photo-booth/entity/photo-booth-brand.entity';
+import { EntityToHashtagRepository } from './repository/entity-hashtag.repository';
 
 @Injectable()
 export class HashtagService {
   constructor(
     private readonly hashtagRepository: HashtagRepository,
-    private readonly unifiedEntityHashtagRepository: EntityHashtagRepositoryInterface<
-      BrandHashtag | EventHashtag
-    >,
+    private readonly entityToHashtagRepository: EntityToHashtagRepository,
   ) {}
 
   findAll() {
@@ -69,18 +65,17 @@ export class HashtagService {
      *       - 새로운 해시태그 생성 및 연결
      */
 
-    const allHashtags =
-      await this.unifiedEntityHashtagRepository.findManyHashtags(
-        entity instanceof PhotoBoothBrand
-          ? BrandHashtag.of(entity)
-          : EventHashtag.of(entity),
-      );
+    const allHashtags = await this.entityToHashtagRepository.findManyHashtags(
+      entity instanceof PhotoBoothBrand
+        ? BrandHashtag.of(entity)
+        : EventHashtag.of(entity),
+    );
 
-    await this.unifiedEntityHashtagRepository.removeAllHashtags(allHashtags);
+    await this.entityToHashtagRepository.removeAllHashtags(allHashtags);
 
     if (hashtags.length !== 0) {
       const newHashtags = await this.createHashtags(hashtags);
-      await this.unifiedEntityHashtagRepository.saveHashtags(
+      await this.entityToHashtagRepository.saveHashtags(
         newHashtags.map((hashtag) =>
           entity instanceof PhotoBoothBrand
             ? BrandHashtag.create(entity, hashtag)
