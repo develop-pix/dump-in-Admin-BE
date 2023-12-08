@@ -20,6 +20,7 @@ import { UserModule } from './user/user.module';
 import { HashtagModule } from './hashtag/hashtag.module';
 import { BrandHashtag } from './hashtag/entity/brand-hashtag.entity';
 import { EventHashtag } from './hashtag/entity/event-hashtag.entity';
+import { ReviewModule } from './review/review.module';
 
 @Module({
   imports: [
@@ -75,6 +76,7 @@ import { EventHashtag } from './hashtag/entity/event-hashtag.entity';
     UserModule,
     AuthModule,
     HashtagModule,
+    ReviewModule,
   ],
 })
 export class AppModule {}
