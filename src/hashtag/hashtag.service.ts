@@ -3,7 +3,7 @@ import { Hashtag } from './entity/hashtag.entity';
 import { HashtagRepository } from './repository/hastag.repository';
 import { Events } from '../event/entity/event.entity';
 import { EventHashtag } from './entity/event-hashtag.entity';
-import { BrandHashtag } from './entity/photo-booth-hashtag.entity';
+import { BrandHashtag } from './entity/brand-hashtag.entity';
 import { PhotoBoothBrand } from '../photo-booth/entity/photo-booth-brand.entity';
 import { EntityToHashtagRepository } from './repository/entity-hashtag.repository';
 

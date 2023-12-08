@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from 'typeorm';
 import { EventHashtag } from './event-hashtag.entity';
-import { BrandHashtag } from './photo-booth-hashtag.entity';
+import { BrandHashtag } from './brand-hashtag.entity';
 
 @Entity('hashtag')
 export class Hashtag {

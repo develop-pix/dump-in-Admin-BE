@@ -1,6 +1,5 @@
-// common-hashtag.repository.ts
 import { FindOptionsWhere, Repository } from 'typeorm';
-import { BrandHashtag } from '../entity/photo-booth-hashtag.entity';
+import { BrandHashtag } from '../entity/brand-hashtag.entity';
 import { EventHashtag } from '../entity/event-hashtag.entity';
 
 export class EntityToHashtagRepository extends Repository<
@@ -29,7 +28,7 @@ export class EntityToHashtagRepository extends Repository<
     return result.length > 0;
   }
 
-  findOptionsWhere(
+  private findOptionsWhere(
     tag: BrandHashtag | EventHashtag,
   ): FindOptionsWhere<BrandHashtag | EventHashtag> {
     if (tag instanceof EventHashtag) {
