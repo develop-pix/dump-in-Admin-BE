@@ -1,5 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
-import { Hashtag } from '../../hashtag/entity/hashtag.entity';
+import { Hashtag } from './hashtag.entity';
 import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
 
 @Entity('photo_booth_hashtag')
