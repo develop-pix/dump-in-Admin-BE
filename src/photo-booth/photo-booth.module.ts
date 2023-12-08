@@ -8,19 +8,20 @@ import { PhotoBoothRepository } from './repository/photo-booth.repository';
 import { HiddenBoothRepository } from './repository/photo-booth-hidden.repository';
 import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
-import { HashtagService } from 'src/hashtag/hashtag.service';
+import { HashtagModule } from '../hashtag/hashtag.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([PhotoBooth, PhotoBoothBrand, HiddenPhotoBooth]),
+    HashtagModule,
   ],
   controllers: [PhotoBoothController],
   providers: [
-    HashtagService,
     PhotoBoothService,
     PhotoBoothRepository,
     HiddenBoothRepository,
     PhotoBoothBrandRepository,
   ],
+  exports: [PhotoBoothService],
 })
 export class PhotoBoothModule {}

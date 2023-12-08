@@ -34,12 +34,6 @@ class EnvironmentVariables {
 
   @IsString()
   SET_COOKIE_SECRET: string;
-
-  @IsString()
-  SET_HTTPS_KEY_PATH: string;
-
-  @IsString()
-  SET_HTTPS_CERT_PATH: string;
 }
 
 export function validate(

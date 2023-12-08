@@ -19,6 +19,7 @@ import { Hashtag } from './hashtag/entity/hashtag.entity';
 import { UserModule } from './user/user.module';
 import { HashtagModule } from './hashtag/hashtag.module';
 import { BrandHashtag } from './hashtag/entity/brand-hashtag.entity';
+import { EventHashtag } from './hashtag/entity/event-hashtag.entity';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { BrandHashtag } from './hashtag/entity/brand-hashtag.entity';
         PhotoBoothBrand,
         BrandHashtag,
         Hashtag,
+        EventHashtag,
       ],
       ssl:
         process.env.NODE_ENV === 'local'
@@ -69,9 +71,9 @@ import { BrandHashtag } from './hashtag/entity/brand-hashtag.entity';
     }),
     PhotoBoothModule,
     ExceptionModule,
-    AuthModule,
     EventModule,
     UserModule,
+    AuthModule,
     HashtagModule,
   ],
 })
