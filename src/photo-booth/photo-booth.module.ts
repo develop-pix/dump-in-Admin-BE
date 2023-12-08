@@ -8,7 +8,7 @@ import { PhotoBoothRepository } from './repository/photo-booth.repository';
 import { HiddenBoothRepository } from './repository/photo-booth-hidden.repository';
 import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
-import { HashtagService } from '../hashtag/hashtag.service';
+import { HashtagService } from 'src/hashtag/hashtag.service';
 
 @Module({
   imports: [

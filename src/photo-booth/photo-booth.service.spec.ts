@@ -6,11 +6,9 @@ import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.reposi
 import { PhotoBooth } from './entity/photo-booth.entity';
 import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { BrandHashtagRepository } from '../hashtag/repository/photo-booth-hashtag.repository';
 import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
 import { HashtagService } from '../hashtag/hashtag.service';
-import { HashtagRepository } from '../hashtag/repository/hastag.repository';
 
 class MockPhotoBoothRepository {
   findBoothByOptionAndCount = jest.fn();
@@ -35,29 +33,20 @@ class MockPhotoBoothBrandRepository {
   isExistBrand = jest.fn();
 }
 
-class MockPhotoBoothHashtagRepository {
-  saveBrandHashtags = jest.fn();
-  findManyHashtagsOfBrand = jest.fn();
-  removeAllHashtagsOfBrand = jest.fn();
-}
-
-class MockHashtagRepository {}
+class MockHashtagService {}
 
 describe('PhotoBoothService', () => {
   let hashtagService: HashtagService;
   let photoBoothService: PhotoBoothService;
-  let hashtagRepository: HashtagRepository;
   let photoBoothRepository: PhotoBoothRepository;
   let photoBoothHiddenRepository: HiddenBoothRepository;
   let photoBoothBrandRepository: PhotoBoothBrandRepository;
-  let photoBoothHashtagRepository: BrandHashtagRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        HashtagService,
         PhotoBoothService,
-        { provide: HashtagRepository, useClass: MockHashtagRepository },
+        { provide: HashtagService, useClass: MockHashtagService },
         { provide: PhotoBoothRepository, useClass: MockPhotoBoothRepository },
         {
           provide: HiddenBoothRepository,
@@ -67,15 +56,10 @@ describe('PhotoBoothService', () => {
           provide: PhotoBoothBrandRepository,
           useClass: MockPhotoBoothBrandRepository,
         },
-        {
-          provide: BrandHashtagRepository,
-          useClass: MockPhotoBoothHashtagRepository,
-        },
       ],
     }).compile();
 
     hashtagService = module.get<HashtagService>(HashtagService);
-    hashtagRepository = module.get<HashtagRepository>(HashtagRepository);
     photoBoothService = module.get<PhotoBoothService>(PhotoBoothService);
     photoBoothRepository =
       module.get<PhotoBoothRepository>(PhotoBoothRepository);
@@ -84,9 +68,6 @@ describe('PhotoBoothService', () => {
     );
     photoBoothBrandRepository = module.get<PhotoBoothBrandRepository>(
       PhotoBoothBrandRepository,
-    );
-    photoBoothHashtagRepository = module.get<BrandHashtagRepository>(
-      BrandHashtagRepository,
     );
 
     jest
@@ -195,12 +176,10 @@ describe('PhotoBoothService', () => {
 
   it('should be defined', () => {
     expect(hashtagService).toBeDefined();
-    expect(hashtagRepository).toBeDefined();
     expect(photoBoothService).toBeDefined();
     expect(photoBoothRepository).toBeDefined();
     expect(photoBoothBrandRepository).toBeDefined();
     expect(photoBoothHiddenRepository).toBeDefined();
-    expect(photoBoothHashtagRepository).toBeDefined();
   });
 
   describe('findBoothByOptionAndCount()', () => {

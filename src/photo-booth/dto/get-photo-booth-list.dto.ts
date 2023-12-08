@@ -2,10 +2,8 @@ import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { HiddenPhotoBooth } from '../entity/photo-booth-hidden.entity';
 import { PhotoBooth } from '../entity/photo-booth.entity';
-import {
-  PhotoBoothBrand,
-  PhotoBoothHashtag,
-} from '../entity/photo-booth-brand.entity';
+import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
+import { BrandHashtag } from '../../hashtag/entity/photo-booth-hashtag.entity';
 
 export class GetPhotoBoothListDto {
   @Exclude() private readonly _id: string;
@@ -80,8 +78,8 @@ export class GetBoothBrandListDto {
   @Exclude() private readonly _main_thumbnail_image_url?: string | null;
   @Exclude() private readonly _is_event: boolean;
   @Exclude()
-  @Type(() => PhotoBoothHashtag)
-  private readonly _photo_booth_hashtags: PhotoBoothHashtag[] | null;
+  @Type(() => BrandHashtag)
+  private readonly _photo_booth_hashtags: BrandHashtag[] | null;
 
   constructor(data: PhotoBoothBrand) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
