@@ -11,16 +11,14 @@ import { AuthModule } from './auth/auth.module';
 import { Session } from './auth/entity/session.entity';
 import { PhotoBooth } from './photo-booth/entity/photo-booth.entity';
 import { HiddenPhotoBooth } from './photo-booth/entity/photo-booth-hidden.entity';
-import {
-  PhotoBoothBrand,
-  PhotoBoothHashtag,
-} from './photo-booth/entity/photo-booth-brand.entity';
+import { PhotoBoothBrand } from './photo-booth/entity/photo-booth-brand.entity';
 import { EventModule } from './event/event.module';
 import { EventImage } from './event/entity/event-image.entity';
 import { Events } from './event/entity/event.entity';
 import { Hashtag } from './hashtag/entity/hashtag.entity';
 import { UserModule } from './user/user.module';
 import { HashtagModule } from './hashtag/hashtag.module';
+import { BrandHashtag } from './hashtag/entity/brand-hashtag.entity';
 
 @Module({
   imports: [
@@ -46,7 +44,7 @@ import { HashtagModule } from './hashtag/hashtag.module';
         PhotoBooth,
         HiddenPhotoBooth,
         PhotoBoothBrand,
-        PhotoBoothHashtag,
+        BrandHashtag,
         Hashtag,
       ],
       ssl:

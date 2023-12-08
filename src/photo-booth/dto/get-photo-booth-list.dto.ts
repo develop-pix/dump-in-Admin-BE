@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { HiddenPhotoBooth } from '../entity/photo-booth-hidden.entity';
 import { PhotoBooth } from '../entity/photo-booth.entity';
 import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
-import { BrandHashtag } from '../../hashtag/entity/photo-booth-hashtag.entity';
+import { BrandHashtag } from '../../hashtag/entity/brand-hashtag.entity';
 
 export class GetPhotoBoothListDto {
   @Exclude() private readonly _id: string;

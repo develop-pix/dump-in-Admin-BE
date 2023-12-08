@@ -5,7 +5,7 @@ import { BrandCreateProps } from '../dto/post-photo-booth.dto';
 import { BrandUpdateProps } from '../dto/patch-photo-booth.dto';
 import { Events } from '../../event/entity/event.entity';
 import { Hashtag } from '../../hashtag/entity/hashtag.entity';
-import { BrandHashtag } from '../../hashtag/entity/photo-booth-hashtag.entity';
+import { BrandHashtag } from '../../hashtag/entity/brand-hashtag.entity';
 
 @Entity('photo_booth_brand')
 export class PhotoBoothBrand {

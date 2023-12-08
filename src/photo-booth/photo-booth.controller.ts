@@ -167,6 +167,17 @@ export class PhotoBoothController {
     );
   }
 
+  @Post('brand')
+  @SwaggerAPI('포토부스 업체 생성', 201)
+  async createBrand(
+    @Body() request: CreateBoothBrandDto,
+  ): Promise<ResponseEntity<string>> {
+    await this.photoBoothService.createBrandWithHastags(
+      request.getCreateProps(),
+    );
+    return ResponseEntity.CREATED('포토부스 업체를 생성 했습니다.');
+  }
+
   @Get('brand/:id')
   @SwaggerAPI('포토부스 업체', 200, GetBoothBrandDetailDto)
   async findOneBrand(
@@ -177,17 +188,6 @@ export class PhotoBoothController {
       '요청한 포토부스 업체를 반환합니다.',
       new GetBoothBrandDetailDto(response),
     );
-  }
-
-  @Post('brand')
-  @SwaggerAPI('포토부스 업체 생성', 201)
-  async createBrand(
-    @Body() request: CreateBoothBrandDto,
-  ): Promise<ResponseEntity<string>> {
-    await this.photoBoothService.createBrandWithHastags(
-      request.getCreateProps(),
-    );
-    return ResponseEntity.CREATED('포토부스 업체를 생성 했습니다.');
   }
 
   @Patch('brand/:id')
