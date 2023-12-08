@@ -10,17 +10,36 @@ import {
 } from '../../photo-booth/dto/get-photo-booth-detail.dto';
 import { ResponseEntity } from '../entity/response.entity';
 import { GetEventDetailDto } from '../../event/dto/get-event-detail.dto';
+import {
+  GetBoothBrandListDto,
+  GetPhotoBoothListDto,
+} from '../../photo-booth/dto/get-photo-booth-list.dto';
+import { GetEventListDto } from '../../event/dto/get-event-list.dto';
+import { GetHashtagListDto } from '../../hashtag/dto/get-hastag-list.dto';
 
-type DetailDtos =
+export type Dtos =
   | GetPhotoBoothDetailDto
   | GetBoothBrandDetailDto
-  | GetEventDetailDto;
+  | GetEventDetailDto
+  | GetPhotoBoothListDto
+  | GetBoothBrandListDto
+  | GetEventListDto
+  | GetHashtagListDto
+  | ResponseEntity<string>;
 
-export const SwaggerAPI = (
-  name: string,
-  status: number = HttpStatus.OK,
-  response?: Type<DetailDtos>,
-): MethodDecorator =>
+interface OptionsProps {
+  name: string;
+  response?: Type<Dtos>;
+  status?: number;
+  isArray?: boolean;
+}
+
+export const SwaggerAPI = ({
+  name,
+  response,
+  status = HttpStatus.OK,
+  isArray = false,
+}: OptionsProps): MethodDecorator =>
   applyDecorators(
     ApiOperation({
       summary: `${name} API`,
@@ -28,8 +47,11 @@ export const SwaggerAPI = (
 
     ApiResponse({
       status,
+      isArray,
       type: response || ResponseEntity,
-      description: '성공 시 OK 응답을 반환합니다.',
+      description: isArray
+        ? '성공 시 OK 응답과 목록과 페이지를 반환합니다.'
+        : '성공 시 OK 응답을 반환합니다.',
     }),
 
     ApiNotFoundResponse({

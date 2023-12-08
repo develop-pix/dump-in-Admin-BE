@@ -4,7 +4,6 @@ import { ApiTags } from '@nestjs/swagger';
 import { GetHashtagListDto } from './dto/get-hastag-list.dto';
 import { ResponseEntity } from '../common/entity/response.entity';
 import { CreateHashtagsDto } from './dto/post-hashtag.dto';
-import { SwaggerListByQueryParam } from '../common/swagger/query-list.decorator';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
 
 @ApiTags('해시태그')
@@ -13,7 +12,11 @@ export class HashtagController {
   constructor(private readonly hashtagService: HashtagService) {}
 
   @Get()
-  @SwaggerListByQueryParam('해시태그', GetHashtagListDto)
+  @SwaggerAPI({
+    name: '해시태그 목록 조회',
+    response: GetHashtagListDto,
+    isArray: true,
+  })
   async findAllHashtags(): Promise<ResponseEntity<GetHashtagListDto[]>> {
     const response = await this.hashtagService.findAllHashtags();
 
@@ -24,7 +27,7 @@ export class HashtagController {
   }
 
   @Post()
-  @SwaggerAPI('해시태그 생성', 201)
+  @SwaggerAPI({ name: '해시태그 생성', status: 201 })
   async createHastags(
     @Body() request: CreateHashtagsDto,
   ): Promise<ResponseEntity<string>> {
