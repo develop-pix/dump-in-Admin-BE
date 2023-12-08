@@ -13,9 +13,6 @@ export class Hashtag {
   @Column({ type: 'varchar', length: 128, nullable: true })
   description: string;
 
-  @Column({ type: 'int', nullable: true })
-  order_number: number;
-
   @OneToMany(
     () => BrandHashtag,
     (photoBoothHashtag: BrandHashtag) => photoBoothHashtag.hashtag,

@@ -23,10 +23,9 @@ export class EventService {
   ): Promise<[GetEventListDto[], number]> {
     /**
      * @param pageProps - pagination - 항목수, 페이지
-     * @param query - request query string - 업체명, 이벤트 허용 여부
-     * @desc - 쿼리 파라미터에 맞는 포토부스 업체 반환
-     *       - 쿼리 옵션이 없으면 전체 포토부스 업체 반환
-     *       - 해시태그들로 업체명 찾기
+     * @param query - request query string - 업체명, 제목
+     * @desc - 쿼리 파라미터에 맞는 이벤트 목록 조회
+     *       - 쿼리 옵션이 없으면 전체 이벤트 조회
      */
 
     query.brand = await this.photoBoothService.findOneBrandByName(
@@ -64,20 +63,12 @@ export class EventService {
   ): Promise<boolean> {
     /**
      * @param createProps
-     *       - 브랜드 생성 속성들
-     *       - 이벤트 여부, 업체명, 대표이미지, 해시태그들
-     * @desc - 해시태그 생성
-     *       - 브랜드 생성
-     *       - 해시태그와 브랜드 연결
+     *       - 이벤트 생성 속성들
+     *       - 제목, 내용, 업체명, 대표이미지, 시작일, 마감일, 공개여부, 해시태그들
+     * @desc - 이벤트 관련 해시태그 생성
+     *       - 이벤트 생성
+     *       - 해시태그와 이벤트 연결
      */
-
-    const isExistEvent = await this.eventRepository.isExistEvent(
-      Events.of({ title: createProps.title }),
-    );
-
-    if (isExistEvent) {
-      throw new NotFoundException('같은 제목의 이벤트가 존재합니다');
-    }
 
     createProps.brand = await this.photoBoothService.findOneBrandByName(
       createProps.brandName,
@@ -96,13 +87,12 @@ export class EventService {
     updateProps: EventUpdateProps,
   ): Promise<boolean> {
     /**
-     * @param id - 포토부스 업체에 대한 id
+     * @param id - 이벤트 id
      * @param updateProps
      *        - 수정이 필요한 데이터 일부
-     *        - 업체명, 설명, 홈페이지 주소, 대표이미지, 이벤트 여부
-     *        - 해시태그
-     * @desc 포토부스 업체의 이름, 설명, 업체 홈페이지 url, 해시태그, 대표이미지 수정
-     * @TODO 포토부스 업체 이미지를 여러장 수정
+     *        - 제목, 내용, 업체명, 대표이미지, 시작일, 마감일, 공개여부, 해시태그들
+     * @desc 이벤트와 이벤트 관련 해시태그 수정
+     * @TODO 이벤트 이미지를 여러장 수정
      */
 
     updateProps.brand = await this.photoBoothService.findOneBrandByName(
