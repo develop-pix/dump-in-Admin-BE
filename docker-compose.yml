@@ -15,34 +15,34 @@ services:
     ports:
       - '5433:5432'
 
-  nest-app:
-    container_name: dumpin-admin-NestJS
-    build:
-      context: .
-      dockerfile: docker/local.Dockerfile
-    ports:
-      # app port
-      - '3000:3000'
-      # debugging port
-      - '9229:9229'
-    volumes:
-      - ./:/usr/src/app
-      - /usr/src/app/node_modules
-    # npm run start
-    # npm run start:debug -> this is debugging mode
-    command: npm run start
-    depends_on:
-      - database
-    networks:
-      - mynetwork
-    environment:
-      - DATABASE_NAME
-      - DATABASE_USER
-      - DATABASE_PASS
-      - DATABASE_HOST
-      - DATABASE_URL
-      - ALLOWED_ORIGINS
-      - DATABASE_PORT
+  # nest-app:
+  #   container_name: dumpin-admin-NestJS
+  #   build:
+  #     context: .
+  #     dockerfile: docker/local.Dockerfile
+  #   ports:
+  #     # app port
+  #     - '3000:3000'
+  #     # debugging port
+  #     - '9229:9229'
+  #   volumes:
+  #     - ./:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   # npm run start
+  #   # npm run start:debug -> this is debugging mode
+  #   command: npm run start
+  #   depends_on:
+  #     - database
+  #   networks:
+  #     - mynetwork
+  #   environment:
+  #     - DATABASE_NAME
+  #     - DATABASE_USER
+  #     - DATABASE_PASS
+  #     - DATABASE_HOST
+  #     - DATABASE_URL
+  #     - ALLOWED_ORIGINS
+  #     - DATABASE_PORT
 
 networks:
   mynetwork:

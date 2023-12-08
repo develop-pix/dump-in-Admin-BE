@@ -5,12 +5,10 @@ import { HiddenBoothRepository } from './repository/photo-booth-hidden.repositor
 import { PhotoBoothBrandRepository } from './repository/photo-booth-brand.repository';
 import { PhotoBooth } from './entity/photo-booth.entity';
 import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
-import { Page } from '../common/dto/paginated-res.dto';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
-import { PhotoBoothHashtagRepository } from './repository/photo-booth-hashtag.repository';
 import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
+import { HashtagService } from '../hashtag/hashtag.service';
 
 class MockPhotoBoothRepository {
   findBoothByOptionAndCount = jest.fn();
@@ -35,26 +33,20 @@ class MockPhotoBoothBrandRepository {
   isExistBrand = jest.fn();
 }
 
-class MockPhotoBoothHashtagRepository {
-  saveHashtags = jest.fn();
-  findManyHashtagByOption = jest.fn();
-  findOneHashtagBy = jest.fn();
-  saveBrandHashtags = jest.fn();
-  findManyHashtagsOfBrand = jest.fn();
-  removeAllHashtagsOfBrand = jest.fn();
-}
+class MockHashtagService {}
 
 describe('PhotoBoothService', () => {
+  let hashtagService: HashtagService;
   let photoBoothService: PhotoBoothService;
   let photoBoothRepository: PhotoBoothRepository;
   let photoBoothHiddenRepository: HiddenBoothRepository;
   let photoBoothBrandRepository: PhotoBoothBrandRepository;
-  let photoBoothHashtagRepository: PhotoBoothHashtagRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PhotoBoothService,
+        { provide: HashtagService, useClass: MockHashtagService },
         { provide: PhotoBoothRepository, useClass: MockPhotoBoothRepository },
         {
           provide: HiddenBoothRepository,
@@ -64,13 +56,10 @@ describe('PhotoBoothService', () => {
           provide: PhotoBoothBrandRepository,
           useClass: MockPhotoBoothBrandRepository,
         },
-        {
-          provide: PhotoBoothHashtagRepository,
-          useClass: MockPhotoBoothHashtagRepository,
-        },
       ],
     }).compile();
 
+    hashtagService = module.get<HashtagService>(HashtagService);
     photoBoothService = module.get<PhotoBoothService>(PhotoBoothService);
     photoBoothRepository =
       module.get<PhotoBoothRepository>(PhotoBoothRepository);
@@ -79,9 +68,6 @@ describe('PhotoBoothService', () => {
     );
     photoBoothBrandRepository = module.get<PhotoBoothBrandRepository>(
       PhotoBoothBrandRepository,
-    );
-    photoBoothHashtagRepository = module.get<PhotoBoothHashtagRepository>(
-      PhotoBoothHashtagRepository,
     );
 
     jest
@@ -189,11 +175,11 @@ describe('PhotoBoothService', () => {
   });
 
   it('should be defined', () => {
+    expect(hashtagService).toBeDefined();
     expect(photoBoothService).toBeDefined();
     expect(photoBoothRepository).toBeDefined();
     expect(photoBoothBrandRepository).toBeDefined();
     expect(photoBoothHiddenRepository).toBeDefined();
-    expect(photoBoothHashtagRepository).toBeDefined();
   });
 
   describe('findBoothByOptionAndCount()', () => {
@@ -206,22 +192,15 @@ describe('PhotoBoothService', () => {
         page: 1,
       };
 
-      const [photoBoothsInDb, count] =
+      const [photoBoothsInDb] =
         await photoBoothRepository.findBoothByOptionAndCount(booth, pageProps);
 
-      const photoBoothResult = photoBoothsInDb.map(
+      const expectedResult = photoBoothsInDb.map(
         (photoBooth) => new GetPhotoBoothListDto(photoBooth),
       );
 
-      const expectedResult = new Page<GetPhotoBoothListDto>(
-        pageProps.page,
-        pageProps.take,
-        count,
-        photoBoothResult,
-      );
-
       // When
-      const result = await photoBoothService.findOpenBoothByQueryParam(
+      const [result] = await photoBoothService.findOpenBoothByQueryParam(
         pageProps,
         booth,
       );
@@ -241,22 +220,15 @@ describe('PhotoBoothService', () => {
 
       booth.name = '포토그레이';
 
-      const [photoBoothsInDb, count] =
+      const [photoBoothsInDb] =
         await photoBoothRepository.findBoothByOptionAndCount(booth, pageProps);
 
-      const photoBoothResult = photoBoothsInDb.map(
+      const expectedResult = photoBoothsInDb.map(
         (photoBooth) => new GetPhotoBoothListDto(photoBooth),
       );
 
-      const expectedResult = new Page<GetPhotoBoothListDto>(
-        pageProps.page,
-        pageProps.take,
-        count,
-        photoBoothResult,
-      );
-
       // When
-      const result = await photoBoothService.findOpenBoothByQueryParam(
+      const [result] = await photoBoothService.findOpenBoothByQueryParam(
         pageProps,
         booth,
       );
@@ -290,16 +262,14 @@ describe('PhotoBoothService', () => {
       const id = 'uuid';
 
       const photoBoothInDb = await photoBoothRepository.findOneBoothBy(
-        PhotoBooth.byId({ id }),
+        PhotoBooth.byId(id),
       );
-
-      const expectedResult = new GetPhotoBoothDetailDto(photoBoothInDb);
 
       // When
       const result = await photoBoothService.findOneOpenBooth(id);
 
       // Then
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(photoBoothInDb);
     });
 
     it('FAILURE: uuid 값이 존재하지 않을 때 404 에러', async () => {
@@ -417,9 +387,7 @@ describe('PhotoBoothService', () => {
       expect(async () => {
         await photoBoothService.deleteOpenBooth(notBoothId);
       }).rejects.toThrowError(
-        new NotFoundException(
-          `포토부스 지점을 찾지 못했습니다. ID: ${notBoothId}`,
-        ),
+        new NotFoundException(`포토부스 삭제가 불가능합니다. ID:${notBoothId}`),
       );
     });
   });
@@ -489,7 +457,7 @@ describe('PhotoBoothService', () => {
       const id = 'uuid';
 
       const isPhotoBoothExist = await photoBoothRepository.photoBoothHasId(
-        PhotoBooth.byId({ id }),
+        PhotoBooth.byId(id),
       );
 
       // When

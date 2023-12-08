@@ -1,5 +1,5 @@
 run-name: CI/CD to AWS by @${{ github.actor }}
-name: CD to lightsail
+name: CD to EC2
 
 on:
   workflow_dispatch:

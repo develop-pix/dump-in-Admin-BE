@@ -5,29 +5,36 @@ import {
   ApiResponse,
 } from '@nestjs/swagger';
 import {
-  GetBoothBrandListDto,
-  GetPhotoBoothListDto,
-} from '../../dto/get-photo-booth-list.dto';
+  GetPhotoBoothDetailDto,
+  GetBoothBrandDetailDto,
+} from '../../photo-booth/dto/get-photo-booth-detail.dto';
+import { ResponseEntity } from '../entity/response.entity';
+import { GetEventDetailDto } from '../../event/dto/get-event-detail.dto';
 
-export const SwaggerListByQueryParam = (
+type DetailDtos =
+  | GetPhotoBoothDetailDto
+  | GetBoothBrandDetailDto
+  | GetEventDetailDto;
+
+export const SwaggerAPI = (
   name: string,
-  reponse: Type<GetPhotoBoothListDto | GetBoothBrandListDto>,
+  status: number = HttpStatus.OK,
+  response?: Type<DetailDtos>,
 ): MethodDecorator =>
   applyDecorators(
     ApiOperation({
-      summary: `${name} 목록 조회 API`,
+      summary: `${name} API`,
     }),
 
     ApiResponse({
-      status: 200,
-      type: reponse,
-      isArray: true,
-      description: '성공 시 OK 응답과 목록과 페이지를 반환합니다.',
+      status,
+      type: response || ResponseEntity,
+      description: '성공 시 OK 응답을 반환합니다.',
     }),
 
     ApiNotFoundResponse({
       description:
-        '목록 조회 실패 시 응답입니다. 404 상태코드와 함께 요청 실패 메시지가 반환됩니다',
+        '실패 시 응답입니다. 404 상태코드와 함께 요청 실패 메시지가 반환됩니다',
       schema: {
         allOf: [
           {
