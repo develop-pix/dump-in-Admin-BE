@@ -28,13 +28,13 @@ export class EventController {
   async findEventByQueryParam(
     @Query() request: EventQueryDto,
   ): Promise<ResponseEntity<Page<GetEventListDto>>> {
-    const response = await this.eventService.findEventByQueryParam(
+    const [response, count] = await this.eventService.findEventByQueryParam(
       request.getPageProps(),
       request.getQueryProps(),
     );
     return ResponseEntity.OK_WITH<Page<GetEventListDto>>(
-      '이벤트 목록을 반환합니다.',
-      response,
+      '이벤트 목록을 조회합니다.',
+      Page.create(request.getPageProps(), count, response),
     );
   }
 
@@ -52,10 +52,10 @@ export class EventController {
   async findOneEvent(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ResponseEntity<GetEventDetailDto>> {
-    const response = await this.eventService.findOneEvent(id);
+    const response = await this.eventService.findOneEventById(id);
     return ResponseEntity.OK_WITH<GetEventDetailDto>(
-      '요청한 이벤트 정보를 반환합니다.',
-      response,
+      '요청한 이벤트 정보를 조회합니다.',
+      new GetEventDetailDto(response),
     );
   }
 

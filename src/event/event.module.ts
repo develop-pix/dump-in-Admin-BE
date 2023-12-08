@@ -3,13 +3,11 @@ import { EventService } from './event.service';
 import { EventController } from './event.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { EventImage } from './entity/event-image.entity';
-import { EventHashtag, Events } from './entity/event.entity';
-import { EventRepository } from './repository/event.repository';
-import { HashtagService } from '../hashtag/hashtag.service';
+import { Events } from './entity/event.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([EventImage, Events, EventHashtag])],
+  imports: [TypeOrmModule.forFeature([EventImage, Events])],
   controllers: [EventController],
-  providers: [EventService, EventRepository, HashtagService],
+  providers: [EventService],
 })
 export class EventModule {}

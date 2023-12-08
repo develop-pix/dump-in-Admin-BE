@@ -9,15 +9,11 @@ import { PhotoBoothService } from '../photo-booth/photo-booth.service';
 import { EventCreateProps } from './dto/post-event.dto';
 import { EventUpdateProps } from './dto/patch-event.dto';
 
-//해시태그 업데이트
-//dto, entity 업데이트
-//주석 업데이트
-
 @Injectable()
 export class EventService {
   constructor(
-    private readonly eventRepository: EventRepository,
     private readonly hashtagService: HashtagService,
+    private readonly eventRepository: EventRepository,
     private readonly photoBoothService: PhotoBoothService,
   ) {}
 
