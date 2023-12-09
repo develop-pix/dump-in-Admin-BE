@@ -64,7 +64,6 @@ export class PhotoBoothController {
   @SwaggerAPI({
     name: '앱에 공개된 포토부스 상세 조회',
     response: GetPhotoBoothDetailDto,
-    status: 200,
   })
   async findOneOpenBooth(
     @Param('id', ParseUUIDPipe) id: string,
