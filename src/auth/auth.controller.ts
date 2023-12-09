@@ -3,19 +3,16 @@ import {
   Post,
   Body,
   Session,
-  Res,
   UseGuards,
-  Req,
+  HttpCode,
 } from '@nestjs/common';
 import { ResponseEntity } from '../common/entity/response.entity';
 import { AuthService } from './auth.service';
 import { SwaggerLogIn } from './decorator/swagger/login.decorator';
 import { ApiTags } from '@nestjs/swagger';
-import { SwaggerLogOut } from './decorator/swagger/logout.decorator';
-import { LogInDto } from './dto/login.dto';
-import { Request, Response } from 'express';
+import { LogInDto } from './dto/post-login-req.dto';
 import { LoggedCheckGuard } from './guard/logged-check.guard';
-import { SessionAdminInfo } from '../user/dto/get-session-admin.dto';
+import { GetAdminSessionDto } from '../user/dto/get-session-admin.dto';
 
 @ApiTags('인증')
 @Controller('auth')
@@ -25,21 +22,15 @@ export class AuthController {
   @SwaggerLogIn()
   @UseGuards(LoggedCheckGuard)
   @Post('login')
+  @HttpCode(200)
   async logIn(
-    @Body() dto: LogInDto,
-    @Session() session: Record<string, SessionAdminInfo>,
+    @Body() request: LogInDto,
+    @Session() session: Record<string, GetAdminSessionDto>,
   ) {
-    const sessionUser = await this.authService.logInAndSetSession(
-      dto.toEntity(),
+    await this.authService.validateAdminForLogIn(
+      request.getLogInProps(),
       session,
     );
-    return ResponseEntity.OK(`${sessionUser.username}님이 로그인 했습니다.`);
-  }
-
-  @SwaggerLogOut()
-  @UseGuards(LoggedCheckGuard)
-  @Post('logout')
-  logOut(@Req() req: Request, @Res() res: Response) {
-    this.authService.logOut(req, res);
+    return ResponseEntity.OK(`${request.username}님이 로그인 했습니다.`);
   }
 }

@@ -1,8 +1,6 @@
-import { LogInDto } from '../../dto/login.dto';
 import { HttpStatus, applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
-  ApiBody,
   ApiOkResponse,
   ApiOperation,
   ApiUnauthorizedResponse,
@@ -79,6 +77,4 @@ export const SwaggerLogIn = (): MethodDecorator =>
         ],
       },
     }),
-
-    ApiBody({ type: LogInDto }),
   );
