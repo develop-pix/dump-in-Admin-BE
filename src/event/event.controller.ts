@@ -55,7 +55,6 @@ export class EventController {
   @Get(':id')
   @SwaggerAPI({
     name: '이벤트 정보 조회',
-    status: 200,
     response: GetEventDetailDto,
   })
   async findOneEvent(

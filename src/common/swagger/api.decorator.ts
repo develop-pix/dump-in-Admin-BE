@@ -16,6 +16,8 @@ import {
 } from '../../photo-booth/dto/get-photo-booth-list.dto';
 import { GetEventListDto } from '../../event/dto/get-event-list.dto';
 import { GetHashtagListDto } from '../../hashtag/dto/get-hastag-list.dto';
+import { GetReviewListDto } from '../../review/dto/get-review-list.dto';
+import { GetReviewDetailDto } from '../../review/dto/get-review-detail.dto';
 
 export type Dtos =
   | GetPhotoBoothDetailDto
@@ -25,7 +27,9 @@ export type Dtos =
   | GetBoothBrandListDto
   | GetEventListDto
   | GetHashtagListDto
-  | ResponseEntity<string>;
+  | ResponseEntity<string>
+  | GetReviewListDto
+  | GetReviewDetailDto;
 
 interface OptionsProps {
   name: string;
