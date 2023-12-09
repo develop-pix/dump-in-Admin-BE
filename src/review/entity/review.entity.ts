@@ -11,9 +11,10 @@ import { ReviewConcept } from './review-concept.entity';
 import { User } from '../../user/entity/user.entity';
 import { PhotoBooth } from '../../photo-booth/entity/photo-booth.entity';
 import { FindReviewOptionsProps } from '../dto/get-review-query.dto';
+import { BaseDateEntity } from '../../common/entity/common-date.entity';
 
 @Entity()
-export class Review {
+export class Review extends BaseDateEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

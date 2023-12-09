@@ -1,8 +1,8 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { ReviewConcept } from '../entity/review-concept.entity';
-import { PhotoBooth } from 'src/photo-booth/entity/photo-booth.entity';
-import { User } from 'src/user/entity/user.entity';
+import { PhotoBooth } from '../../photo-booth/entity/photo-booth.entity';
+import { User } from '../../user/entity/user.entity';
 import { ReviewImage } from '../entity/review-image.entity';
 import { Review } from '../entity/review.entity';
 

@@ -28,7 +28,7 @@ export class ReviewService {
 
     [query.photoBooth, query.user] = await Promise.all([
       this.photoBoothService.findOneOpenBoothByName(query.boothName),
-      this.userService.findOneUserByName(query.userName),
+      this.userService.findOneUserByNickname(query.userName),
     ]);
 
     const [results, count] =

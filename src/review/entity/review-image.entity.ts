@@ -8,7 +8,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 import { Review } from './review.entity';
-import { BaseDateEntity } from 'src/common/entity/common-date.entity';
+import { BaseDateEntity } from '../../common/entity/common-date.entity';
 
 @Entity()
 export class ReviewImage extends BaseDateEntity {
