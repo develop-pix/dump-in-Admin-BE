@@ -11,7 +11,7 @@ export class AuthService {
   async validateAdminForLogIn(
     props: AdminLogInProps,
     session: Record<string, GetAdminSessionDto>,
-  ): Promise<boolean> {
+  ): Promise<GetAdminSessionDto> {
     /**
      * @param props - 컨트롤러에서 받은 유저 정보 (username, password)
      * @desc - 유저 검증 로직
@@ -30,6 +30,6 @@ export class AuthService {
     }
 
     session.user = new GetAdminSessionDto(admin);
-    return true;
+    return session.user;
   }
 }

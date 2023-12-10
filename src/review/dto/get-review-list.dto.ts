@@ -68,15 +68,15 @@ export class GetReviewListDto {
     description: '리뷰에 연결된 포토부스 정보',
   })
   @Expose()
-  get photoBooth(): PhotoBooth {
-    return this._photo_booth;
+  get boothName(): string {
+    return this._photo_booth.name;
   }
 
   @ApiProperty({
     description: '리뷰를 작성한 유저 정보',
   })
   @Expose()
-  get user(): User {
-    return this._user;
+  get userName(): string {
+    return this._user.nickname;
   }
 }

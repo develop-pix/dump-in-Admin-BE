@@ -40,6 +40,7 @@ describe('AuthService', () => {
           savedUser.username = 'admin';
           savedUser.email = 'admin@example.com';
           savedUser.password = 'admin hashed 12';
+          savedUser.is_admin = true;
           return Promise.resolve(savedUser);
         } else {
           return Promise.reject(
@@ -68,7 +69,7 @@ describe('AuthService', () => {
         mockSession,
       );
 
-      expect(result).toEqual(true);
+      expect(result.isAdmin).toEqual(true);
     });
 
     it('FAILURE: 어드민 역할이 아닐 때, 404 예외 throw', async () => {

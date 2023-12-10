@@ -28,8 +28,6 @@ export class UserService {
      * @desc 유저에 대한 데이터 반환
      */
 
-    if (typeof name === 'undefined') return undefined;
-
     const user = await this.userRepository.findOneUserBy(User.byNickname(name));
 
     if (!user) {
@@ -41,8 +39,8 @@ export class UserService {
 
   async findOneAdminBy(props: AdminSignInProps): Promise<User> {
     /**
-     * @param name - 유저 닉네임
-     * @desc 유저에 대한 데이터 반환
+     * @param props - 유저아이디와 역할이 admin인 정보를 찾기
+     * @desc 관리자에 대한 데이터 반환
      */
 
     const admin = await this.userRepository.findOneUserBy(User.adminOf(props));

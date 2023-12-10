@@ -87,8 +87,6 @@ export class PhotoBoothService {
      * @desc 포토부스 지점에 대한 상세 데이터 반환
      */
 
-    if (typeof name === 'undefined') return undefined;
-
     const photoBooth = await this.photoBoothRepository.findOneBoothBy(
       PhotoBooth.of({ name }),
     );

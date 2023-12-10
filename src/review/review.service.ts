@@ -37,7 +37,7 @@ export class ReviewService {
         pageProps,
       );
 
-    if (results.length === 0) {
+    if (count === 0) {
       throw new NotFoundException('리뷰를 찾지 못했습니다');
     }
 
@@ -51,19 +51,24 @@ export class ReviewService {
     const review = await this.reviewRepository.findOneReviewBy(Review.byId(id));
 
     if (!review) {
-      throw new NotFoundException('이벤트를 찾지 못했습니다.');
+      throw new NotFoundException('리뷰를 찾지 못했습니다.');
     }
 
     return review;
   }
 
   async removeReview(id: number): Promise<boolean> {
-    const isUpdated = await this.reviewRepository.updateReview(
+    /**
+     * @param id - 삭제할 리뷰 id
+     * @desc 해당 리뷰의 is_deleted 컬럼을 true로 수정
+     */
+
+    const isDeleted = await this.reviewRepository.updateReview(
       id,
       Review.delete(true),
     );
 
-    if (!isUpdated) {
+    if (!isDeleted) {
       throw new NotFoundException('리뷰 삭제가 불가능합니다.');
     }
 
