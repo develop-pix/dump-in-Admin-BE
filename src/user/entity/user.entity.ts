@@ -56,11 +56,10 @@ export class User extends BaseDateEntity {
   @OneToMany(() => Review, (review: Review) => review.user)
   reviews: Review[];
 
-  static adminOf({ username, password }: AdminSignInProps): User {
+  static adminOf({ username }: AdminSignInProps): User {
     const users = new User();
 
     users.username = username;
-    users.password = password;
     users.is_admin = true;
 
     return users;

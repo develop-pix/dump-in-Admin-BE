@@ -41,6 +41,7 @@ export class UserRepository extends Repository<User> {
       id: user.id,
       username: user.username,
       nickname: user.nickname,
+      is_admin: user.is_admin,
     };
   }
 }
