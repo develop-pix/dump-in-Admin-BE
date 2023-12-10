@@ -81,6 +81,23 @@ export class PhotoBoothService {
     return photoBooth;
   }
 
+  async findOneOpenBoothByName(name: string): Promise<PhotoBooth> {
+    /**
+     * @param name - 공개 포토부스의 지점명
+     * @desc 포토부스 지점에 대한 상세 데이터 반환
+     */
+
+    const photoBooth = await this.photoBoothRepository.findOneBoothBy(
+      PhotoBooth.of({ name }),
+    );
+
+    if (!photoBooth) {
+      throw new NotFoundException('포토부스 지점을 찾지 못했습니다');
+    }
+
+    return photoBooth;
+  }
+
   async updateOpenBooth(
     id: string,
     updateProps: PhotoBoothUpdateProps,

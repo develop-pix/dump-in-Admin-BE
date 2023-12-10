@@ -9,7 +9,6 @@ import {
   Body,
 } from '@nestjs/common';
 import { EventService } from './event.service';
-import { SwaggerListByQueryParam } from '../common/swagger/query-list.decorator';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
 import { ResponseEntity } from '../common/entity/response.entity';
 import { EventQueryDto } from './dto/get-event-query.dto';
@@ -26,7 +25,11 @@ export class EventController {
   constructor(private readonly eventService: EventService) {}
 
   @Get()
-  @SwaggerListByQueryParam('이벤트', GetEventListDto)
+  @SwaggerAPI({
+    name: '이벤트 목록 조회',
+    response: GetEventListDto,
+    isArray: true,
+  })
   async findEventByQueryParam(
     @Query() request: EventQueryDto,
   ): Promise<ResponseEntity<Page<GetEventListDto>>> {
@@ -41,7 +44,7 @@ export class EventController {
   }
 
   @Post()
-  @SwaggerAPI('이벤트 생성', 201)
+  @SwaggerAPI({ name: '이벤트 생성', status: 201 })
   async createEvent(
     @Body() request: CreateEventDto,
   ): Promise<ResponseEntity<string>> {
@@ -50,7 +53,10 @@ export class EventController {
   }
 
   @Get(':id')
-  @SwaggerAPI('이벤트 정보 조회', 200, GetEventDetailDto)
+  @SwaggerAPI({
+    name: '이벤트 정보 조회',
+    response: GetEventDetailDto,
+  })
   async findOneEvent(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ResponseEntity<GetEventDetailDto>> {
@@ -62,7 +68,7 @@ export class EventController {
   }
 
   @Patch(':id')
-  @SwaggerAPI('이벤트 수정')
+  @SwaggerAPI({ name: '이벤트 수정' })
   async updateEvent(
     @Param('id', ParseIntPipe) id: number,
     @Body() request: UpdateEventDto,

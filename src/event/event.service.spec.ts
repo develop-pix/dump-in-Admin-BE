@@ -199,10 +199,7 @@ describe('EventService', () => {
 
       // When & Then
       expect(async () => {
-        await eventService.findEventByQueryParam(
-          pageProps,
-          Events.of(queryProps),
-        );
+        await eventService.findEventByQueryParam(pageProps, queryProps);
       }).rejects.toThrowError(
         new NotFoundException('이벤트를 찾지 못했습니다'),
       );

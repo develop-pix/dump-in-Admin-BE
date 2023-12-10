@@ -1,34 +1,28 @@
-import { Controller, Get, Post, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiTags } from '@nestjs/swagger';
+import { PaginationDto } from '../common/dto/pagination-req.dto';
+import { ResponseEntity } from 'src/common/entity/response.entity';
+import { GetUserDto } from './dto/get-user.dto';
+import { Page } from '../common/dto/pagination-res.dto';
+import { SwaggerAPI } from 'src/common/swagger/api.decorator';
 
 @ApiTags('유저')
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  create() {
-    return this.userService.create();
-  }
-
   @Get()
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string) {
-    return this.userService.update(+id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.userService.remove(+id);
+  @SwaggerAPI({ name: '유저 목록 조회', response: GetUserDto, isArray: true })
+  async findAllUser(
+    @Query() request: PaginationDto,
+  ): Promise<ResponseEntity<Page<GetUserDto>>> {
+    const [response, count] = await this.userService.findAllUser(
+      request.getPageProps(),
+    );
+    return ResponseEntity.OK_WITH<Page<GetUserDto>>(
+      '유저 목록입니다.',
+      Page.create(request.getPageProps(), count, response),
+    );
   }
 }

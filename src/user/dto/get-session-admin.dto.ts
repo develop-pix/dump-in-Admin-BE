@@ -1,16 +1,16 @@
 import { Exclude, Expose } from 'class-transformer';
-import { ApiProperty, PickType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../entity/user.entity';
 
-export class GetSessionAdminDto {
+export class GetAdminSessionDto {
   @Exclude() private readonly _email: string;
   @Exclude() private readonly _username: string;
   @Exclude() private readonly _isAdmin: boolean;
 
-  constructor(user: RawAdmin) {
+  constructor(user: User) {
     this._email = user.email;
     this._username = user.username;
-    this._isAdmin = user.isAdmin;
+    this._isAdmin = user.is_admin;
   }
 
   @ApiProperty({
@@ -40,24 +40,3 @@ export class GetSessionAdminDto {
     return this._isAdmin;
   }
 }
-
-export class RawAdmin {
-  email: string;
-  username: string;
-  password: string;
-  is_admin: boolean;
-
-  constructor(user: User) {
-    Object.keys(user).forEach((key) => (this[`${key}`] = user[key]));
-  }
-
-  get isAdmin(): boolean {
-    return this.is_admin;
-  }
-}
-
-export class SessionAdminInfo extends PickType(RawAdmin, [
-  'username',
-  'email',
-  'isAdmin',
-]) {}

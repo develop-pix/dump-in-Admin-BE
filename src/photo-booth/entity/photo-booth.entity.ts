@@ -5,11 +5,13 @@ import {
   PrimaryGeneratedColumn,
   ManyToOne,
   JoinColumn,
+  OneToMany,
 } from 'typeorm';
 import { PhotoBoothBrand } from './photo-booth-brand.entity';
 import { FindBoothOptionProps } from '../dto/get-photo-booth-query.dto';
 import { PhotoBoothUpdateProps } from '../dto/patch-photo-booth.dto';
 import { MoveToOpenBoothProps } from '../dto/put-photo-booth.dto';
+import { Review } from '../../review/entity/review.entity';
 
 @Entity('photo_booth')
 export class PhotoBooth extends BaseDateEntity {
@@ -42,6 +44,9 @@ export class PhotoBooth extends BaseDateEntity {
 
   @Column({ type: 'int' })
   view_count: number;
+
+  @OneToMany(() => Review, (review) => review.photo_booth)
+  reviews: Review[];
 
   @ManyToOne(
     () => PhotoBoothBrand,

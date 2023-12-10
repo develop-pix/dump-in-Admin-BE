@@ -6,20 +6,11 @@ import { utilities, WinstonModule } from 'nest-winston';
 import * as winston from 'winston';
 import { ExceptionModule } from './common/filter/exception-filter.module';
 import { PhotoBoothModule } from './photo-booth/photo-booth.module';
-import { User } from './user/entity/user.entity';
 import { AuthModule } from './auth/auth.module';
-import { Session } from './auth/entity/session.entity';
-import { PhotoBooth } from './photo-booth/entity/photo-booth.entity';
-import { HiddenPhotoBooth } from './photo-booth/entity/photo-booth-hidden.entity';
-import { PhotoBoothBrand } from './photo-booth/entity/photo-booth-brand.entity';
-import { EventModule } from './event/event.module';
-import { EventImage } from './event/entity/event-image.entity';
-import { Events } from './event/entity/event.entity';
-import { Hashtag } from './hashtag/entity/hashtag.entity';
 import { UserModule } from './user/user.module';
 import { HashtagModule } from './hashtag/hashtag.module';
-import { BrandHashtag } from './hashtag/entity/brand-hashtag.entity';
-import { EventHashtag } from './hashtag/entity/event-hashtag.entity';
+import { ReviewModule } from './review/review.module';
+import { EventModule } from './event/event.module';
 
 @Module({
   imports: [
@@ -38,16 +29,8 @@ import { EventHashtag } from './hashtag/entity/event-hashtag.entity';
       synchronize: process.env.NODE_ENV === 'local',
       logging: process.env.NODE_ENV !== 'production',
       entities: [
-        EventImage,
-        Events,
-        User,
-        Session,
-        PhotoBooth,
-        HiddenPhotoBooth,
-        PhotoBoothBrand,
-        BrandHashtag,
-        Hashtag,
-        EventHashtag,
+        __dirname + '/**/*.entity{.ts,.js}',
+        '!**/common/**/*.entity{.ts,.js}',
       ],
       ssl:
         process.env.NODE_ENV === 'local'
@@ -75,6 +58,7 @@ import { EventHashtag } from './hashtag/entity/event-hashtag.entity';
     UserModule,
     AuthModule,
     HashtagModule,
+    ReviewModule,
   ],
 })
 export class AppModule {}

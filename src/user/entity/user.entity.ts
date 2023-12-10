@@ -1,62 +1,80 @@
+import { Review } from '../../review/entity/review.entity';
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
-import { Entity, Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  Unique,
+  OneToMany,
+} from 'typeorm';
 
 @Entity('users')
 @Unique(['email'])
 export class User extends BaseDateEntity {
-  @PrimaryGeneratedColumn({ name: 'id' })
-  userId: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @Column({ type: 'varchar', nullable: false, length: 128 })
+  @Column()
   email: string;
 
-  @Column({ type: 'varchar', nullable: false, length: 128 })
+  @Column()
   username: string;
 
-  @Column({ type: 'varchar', nullable: false, length: 128 })
+  @Column()
   nickname: string;
 
-  @Column({ type: 'varchar', nullable: true, length: 128 })
+  @Column()
   password: string;
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column()
   is_active: boolean;
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column()
   is_deleted: boolean;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column()
   deleted_at: Date;
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column()
   is_agree_privacy: boolean;
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column()
   is_agree_marketing: boolean;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column()
   last_login_at: Date;
 
-  @Column({ type: 'varchar', nullable: true, length: 8 })
+  @Column()
   gender: string;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column()
   birth: Date;
 
-  @Column({ type: 'boolean', nullable: false })
+  @Column()
   is_admin: boolean;
 
-  static of({ username, password }: UserSignInProps): User {
+  @OneToMany(() => Review, (review: Review) => review.user)
+  reviews: Review[];
+
+  static adminOf({ username }: AdminSignInProps): User {
     const users = new User();
 
     users.username = username;
-    users.password = password;
+    users.is_admin = true;
+
+    return users;
+  }
+
+  static byNickname(nickname: string): User {
+    const users = new User();
+
+    users.nickname = nickname;
 
     return users;
   }
 }
 
-export interface UserSignInProps {
+export interface AdminSignInProps {
   username: string;
   password: string;
 }

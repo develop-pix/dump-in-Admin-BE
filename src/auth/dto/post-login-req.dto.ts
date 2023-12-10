@@ -1,7 +1,6 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
-import { User } from '../../user/entity/user.entity';
 import * as crypto from 'crypto';
 
 export class LogInDto {
@@ -26,16 +25,15 @@ export class LogInDto {
   @MaxLength(30)
   password: string;
 
-  toEntity(): User {
-    const props = {
+  getLogInProps(): AdminLogInProps {
+    return {
       username: this.username,
-      password: this.sha256(this.password),
+      password: crypto.createHash('sha256').update(this.password).digest('hex'),
     };
-
-    return User.of(props);
   }
+}
 
-  private sha256(data: string): string {
-    return crypto.createHash('sha256').update(data).digest('hex');
-  }
+export interface AdminLogInProps {
+  username: string;
+  password: string;
 }
