@@ -31,7 +31,7 @@ describe('AuthService', () => {
         Promise.resolve(`${plain} hashed 12` === hashed),
       );
 
-    // UserRepository Stub
+    // UserService Stub
     jest
       .spyOn(userService, 'findOneAdminBy')
       .mockImplementation(({ username }) => {
@@ -40,12 +40,7 @@ describe('AuthService', () => {
           savedUser.username = 'admin';
           savedUser.email = 'admin@example.com';
           savedUser.password = 'admin hashed 12';
-          savedUser.is_admin = true;
           return Promise.resolve(savedUser);
-        } else if (username === 'user') {
-          return Promise.reject(
-            new NotFoundException('관리자 정보를 찾지 못했습니다'),
-          );
         } else {
           return Promise.reject(
             new NotFoundException('관리자 정보를 찾지 못했습니다'),
@@ -78,7 +73,6 @@ describe('AuthService', () => {
 
     it('FAILURE: 어드민 역할이 아닐 때, 404 예외 throw', async () => {
       getLogInProps.username = 'user';
-      getLogInProps.password = 'user';
 
       await expect(async () => {
         await authService.validateAdminForLogIn(getLogInProps, mockSession);
@@ -87,9 +81,8 @@ describe('AuthService', () => {
       );
     });
 
-    it('FAILURE: 유저 정보가 존재하지 않을 때, 404 예외 throw', async () => {
+    it('FAILURE: 관리자 정보가 존재하지 않을 때, 404 예외 throw', async () => {
       getLogInProps.username = 'anonymous';
-      getLogInProps.password = 'anonymous';
 
       await expect(async () => {
         await authService.validateAdminForLogIn(getLogInProps, mockSession);
