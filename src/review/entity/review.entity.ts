@@ -13,7 +13,7 @@ import { PhotoBooth } from '../../photo-booth/entity/photo-booth.entity';
 import { FindReviewOptionsProps } from '../dto/get-review-query.dto';
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 
-@Entity()
+@Entity('review')
 export class Review extends BaseDateEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -49,7 +49,7 @@ export class Review extends BaseDateEntity {
   view_count: number;
 
   @Column()
-  likes_count: number;
+  like_count: number;
 
   @OneToMany(() => ReviewConcept, (reviewConcept) => reviewConcept.review)
   review_concepts: ReviewConcept[];
@@ -73,11 +73,16 @@ export class Review extends BaseDateEntity {
     return review;
   }
 
-  static of({ photoBooth, user }: FindReviewOptionsProps): Review {
+  static of({ boothName, userName }: FindReviewOptionsProps): Review {
     const review = new Review();
+    const user = new User();
+    const booth = new PhotoBooth();
 
-    review.photo_booth = photoBooth;
+    booth.name = boothName;
+    user.nickname = userName;
+
     review.user = user;
+    review.photo_booth = booth;
 
     return review;
   }

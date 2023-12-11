@@ -10,7 +10,7 @@ import {
 import { Review } from './review.entity';
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 
-@Entity()
+@Entity('review_image')
 export class ReviewImage extends BaseDateEntity {
   @PrimaryGeneratedColumn()
   id: number;

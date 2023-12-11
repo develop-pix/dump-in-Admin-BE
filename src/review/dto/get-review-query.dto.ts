@@ -1,9 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
-import { PaginationDto } from '../../common/dto/pagination-req.dto';
-import { PhotoBooth } from '../../photo-booth/entity/photo-booth.entity';
-import { User } from '../../user/entity/user.entity';
+import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
 
 export class ReviewQueryDto extends PaginationDto {
   @ApiProperty({
@@ -29,15 +27,13 @@ export class ReviewQueryDto extends PaginationDto {
 
   getQueryProps(): FindReviewOptionsProps {
     return {
-      boothName: this.boothName,
-      userName: this.userName,
+      boothName: this.decodeString(this.boothName),
+      userName: this.decodeString(this.userName),
     };
   }
 }
 
 export interface FindReviewOptionsProps {
-  boothName?: string;
-  photoBooth?: PhotoBooth;
-  userName?: string;
-  user?: User;
+  boothName: string;
+  userName: string;
 }

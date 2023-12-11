@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Review } from './review.entity';
 
-@Entity()
+@Entity('concept')
 export class Concept {
   @PrimaryGeneratedColumn()
   id: number;
@@ -26,7 +26,7 @@ export class Concept {
   review_concepts: ReviewConcept[];
 }
 
-@Entity()
+@Entity('review_concept')
 export class ReviewConcept {
   @PrimaryGeneratedColumn()
   id: number;
