@@ -1,16 +1,16 @@
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../entity/user.entity';
 import { Review } from '../../review/entity/review.entity';
 
 export class GetUserDto {
-  @Exclude() private _id: number;
-  @Exclude() private _username: string;
-  @Exclude() private _nickname: string;
-  @Exclude() private _email: string;
-  @Exclude() private _created_at: Date;
-  @Exclude() private _deleted_at: Date | null;
-  @Exclude() private _reviews: Review[];
+  @Exclude() readonly _id: number;
+  @Exclude() readonly _username: string;
+  @Exclude() readonly _nickname: string;
+  @Exclude() readonly _email: string;
+  @Exclude() readonly _created_at: Date;
+  @Exclude() readonly _deleted_at: Date | null;
+  @Exclude() readonly _reviews: Review[];
 
   constructor(data: User) {
     Object.keys(data).map((key) => (this[`_${key}`] = data[key]));
@@ -66,8 +66,7 @@ export class GetUserDto {
     description: '유저가 작성한 리뷰들',
   })
   @Expose()
-  @Type(() => Review)
-  get review(): Review[] {
-    return this._reviews;
+  get review(): number {
+    return this._reviews.length;
   }
 }

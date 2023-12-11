@@ -1,10 +1,10 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { ApiTags } from '@nestjs/swagger';
-import { PaginationDto } from '../common/dto/pagination-req.dto';
+import { PaginationDto } from '../common/dto/get-pagination-query.dto';
 import { ResponseEntity } from 'src/common/entity/response.entity';
 import { GetUserDto } from './dto/get-user.dto';
-import { Page } from '../common/dto/pagination-res.dto';
+import { Page } from '../common/dto/get-pagination-list.dto';
 import { SwaggerAPI } from 'src/common/swagger/api.decorator';
 
 @ApiTags('유저')

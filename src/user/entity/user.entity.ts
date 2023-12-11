@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-@Entity('users')
+@Entity('user')
 @Unique(['email'])
 export class User extends BaseDateEntity {
   @PrimaryGeneratedColumn()
@@ -42,7 +42,7 @@ export class User extends BaseDateEntity {
   is_agree_marketing: boolean;
 
   @Column()
-  last_login_at: Date;
+  last_login: Date;
 
   @Column()
   gender: string;
