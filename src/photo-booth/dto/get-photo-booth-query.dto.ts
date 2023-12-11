@@ -2,7 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsBoolean, IsOptional, IsString } from 'class-validator';
 import { PaginationDto } from '../../common/dto/pagination-req.dto';
-import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
+import {
+  BrandReqBodyProps,
+  PhotoBoothReqBodyProps,
+} from './req-photo-booth-body.dto';
 
 export class BoothQueryDto extends PaginationDto {
   @ApiProperty({
@@ -13,7 +16,7 @@ export class BoothQueryDto extends PaginationDto {
   @IsString()
   @IsOptional()
   @Type(() => String)
-  location?: string;
+  location: string;
 
   @ApiProperty({
     description: '포토부스에서 지점명을 검색하는 쿼리스트링',
@@ -23,7 +26,7 @@ export class BoothQueryDto extends PaginationDto {
   @IsString()
   @IsOptional()
   @Type(() => String)
-  name?: string;
+  name: string;
 
   @ApiProperty({
     description: '포토부스에서 업체명을 검색하는 쿼리스트링',
@@ -33,7 +36,7 @@ export class BoothQueryDto extends PaginationDto {
   @IsString()
   @IsOptional()
   @Type(() => String)
-  brandName?: string;
+  brandName: string;
 
   getQueryProps(): FindBoothOptionProps {
     return {
@@ -74,7 +77,7 @@ export class BoothBrandQueryDto extends PaginationDto {
   @IsOptional()
   @IsString()
   @Type(() => String)
-  hashtags?: string;
+  hashtags: string;
 
   getQueryProps(): FindBrandOptionProps {
     return {
@@ -87,17 +90,6 @@ export class BoothBrandQueryDto extends PaginationDto {
   }
 }
 
-export interface FindBrandOptionProps {
-  id?: number;
-  name?: string;
-  isEvent?: boolean;
-  hashtags?: string[];
-}
+export interface FindBrandOptionProps extends Partial<BrandReqBodyProps> {}
 
-export interface FindBoothOptionProps {
-  id?: string;
-  name?: string;
-  location?: string;
-  brandName?: string;
-  brand?: PhotoBoothBrand;
-}
+export interface FindBoothOptionProps extends Partial<PhotoBoothReqBodyProps> {}
