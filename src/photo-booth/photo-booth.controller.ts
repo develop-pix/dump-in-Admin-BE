@@ -60,6 +60,57 @@ export class PhotoBoothController {
     );
   }
 
+  @Get('brand')
+  @SwaggerAPI({
+    name: '포토부스 업체 목록 조회',
+    response: GetBoothBrandListDto,
+    isArray: true,
+  })
+  async findBrandByQueryParam(
+    @Query() request: BoothBrandQueryDto,
+  ): Promise<ResponseEntity<Page<GetBoothBrandListDto>>> {
+    const [response, count] =
+      await this.photoBoothService.findBrandByQueryParam(
+        request.getPageProps(),
+        request.getQueryProps(),
+      );
+    return ResponseEntity.OK_WITH<Page<GetBoothBrandListDto>>(
+      '포토부스 업체 목록을 반환합니다.',
+      Page.create(request.getPageProps(), count, response),
+    );
+  }
+
+  @Post('brand')
+  @SwaggerAPI({ name: '포토부스 업체 생성', status: 201 })
+  async createBrand(
+    @Body() request: CreateBoothBrandDto,
+  ): Promise<ResponseEntity<string>> {
+    await this.photoBoothService.createBrandWithHastags(
+      request.getCreateProps(),
+    );
+    return ResponseEntity.CREATED('포토부스 업체를 생성 했습니다.');
+  }
+
+  @Get('raw')
+  @SwaggerAPI({
+    name: '비공개 포토부스 목록 조회',
+    response: GetPhotoBoothListDto,
+    isArray: true,
+  })
+  async findHiddenBoothByQueryParam(
+    @Query() request: BoothQueryDto,
+  ): Promise<ResponseEntity<Page<GetPhotoBoothListDto>>> {
+    const [response, count] =
+      await this.photoBoothService.findHiddenBoothByQueryParam(
+        request.getPageProps(),
+        request.getQueryProps(),
+      );
+    return ResponseEntity.OK_WITH<Page<GetPhotoBoothListDto>>(
+      '비공개 포토부스 목록을 반환합니다.',
+      Page.create(request.getPageProps(), count, response),
+    );
+  }
+
   @Get(':id')
   @SwaggerAPI({
     name: '앱에 공개된 포토부스 상세 조회',
@@ -92,26 +143,6 @@ export class PhotoBoothController {
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.deleteOpenBooth(id);
     return ResponseEntity.OK('공개된 포토부스 지점을 삭제 했습니다.');
-  }
-
-  @Get('raw')
-  @SwaggerAPI({
-    name: '비공개 포토부스 목록 조회',
-    response: GetPhotoBoothListDto,
-    isArray: true,
-  })
-  async findHiddenBoothByQueryParam(
-    @Query() request: BoothQueryDto,
-  ): Promise<ResponseEntity<Page<GetPhotoBoothListDto>>> {
-    const [response, count] =
-      await this.photoBoothService.findHiddenBoothByQueryParam(
-        request.getPageProps(),
-        request.getQueryProps(),
-      );
-    return ResponseEntity.OK_WITH<Page<GetPhotoBoothListDto>>(
-      '비공개 포토부스 목록을 반환합니다.',
-      Page.create(request.getPageProps(), count, response),
-    );
   }
 
   @Get('raw/:id')
@@ -162,37 +193,6 @@ export class PhotoBoothController {
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.deleteHiddenBooth(id);
     return ResponseEntity.OK('비공개 포토부스를 삭제 했습니다.');
-  }
-
-  @Get('brand')
-  @SwaggerAPI({
-    name: '포토부스 업체 목록 조회',
-    response: GetBoothBrandListDto,
-    isArray: true,
-  })
-  async findBrandByQueryParam(
-    @Query() request: BoothBrandQueryDto,
-  ): Promise<ResponseEntity<Page<GetBoothBrandListDto>>> {
-    const [response, count] =
-      await this.photoBoothService.findBrandByQueryParam(
-        request.getPageProps(),
-        request.getQueryProps(),
-      );
-    return ResponseEntity.OK_WITH<Page<GetBoothBrandListDto>>(
-      '포토부스 업체 목록을 반환합니다.',
-      Page.create(request.getPageProps(), count, response),
-    );
-  }
-
-  @Post('brand')
-  @SwaggerAPI({ name: '포토부스 업체 생성', status: 201 })
-  async createBrand(
-    @Body() request: CreateBoothBrandDto,
-  ): Promise<ResponseEntity<string>> {
-    await this.photoBoothService.createBrandWithHastags(
-      request.getCreateProps(),
-    );
-    return ResponseEntity.CREATED('포토부스 업체를 생성 했습니다.');
   }
 
   @Get('brand/:id')
