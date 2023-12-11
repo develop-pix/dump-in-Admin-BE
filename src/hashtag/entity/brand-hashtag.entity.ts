@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Hashtag } from './hashtag.entity';
 import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
 
-@Entity('photo_booth_hashtag')
+@Entity('photo_booth_brand_hashtags')
 export class BrandHashtag {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
@@ -11,7 +11,7 @@ export class BrandHashtag {
     () => PhotoBoothBrand,
     (photoBoothBrand: PhotoBoothBrand) => photoBoothBrand.photo_booth_hashtags,
   )
-  @JoinColumn({ name: 'photo_booth_brand_id' })
+  @JoinColumn({ name: 'photoboothbrand_id' })
   photo_booth_brand: PhotoBoothBrand;
 
   @ManyToOne(
