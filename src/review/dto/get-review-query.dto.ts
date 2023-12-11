@@ -15,7 +15,7 @@ export class ReviewQueryDto extends PaginationDto {
   @IsOptional()
   @IsString()
   @Type(() => String)
-  boothName?: string;
+  boothName: string;
 
   @ApiProperty({
     description: '리뷰를 작성한 유저닉네임',
@@ -25,7 +25,7 @@ export class ReviewQueryDto extends PaginationDto {
   @IsOptional()
   @IsString()
   @Type(() => String)
-  userName?: string;
+  userName: string;
 
   getQueryProps(): FindReviewOptionsProps {
     return {
