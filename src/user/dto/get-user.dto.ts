@@ -4,18 +4,16 @@ import { User } from '../entity/user.entity';
 import { Review } from '../../review/entity/review.entity';
 
 export class GetUserDto {
-  @Exclude() private readonly _id: number;
-  @Exclude() private readonly _username: string;
-  @Exclude() private readonly _nickname: string;
-  @Exclude() private readonly _email: string;
-  @Exclude() private readonly _created_at: Date;
-  @Exclude() private readonly _deleted_at: Date | null;
-  @Exclude()
-  @Type(() => Review)
-  private readonly _reviews: Review[];
+  @Exclude() private _id: number;
+  @Exclude() private _username: string;
+  @Exclude() private _nickname: string;
+  @Exclude() private _email: string;
+  @Exclude() private _created_at: Date;
+  @Exclude() private _deleted_at: Date | null;
+  @Exclude() private _reviews: Review[];
 
   constructor(data: User) {
-    Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
+    Object.keys(data).map((key) => (this[`_${key}`] = data[key]));
   }
 
   @ApiProperty({ description: '유저 테이블 내의 id 값' })
