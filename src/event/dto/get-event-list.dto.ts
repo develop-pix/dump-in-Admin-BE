@@ -4,13 +4,16 @@ import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.enti
 import { Events } from '../entity/event.entity';
 
 export class GetEventListDto {
-  @Exclude() private readonly _id: number;
-  @Exclude() private readonly _title: string;
-  @Exclude() private readonly _content: string;
-  @Exclude() private readonly _main_thumbnail_url: string;
-  @Exclude()
-  @Type(() => PhotoBoothBrand)
-  private readonly _photo_booth_brand: PhotoBoothBrand;
+  @Exclude() readonly _id: number;
+  @Exclude() readonly _title: string;
+  @Exclude() readonly _content: string;
+  @Exclude() readonly _main_thumbnail_url: string;
+  @Exclude() readonly _start_date: Date;
+  @Exclude() readonly _end_date: Date;
+  @Exclude() readonly _view_count: number;
+  @Exclude() readonly _likes_count: number;
+  @Exclude() readonly _is_public: boolean;
+  @Exclude() readonly _photo_booth_brand: PhotoBoothBrand;
 
   constructor(data: Events) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
@@ -50,7 +53,8 @@ export class GetEventListDto {
     description: '이벤트와 관련된 포토부스 업체명',
   })
   @Expose()
-  get brandName(): string {
-    return this._photo_booth_brand.name;
+  @Type(() => PhotoBoothBrand)
+  get brandName(): PhotoBoothBrand {
+    return this._photo_booth_brand;
   }
 }

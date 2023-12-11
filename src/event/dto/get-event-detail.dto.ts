@@ -1,52 +1,22 @@
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
-import { Events } from '../entity/event.entity';
+import { GetEventListDto } from './get-event-list.dto';
 
-export class GetEventDetailDto {
-  @Exclude() private readonly _id: number;
-  @Exclude() private readonly _title: string;
-  @Exclude() private readonly _content: string;
-  @Exclude() private readonly _main_thumbnail_url: string;
-  @Exclude() private readonly _view_count: number;
-  @Exclude() private readonly _likes_count: number;
-  @Exclude() private readonly _is_public: boolean;
-  @Exclude()
-  @Type(() => PhotoBoothBrand)
-  private readonly _photo_booth_brand: PhotoBoothBrand;
-
-  constructor(data: Events) {
-    Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
-  }
-
-  @ApiProperty({ description: '이벤트의 id 값' })
+export class GetEventDetailDto extends GetEventListDto {
+  @ApiProperty({
+    description: '이벤트 시작일',
+  })
   @Expose()
-  get id(): number {
-    return this._id;
+  get startDate(): Date {
+    return this._start_date;
   }
 
   @ApiProperty({
-    description: '이벤트의 제목',
+    description: '이벤트 마감일',
   })
   @Expose()
-  get title(): string {
-    return this._title;
-  }
-
-  @ApiProperty({
-    description: '이벤트의 내용',
-  })
-  @Expose()
-  get content(): string {
-    return this._content;
-  }
-
-  @ApiProperty({
-    description: '이벤트의 대표 이미지',
-  })
-  @Expose()
-  get mainThumbnailUrl(): string {
-    return this._main_thumbnail_url;
+  get endDate(): Date {
+    return this._end_date;
   }
 
   @ApiProperty({
@@ -71,13 +41,5 @@ export class GetEventDetailDto {
   @Expose()
   get isPublic(): boolean {
     return this._is_public;
-  }
-
-  @ApiProperty({
-    description: '이벤트와 관련된 포토부스 업체명',
-  })
-  @Expose()
-  get brandName(): string {
-    return this._photo_booth_brand.name;
   }
 }
