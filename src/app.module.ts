@@ -28,10 +28,7 @@ import { EventModule } from './event/event.module';
       database: process.env.DATABASE_NAME,
       synchronize: process.env.NODE_ENV === 'local',
       logging: process.env.NODE_ENV !== 'production',
-      entities: [
-        __dirname + '/**/*.entity{.ts,.js}',
-        '!**/common/**/*.entity{.ts,.js}',
-      ],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       ssl:
         process.env.NODE_ENV === 'local'
           ? undefined
