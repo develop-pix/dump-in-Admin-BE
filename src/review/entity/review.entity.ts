@@ -78,11 +78,11 @@ export class Review extends BaseDateEntity {
     const user = new User();
     const booth = new PhotoBooth();
 
-    booth.name = boothName;
     user.nickname = userName;
+    booth.name = boothName;
 
-    review.user = user;
-    review.photo_booth = booth;
+    review.user = userName ? user : undefined;
+    review.photo_booth = boothName ? booth : undefined;
 
     return review;
   }

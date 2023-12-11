@@ -11,7 +11,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { ReviewQueryDto } from './dto/get-review-query.dto';
 import { ResponseEntity } from '../common/entity/response.entity';
 import { GetReviewListDto } from './dto/get-review-list.dto';
-import { Page } from '../common/dto/pagination-res.dto';
+import { Page } from '../common/dto/get-pagination-list.dto';
 import { GetReviewDetailDto } from './dto/get-review-detail.dto';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
 
