@@ -50,4 +50,9 @@ export class PaginationDto {
       page: this.page,
     };
   }
+
+  decodeString(encodedString: string): string {
+    if (typeof encodedString === 'undefined') return undefined;
+    return decodeURIComponent(encodedString);
+  }
 }

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { PaginationProps } from './pagination-req.dto';
+import { PaginationProps } from './get-pagination-query.dto';
 
 export class Page<T> {
   @Exclude() private readonly _take: number;
