@@ -52,6 +52,7 @@ async function bootstrap(): Promise<void> {
     .setTitle('Dump-In-Admin API')
     .setDescription('The Dump-In-Admin API document')
     .setVersion('1.0')
+    .addServer('/api')
     .build();
   const document = SwaggerModule.createDocument(app, config);
 
@@ -65,7 +66,7 @@ async function bootstrap(): Promise<void> {
 
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
-  SwaggerModule.setup('api/swagger', app, document);
+  SwaggerModule.setup('/api/swagger', app, document);
   await app.listen(+process.env.APP_SERVER_PORT);
 }
 bootstrap();
