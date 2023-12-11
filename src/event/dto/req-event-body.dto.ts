@@ -24,7 +24,7 @@ export interface EventReqBodyProps {
   hashtags?: string[];
 }
 
-export class EventReqBodyDto {
+export class EventReqBodyDto implements EventReqBodyProps {
   @ApiProperty({
     description: '이벤트의 제목',
   })
