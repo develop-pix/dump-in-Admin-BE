@@ -8,8 +8,8 @@ export class GetUserDto {
   @Exclude() readonly _username: string;
   @Exclude() readonly _nickname: string;
   @Exclude() readonly _email: string;
-  @Exclude() readonly _created_at: Date;
-  @Exclude() readonly _deleted_at: Date | null;
+  @Exclude() readonly _createdAt: Date;
+  @Exclude() readonly _deletedAt: Date | null;
   @Exclude() readonly _reviews: Review[];
 
   constructor(data: User) {
@@ -51,7 +51,7 @@ export class GetUserDto {
   })
   @Expose()
   get deletedAt(): Date {
-    return this._deleted_at;
+    return this._deletedAt;
   }
 
   @ApiProperty({
@@ -59,7 +59,7 @@ export class GetUserDto {
   })
   @Expose()
   get createdAt(): Date {
-    return this._created_at;
+    return this._createdAt;
   }
 
   @ApiProperty({

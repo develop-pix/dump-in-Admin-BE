@@ -40,8 +40,8 @@ export class UserRepository extends Repository<User> {
       username: true,
       nickname: true,
       email: true,
-      created_at: true,
-      deleted_at: true,
+      createdAt: true,
+      deletedAt: true,
     };
     return { relations, take, skip, select };
   }
@@ -51,7 +51,7 @@ export class UserRepository extends Repository<User> {
       id: user.id,
       username: user.username,
       nickname: user.nickname,
-      is_admin: user.is_admin,
+      isAdmin: user.isAdmin,
     };
   }
 }
