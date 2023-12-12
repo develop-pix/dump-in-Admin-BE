@@ -21,45 +21,45 @@ export class Review extends BaseDateEntity {
   @Column()
   content: string;
 
-  @Column()
-  is_deleted: boolean;
+  @Column({ name: 'is_deleted' })
+  isDeleted: boolean;
 
   @Column()
   date: Date;
 
-  @Column()
-  frame_color: string;
+  @Column({ name: 'frame_color' })
+  frameColor: string;
 
   @Column()
   participants: number;
 
-  @Column()
-  camera_shot: string;
+  @Column({ name: 'camera_shot' })
+  cameraShot: string;
 
-  @Column({ nullable: true })
-  goods_amount: boolean;
+  @Column({ name: 'goods_amount', nullable: true })
+  goodsAmount: boolean;
 
-  @Column({ nullable: true })
-  curl_amount: boolean;
+  @Column({ name: 'curl_amount', nullable: true })
+  curlAmount: boolean;
 
-  @Column()
-  is_public: boolean;
+  @Column({ name: 'is_public' })
+  isPublic: boolean;
 
-  @Column()
-  view_count: number;
+  @Column({ name: 'view_count' })
+  viewCount: number;
 
-  @Column()
-  like_count: number;
+  @Column({ name: 'like_count' })
+  likeCount: number;
 
   @OneToMany(() => ReviewConcept, (reviewConcept) => reviewConcept.review)
-  review_concepts: ReviewConcept[];
+  reviewConcepts: ReviewConcept[];
 
   @OneToMany(() => ReviewImage, (reviewImage) => reviewImage.review)
-  review_images: ReviewImage[];
+  reviewImages: ReviewImage[];
 
   @ManyToOne(() => PhotoBooth, (photoBooth: PhotoBooth) => photoBooth.reviews)
   @JoinColumn({ name: 'photo_booth_id' })
-  photo_booth: PhotoBooth;
+  photoBooth: PhotoBooth;
 
   @ManyToOne(() => User, (user) => user.reviews)
   @JoinColumn({ name: 'user_id' })
@@ -73,16 +73,13 @@ export class Review extends BaseDateEntity {
     return review;
   }
 
-  static of({ boothName, userName }: FindReviewOptionsProps): Review {
+  static of({ boothName, nickname }: FindReviewOptionsProps): Review {
     const review = new Review();
-    const user = new User();
-    const booth = new PhotoBooth();
+    const user = User.byNickname(nickname);
+    const booth = PhotoBooth.byName(boothName);
 
-    user.nickname = userName;
-    booth.name = boothName;
-
-    review.user = userName ? user : undefined;
-    review.photo_booth = boothName ? booth : undefined;
+    review.user = nickname ? user : undefined;
+    review.photoBooth = boothName ? booth : undefined;
 
     return review;
   }
@@ -90,7 +87,7 @@ export class Review extends BaseDateEntity {
   static delete(isDeleted: boolean): Review {
     const review = new Review();
 
-    review.is_deleted = isDeleted;
+    review.isDeleted = isDeleted;
 
     return review;
   }

@@ -15,10 +15,10 @@ export class ReviewImage extends BaseDateEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Review, (review) => review.review_images)
+  @ManyToOne(() => Review, (review) => review.reviewImages)
   @JoinColumn({ name: 'review_id' })
   review: Review;
 
-  @Column()
-  review_image_url: string;
+  @Column({ name: 'review_image_url' })
+  reviewImageUrl: string;
 }
