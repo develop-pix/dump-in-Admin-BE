@@ -42,20 +42,20 @@ export class ReviewRepository extends Repository<Review> {
     review: Review,
     page?: PaginationProps,
   ): FindManyOptions<Review> {
-    const { take, skip } = page || { take: undefined, skip: undefined };
+    const { take, skip } = page ?? {};
     const where = this.findReviewOptionsWhere(review);
     const relations = {
-      review_concepts: true,
-      review_images: true,
-      photo_booth: true,
+      reviewConcepts: true,
+      reviewImages: true,
+      photoBooth: true,
       user: true,
     };
     const select: FindOptionsSelect<Review> = {
       id: true,
       content: true,
       date: true,
-      view_count: true,
-      like_count: true,
+      viewCount: true,
+      likeCount: true,
     };
     return { where, relations, take, skip, select };
   }
@@ -63,9 +63,9 @@ export class ReviewRepository extends Repository<Review> {
   private findReviewOptionsWhere(review: Review): FindOptionsWhere<Review> {
     return {
       id: review.id,
-      photo_booth: review.photo_booth,
+      photoBooth: review.photoBooth,
       user: review.user,
-      is_deleted: false,
+      isDeleted: false,
     };
   }
 }

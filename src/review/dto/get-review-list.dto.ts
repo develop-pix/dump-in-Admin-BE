@@ -10,12 +10,12 @@ export class GetReviewListDto {
   @Exclude() readonly _id: number;
   @Exclude() readonly _content: string;
   @Exclude() readonly _date: Date;
-  @Exclude() readonly _is_public: boolean;
-  @Exclude() readonly _view_count: number;
-  @Exclude() readonly _likes_count: number;
-  @Exclude() readonly _review_concepts: ReviewConcept[];
-  @Exclude() readonly _review_images: ReviewImage[];
-  @Exclude() readonly _photo_booth: PhotoBooth;
+  @Exclude() readonly _isPublic: boolean;
+  @Exclude() readonly _viewCount: number;
+  @Exclude() readonly _likeCount: number;
+  @Exclude() readonly _reviewConcepts: ReviewConcept[];
+  @Exclude() readonly _reviewImages: ReviewImage[];
+  @Exclude() readonly _photoBooth: PhotoBooth;
   @Exclude() readonly _user: User;
 
   constructor(data: Review) {
@@ -50,7 +50,7 @@ export class GetReviewListDto {
   @Expose()
   @Type(() => ReviewConcept)
   get reviewConcept(): ReviewConcept[] {
-    return this._review_concepts;
+    return this._reviewConcepts;
   }
 
   @ApiProperty({
@@ -59,7 +59,7 @@ export class GetReviewListDto {
   @Expose()
   @Type(() => ReviewImage)
   get reviewImages(): ReviewImage[] {
-    return this._review_images;
+    return this._reviewImages;
   }
 
   @ApiProperty({
@@ -67,7 +67,7 @@ export class GetReviewListDto {
   })
   @Expose()
   get boothName(): string {
-    return this._photo_booth.name;
+    return this._photoBooth.name;
   }
 
   @ApiProperty({

@@ -23,17 +23,17 @@ export class ReviewQueryDto extends PaginationDto {
   @IsOptional()
   @IsString()
   @Type(() => String)
-  userName: string;
+  nickname: string;
 
   getQueryProps(): FindReviewOptionsProps {
     return {
       boothName: this.decodeString(this.boothName),
-      userName: this.decodeString(this.userName),
+      nickname: this.decodeString(this.nickname),
     };
   }
 }
 
 export interface FindReviewOptionsProps {
   boothName: string;
-  userName: string;
+  nickname: string;
 }

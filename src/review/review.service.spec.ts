@@ -30,9 +30,9 @@ describe('ReviewService', () => {
     jest
       .spyOn(reviewRepository, 'findReviewByOptionAndCount')
       .mockImplementation((review: Review) => {
-        if (review.photo_booth?.name === '지점명') {
+        if (review.photoBooth?.name === '지점명') {
           const savedReview = new Review();
-          savedReview.photo_booth = review.photo_booth;
+          savedReview.photoBooth = review.photoBooth;
           return Promise.resolve([[savedReview], 1]);
         } else if (review.user?.nickname === '유저 닉네임') {
           const savedReview = new Review();
@@ -82,7 +82,7 @@ describe('ReviewService', () => {
       // Given
       const queryProps: FindReviewOptionsProps = {
         boothName: '지점명',
-        userName: undefined,
+        nickname: undefined,
       };
 
       const [reviewInDb, countInDb] =
@@ -110,7 +110,7 @@ describe('ReviewService', () => {
       // Given
       const queryProps: FindReviewOptionsProps = {
         boothName: undefined,
-        userName: '유저 닉네임',
+        nickname: '유저 닉네임',
       };
 
       const [reviewInDb, countInDb] =
@@ -138,7 +138,7 @@ describe('ReviewService', () => {
       // Given
       const queryProps: FindReviewOptionsProps = {
         boothName: '없는 지점명',
-        userName: undefined,
+        nickname: undefined,
       };
 
       // When & Then
@@ -150,7 +150,7 @@ describe('ReviewService', () => {
     it('FAILURE: 유저 닉네임으로 쿼리했을 때 리뷰가 존재하지 않으면 404 에러', async () => {
       // Given
       const queryProps: FindReviewOptionsProps = {
-        userName: '없는 유저 닉네임',
+        nickname: '없는 유저 닉네임',
         boothName: undefined,
       };
 

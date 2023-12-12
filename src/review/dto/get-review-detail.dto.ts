@@ -8,15 +8,15 @@ export class GetReviewDetailDto extends GetReviewListDto {
   })
   @Expose()
   get viewCount(): number {
-    return this._view_count;
+    return this._viewCount;
   }
 
   @ApiProperty({
     description: '리뷰의 좋아요수',
   })
   @Expose()
-  get likesCount(): number {
-    return this._likes_count;
+  get likeCount(): number {
+    return this._likeCount;
   }
 
   @ApiProperty({
@@ -24,6 +24,6 @@ export class GetReviewDetailDto extends GetReviewListDto {
   })
   @Expose()
   get isPublic(): boolean {
-    return this._is_public;
+    return this._isPublic;
   }
 }
