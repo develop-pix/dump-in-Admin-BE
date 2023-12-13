@@ -12,34 +12,34 @@ export class PhotoBoothBrand {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
-  @Column({ type: 'varchar', length: 32 })
+  @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ type: 'varchar', length: 128, nullable: true })
+  @Column({ type: 'varchar' })
   description: string;
 
-  @Column({ type: 'varchar', length: 128 })
-  photo_booth_url: string;
+  @Column({ name: 'photo_booth_url' })
+  photoBoothUrl: string;
 
-  @Column({ type: 'varchar', length: 512, nullable: true })
-  main_thumbnail_image_url: string;
+  @Column({ name: 'main_thumbnail_image_url' })
+  mainThumbnailImageUrl: string;
 
-  @Column({ type: 'bool' })
-  is_event: boolean;
+  @Column({ name: 'is_event' })
+  isEvent: boolean;
 
   @OneToMany(
     () => PhotoBooth,
-    (photoBooth: PhotoBooth) => photoBooth.photo_booth_brand,
+    (photoBooth: PhotoBooth) => photoBooth.photoBoothBrand,
   )
-  photo_booths: PhotoBooth[];
+  photoBooths: PhotoBooth[];
 
   @OneToMany(
     () => BrandHashtag,
-    (photoBoothHashtag: BrandHashtag) => photoBoothHashtag.photo_booth_brand,
+    (photoBoothHashtag: BrandHashtag) => photoBoothHashtag.photoBoothBrand,
   )
-  photo_booth_hashtags: BrandHashtag[];
+  brandHashtags: BrandHashtag[];
 
-  @OneToMany(() => Events, (event: Events) => event.photo_booth_brand)
+  @OneToMany(() => Events, (event: Events) => event.photoBoothBrand)
   events: Events[];
 
   static create({
@@ -50,8 +50,8 @@ export class PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.name = name;
-    brand.main_thumbnail_image_url = mainThumbnailImageUrl;
-    brand.is_event = isEvent;
+    brand.mainThumbnailImageUrl = mainThumbnailImageUrl;
+    brand.isEvent = isEvent;
 
     return brand;
   }
@@ -67,9 +67,9 @@ export class PhotoBoothBrand {
 
     brand.name = name;
     brand.description = description;
-    brand.photo_booth_url = photoBoothUrl;
-    brand.main_thumbnail_image_url = mainThumbnailImageUrl;
-    brand.is_event = isEvent;
+    brand.photoBoothUrl = photoBoothUrl;
+    brand.mainThumbnailImageUrl = mainThumbnailImageUrl;
+    brand.isEvent = isEvent;
 
     return brand;
   }
@@ -82,8 +82,8 @@ export class PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.name = name;
-    brand.is_event = isEvent;
-    brand.photo_booth_hashtags = hashtags.map((tag) => {
+    brand.isEvent = isEvent;
+    brand.brandHashtags = hashtags.map((tag) => {
       const hashtag = new BrandHashtag();
       hashtag.hashtag = new Hashtag();
       hashtag.hashtag.name = tag;

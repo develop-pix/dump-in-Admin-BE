@@ -8,10 +8,10 @@ export class HiddenPhotoBooth extends BaseDateEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'id' })
   id: string;
 
-  @Column({ type: 'varchar', length: 64 })
+  @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ type: 'varchar', length: 32 })
+  @Column({ type: 'varchar' })
   location: string;
 
   @Column({ type: 'decimal', precision: 13, scale: 10 })
@@ -20,17 +20,17 @@ export class HiddenPhotoBooth extends BaseDateEntity {
   @Column({ type: 'decimal', precision: 13, scale: 10 })
   longitude: number;
 
-  @Column({ type: 'varchar', length: 64 })
-  street_address: string;
+  @Column({ name: 'street_address' })
+  streetAddress: string;
 
-  @Column({ type: 'varchar', length: 64 })
-  road_address: string;
+  @Column({ name: 'road_address' })
+  roadAddress: string;
 
-  @Column({ type: 'varchar', length: 64 })
-  operation_time: string;
+  @Column({ name: 'operation_time' })
+  operationTime: string;
 
-  @Column({ type: 'timestamp', nullable: true })
-  preprocessed_at: Date;
+  @Column({ name: 'preprocessed_at' })
+  preprocessedAt: Date;
 
   static of({ location, name }: FindBoothOptionProps): HiddenPhotoBooth {
     const hiddenBooth = new HiddenPhotoBooth();
@@ -60,9 +60,9 @@ export class HiddenPhotoBooth extends BaseDateEntity {
 
     hiddenBooth.name = name;
     hiddenBooth.location = location;
-    hiddenBooth.street_address = streetAddress;
-    hiddenBooth.road_address = roadAddress;
-    hiddenBooth.preprocessed_at = isDelete ? new Date() : null;
+    hiddenBooth.streetAddress = streetAddress;
+    hiddenBooth.roadAddress = roadAddress;
+    hiddenBooth.preprocessedAt = isDelete ? new Date() : null;
 
     return hiddenBooth;
   }

@@ -18,10 +18,10 @@ export class PhotoBooth extends BaseDateEntity {
   @PrimaryGeneratedColumn('uuid', { name: 'id' })
   id: string;
 
-  @Column({ type: 'varchar', length: 64 })
+  @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ type: 'varchar', length: 32 })
+  @Column({ type: 'varchar' })
   location: string;
 
   @Column({ type: 'decimal', precision: 13, scale: 10 })
@@ -30,30 +30,30 @@ export class PhotoBooth extends BaseDateEntity {
   @Column({ type: 'decimal', precision: 13, scale: 10 })
   longitude: number;
 
-  @Column({ type: 'varchar', length: 64 })
-  street_address: string;
+  @Column({ name: 'street_address' })
+  streetAddress: string;
 
-  @Column({ type: 'varchar', length: 64 })
-  road_address: string;
+  @Column({ name: 'road_address' })
+  roadAddress: string;
 
-  @Column({ type: 'varchar', length: 64 })
-  operation_time: string;
+  @Column({ name: 'operation_time' })
+  operationTime: string;
 
-  @Column({ type: 'int' })
-  likes_count: number;
+  @Column({ name: 'like_count' })
+  likeCount: number;
 
-  @Column({ type: 'int' })
-  view_count: number;
+  @Column({ name: 'view_count' })
+  viewCount: number;
 
-  @OneToMany(() => Review, (review) => review.photo_booth)
+  @OneToMany(() => Review, (review) => review.photoBooth)
   reviews: Review[];
 
   @ManyToOne(
     () => PhotoBoothBrand,
-    (photoBoothBrand: PhotoBoothBrand) => photoBoothBrand.photo_booths,
+    (photoBoothBrand: PhotoBoothBrand) => photoBoothBrand.photoBooths,
   )
   @JoinColumn({ name: 'photo_booth_brand_id' })
-  photo_booth_brand: PhotoBoothBrand;
+  photoBoothBrand: PhotoBoothBrand;
 
   static byId(id: string) {
     const photoBooth = new PhotoBooth();
@@ -63,12 +63,20 @@ export class PhotoBooth extends BaseDateEntity {
     return photoBooth;
   }
 
-  static of({ location, name, brand }: FindBoothOptionProps) {
+  static byName(name: string) {
+    const photoBooth = new PhotoBooth();
+
+    photoBooth.name = name;
+
+    return photoBooth;
+  }
+
+  static of({ location, name, brandName }: FindBoothOptionProps) {
     const photoBooth = new PhotoBooth();
 
     photoBooth.location = location;
     photoBooth.name = name;
-    photoBooth.photo_booth_brand = brand;
+    photoBooth.photoBoothBrand = PhotoBoothBrand.byName(brandName);
 
     return photoBooth;
   }
@@ -78,15 +86,15 @@ export class PhotoBooth extends BaseDateEntity {
     location,
     streetAddress,
     roadAddress,
-    brand,
+    brandName,
   }: PhotoBoothUpdateProps): PhotoBooth {
     const photoBooth = new PhotoBooth();
 
     photoBooth.name = name;
     photoBooth.location = location;
-    photoBooth.street_address = streetAddress;
-    photoBooth.road_address = roadAddress;
-    photoBooth.photo_booth_brand = brand;
+    photoBooth.streetAddress = streetAddress;
+    photoBooth.roadAddress = roadAddress;
+    photoBooth.photoBoothBrand = PhotoBoothBrand.byName(brandName);
 
     return photoBooth;
   }
@@ -101,7 +109,7 @@ export class PhotoBooth extends BaseDateEntity {
       streetAddress,
       roadAddress,
       operationTime,
-      brand,
+      brandName,
     }: MoveToOpenBoothProps,
   ): PhotoBooth {
     const photoBooth = new PhotoBooth();
@@ -111,10 +119,10 @@ export class PhotoBooth extends BaseDateEntity {
     photoBooth.latitude = latitude;
     photoBooth.location = location;
     photoBooth.longitude = longitude;
-    photoBooth.road_address = roadAddress;
-    photoBooth.operation_time = operationTime;
-    photoBooth.street_address = streetAddress;
-    photoBooth.photo_booth_brand = brand;
+    photoBooth.roadAddress = roadAddress;
+    photoBooth.operationTime = operationTime;
+    photoBooth.streetAddress = streetAddress;
+    photoBooth.photoBoothBrand = PhotoBoothBrand.byName(brandName);
 
     return photoBooth;
   }
