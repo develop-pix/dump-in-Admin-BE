@@ -1,7 +1,7 @@
 import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
 import { EventReqBodyProps } from './req-event-body.dto';
-import { PaginationDto } from '../../common/dto/pagination-req.dto';
+import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 

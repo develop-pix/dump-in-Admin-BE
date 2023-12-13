@@ -12,7 +12,7 @@ import { EventService } from './event.service';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
 import { ResponseEntity } from '../common/entity/response.entity';
 import { EventQueryDto } from './dto/get-event-query.dto';
-import { Page } from '../common/dto/pagination-res.dto';
+import { Page } from '../common/dto/get-pagination-list.dto';
 import { GetEventListDto } from './dto/get-event-list.dto';
 import { GetEventDetailDto } from './dto/get-event-detail.dto';
 import { CreateEventDto } from './dto/post-event.dto';

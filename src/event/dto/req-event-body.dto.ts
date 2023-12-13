@@ -9,7 +9,6 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
 import { Type } from 'class-transformer';
 
 export interface EventReqBodyProps {
@@ -20,8 +19,7 @@ export interface EventReqBodyProps {
   isPublic: boolean;
   startDate: Date;
   endDate: Date;
-  brand?: PhotoBoothBrand;
-  hashtags?: string[];
+  hashtags: string[];
 }
 
 export class EventReqBodyDto implements EventReqBodyProps {

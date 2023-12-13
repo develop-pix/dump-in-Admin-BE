@@ -7,7 +7,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Events } from '../entity/event.entity';
-import { PaginationProps } from '../../common/dto/pagination-req.dto';
+import { PaginationProps } from '../../common/dto/get-pagination-query.dto';
 
 @Injectable()
 export class EventRepository {
@@ -24,13 +24,13 @@ export class EventRepository {
     event: Events,
     page: PaginationProps,
   ): Promise<[Events[], number]> {
-    const options = this.findEventManyOptions(page, event);
+    const options = this.findEventManyOptions(event, page);
     return await this.eventRepository.findAndCount(options);
   }
 
-  async findOneEventBy(event: Events): Promise<Events> {
-    const where = this.findEventOptionsWhere(event);
-    return await this.eventRepository.findOneBy(where);
+  async findOneEvent(event: Events): Promise<Events> {
+    const options = this.findEventManyOptions(event);
+    return await this.eventRepository.findOne(options);
   }
 
   async updateEvent(id: number, event: Events): Promise<boolean> {
@@ -44,20 +44,26 @@ export class EventRepository {
   }
 
   private findEventManyOptions(
-    page: PaginationProps,
     event: Events,
+    page?: PaginationProps,
   ): FindManyOptions<Events> {
-    const { take, skip } = page;
+    const { take, skip } = page ?? {};
     const where = this.findEventOptionsWhere(event);
     const relations = {
-      event_images: true,
-      photo_booth_brand: true,
-      event_hashtag: true,
+      eventImages: true,
+      photoBoothBrand: true,
+      eventHashtag: true,
     };
     const select: FindOptionsSelect<Events> = {
       id: true,
       title: true,
       content: true,
+      mainThumbnailUrl: true,
+      startDate: true,
+      endDate: true,
+      viewCount: true,
+      likeCount: true,
+      isPublic: true,
     };
     return { where, relations, take, skip, select };
   }
@@ -66,7 +72,7 @@ export class EventRepository {
     return {
       id: event.id,
       title: event.title,
-      photo_booth_brand: event.photo_booth_brand,
+      photoBoothBrand: event.photoBoothBrand,
     };
   }
 }

@@ -8,7 +8,7 @@ export class GetEventDetailDto extends GetEventListDto {
   })
   @Expose()
   get startDate(): Date {
-    return this._start_date;
+    return this._startDate;
   }
 
   @ApiProperty({
@@ -16,7 +16,7 @@ export class GetEventDetailDto extends GetEventListDto {
   })
   @Expose()
   get endDate(): Date {
-    return this._end_date;
+    return this._endDate;
   }
 
   @ApiProperty({
@@ -24,7 +24,7 @@ export class GetEventDetailDto extends GetEventListDto {
   })
   @Expose()
   get viewCount(): number {
-    return this._view_count;
+    return this._viewCount;
   }
 
   @ApiProperty({
@@ -32,7 +32,7 @@ export class GetEventDetailDto extends GetEventListDto {
   })
   @Expose()
   get likesCount(): number {
-    return this._likes_count;
+    return this._likeCount;
   }
 
   @ApiProperty({
@@ -40,6 +40,6 @@ export class GetEventDetailDto extends GetEventListDto {
   })
   @Expose()
   get isPublic(): boolean {
-    return this._is_public;
+    return this._isPublic;
   }
 }

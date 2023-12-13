@@ -6,14 +6,12 @@ import { PhotoBoothService } from '../photo-booth/photo-booth.service';
 import { Events } from './entity/event.entity';
 import { GetEventListDto } from './dto/get-event-list.dto';
 import { NotFoundException } from '@nestjs/common';
-import { PhotoBoothBrand } from '../photo-booth/entity/photo-booth-brand.entity';
 
 class MockEventRepository {
   saveEvent = jest.fn();
   findEventByOptionAndCount = jest.fn();
-  findOneEventBy = jest.fn();
+  findOneEvent = jest.fn();
   updateEvent = jest.fn();
-  isExistEvent = jest.fn();
 }
 
 class MockHashtagService {
@@ -21,7 +19,7 @@ class MockHashtagService {
 }
 
 class MockPhotoBoothService {
-  findOneBrandByName = jest.fn();
+  isExistByBrandName = jest.fn();
 }
 
 describe('EventService', () => {
@@ -71,7 +69,7 @@ describe('EventService', () => {
       });
 
     jest
-      .spyOn(eventRepository, 'findOneEventBy')
+      .spyOn(eventRepository, 'findOneEvent')
       .mockImplementation((event: Events) => {
         if (event.id === 1) {
           const saveEvent = new Events();
@@ -81,16 +79,6 @@ describe('EventService', () => {
           return Promise.resolve(saveEvent);
         } else {
           return Promise.resolve(null);
-        }
-      });
-
-    jest
-      .spyOn(eventRepository, 'isExistEvent')
-      .mockImplementation((event: Events) => {
-        if (event.title === '이벤트 제목') {
-          return Promise.resolve(true);
-        } else {
-          return Promise.resolve(false);
         }
       });
 
@@ -105,12 +93,10 @@ describe('EventService', () => {
       });
 
     jest
-      .spyOn(photoBoothService, 'findOneBrandByName')
+      .spyOn(photoBoothService, 'isExistByBrandName')
       .mockImplementation((name: string) => {
         if (name === '업체명') {
-          const saveBrand = new PhotoBoothBrand();
-          saveBrand.name = '업체명';
-          return Promise.resolve(saveBrand);
+          return Promise.resolve(true);
         } else if (typeof name === 'undefined') {
           return Promise.resolve(name);
         } else {
@@ -226,7 +212,7 @@ describe('EventService', () => {
       // Given
       const id = 1;
 
-      const eventInDb = await eventRepository.findOneEventBy(Events.byId(id));
+      const eventInDb = await eventRepository.findOneEvent(Events.byId(id));
 
       // When
       const result = await eventService.findOneEventById(id);
