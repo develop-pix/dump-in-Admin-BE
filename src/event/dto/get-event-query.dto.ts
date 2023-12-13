@@ -1,5 +1,4 @@
 import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
 import { EventReqBodyProps } from './req-event-body.dto';
 import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
 import { ApiProperty } from '@nestjs/swagger';
@@ -27,13 +26,11 @@ export class EventQueryDto extends PaginationDto {
 
   getQueryProps(): FindEventOptionProps {
     return {
-      brandName: this.brandName,
-      title: this.title,
+      brandName: this.decodeString(this.brandName),
+      title: this.decodeString(this.title),
     };
   }
 }
 
 export interface FindEventOptionProps
-  extends Pick<Partial<EventReqBodyProps>, 'brandName' | 'title'> {
-  brand?: PhotoBoothBrand;
-}
+  extends Pick<Partial<EventReqBodyProps>, 'brandName' | 'title'> {}

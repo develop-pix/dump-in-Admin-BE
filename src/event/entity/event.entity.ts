@@ -72,11 +72,11 @@ export class Events extends BaseDateEntity {
     return event;
   }
 
-  static of({ title, brand }: FindEventOptionProps): Events {
+  static of({ title, brandName }: FindEventOptionProps): Events {
     const event = new Events();
 
     event.title = title;
-    event.photoBoothBrand = brand;
+    event.photoBoothBrand = PhotoBoothBrand.byName(brandName);
 
     return event;
   }
