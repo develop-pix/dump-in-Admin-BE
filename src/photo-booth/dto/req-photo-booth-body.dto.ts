@@ -9,7 +9,6 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
-import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
 
 export interface PhotoBoothReqBodyProps {
   name: string;
@@ -20,13 +19,9 @@ export interface PhotoBoothReqBodyProps {
   roadAddress: string;
   streetAddress: string;
   operationTime: string;
-  brand?: PhotoBoothBrand;
 }
 
 export class PhotoBoothReqBodyDto implements PhotoBoothReqBodyProps {
-  description: string;
-  photoBoothUrl: string;
-  brand?: PhotoBoothBrand;
   @ApiProperty({
     description: '포토부스의 업체 + 지점명',
     example: '하루필름 홍대 1호점',
@@ -103,10 +98,10 @@ export class PhotoBoothReqBodyDto implements PhotoBoothReqBodyProps {
 export interface BrandReqBodyProps {
   name: string;
   isEvent: boolean;
-  mainThumbnailImageUrl: string;
   hashtags: string[];
   description: string;
   photoBoothUrl: string;
+  mainThumbnailImageUrl: string;
 }
 
 export class BrandReqBodyDto implements BrandReqBodyProps {
@@ -116,6 +111,8 @@ export class BrandReqBodyDto implements BrandReqBodyProps {
     example: '포토그레이',
   })
   @IsString()
+  @MinLength(3)
+  @MaxLength(64)
   name: string;
 
   @ApiProperty({
@@ -123,18 +120,24 @@ export class BrandReqBodyDto implements BrandReqBodyProps {
     required: true,
   })
   @IsString()
+  @MinLength(3)
+  @MaxLength(512)
   mainThumbnailImageUrl: string;
 
   @ApiProperty({
     description: '포토부스의 업체 설명',
   })
   @IsString()
+  @MinLength(3)
+  @MaxLength(128)
   description: string;
 
   @ApiProperty({
     description: '포토부스의 업체 관련 홈페이지 주소',
   })
   @IsString()
+  @MinLength(3)
+  @MaxLength(128)
   photoBoothUrl: string;
 
   @ApiProperty({
@@ -142,7 +145,7 @@ export class BrandReqBodyDto implements BrandReqBodyProps {
     example: true,
   })
   @IsBoolean()
-  isEvent: boolean = false;
+  isEvent: boolean;
 
   @ApiProperty({
     description: '포토부스 업체 해시태그 목록 (최대 4개)',

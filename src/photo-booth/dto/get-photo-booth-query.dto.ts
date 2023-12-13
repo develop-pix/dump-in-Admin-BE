@@ -1,7 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
-import { PaginationDto } from '../../common/dto/pagination-req.dto';
+import {
+  IsBoolean,
+  IsOptional,
+  IsString,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
 import {
   BrandReqBodyProps,
   PhotoBoothReqBodyProps,
@@ -14,6 +20,8 @@ export class BoothQueryDto extends PaginationDto {
     example: '서울',
   })
   @IsString()
+  @MinLength(3)
+  @MaxLength(64)
   @IsOptional()
   @Type(() => String)
   location: string;
@@ -24,6 +32,8 @@ export class BoothQueryDto extends PaginationDto {
     example: '하루필름 홍대 1호점',
   })
   @IsString()
+  @MinLength(3)
+  @MaxLength(32)
   @IsOptional()
   @Type(() => String)
   name: string;
@@ -34,6 +44,8 @@ export class BoothQueryDto extends PaginationDto {
     example: '하루필름',
   })
   @IsString()
+  @MinLength(3)
+  @MaxLength(64)
   @IsOptional()
   @Type(() => String)
   brandName: string;
@@ -54,8 +66,9 @@ export class BoothBrandQueryDto extends PaginationDto {
     example: '포토그레이',
   })
   @IsString()
+  @MinLength(3)
+  @MaxLength(64)
   @IsOptional()
-  @IsString()
   @Type(() => String)
   name: string;
 
@@ -67,7 +80,7 @@ export class BoothBrandQueryDto extends PaginationDto {
   @IsOptional()
   @IsBoolean()
   @Type(() => Boolean)
-  isEvent: boolean = false;
+  isEvent: boolean;
 
   @ApiProperty({
     description: '포토부스 업체의 해시태그',
@@ -81,11 +94,11 @@ export class BoothBrandQueryDto extends PaginationDto {
 
   getQueryProps(): FindBrandOptionProps {
     return {
-      name: this.name,
+      name: this.decodeString(this.name),
       isEvent: this.isEvent,
-      hashtags: this.hashtags
-        ? this.hashtags.split(',').map((tag) => tag.trim())
-        : [],
+      hashtags: this.decodeString(this.hashtags)
+        ?.split(',')
+        .map((tag) => tag.trim()),
     };
   }
 }
