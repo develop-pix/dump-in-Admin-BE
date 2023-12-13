@@ -7,7 +7,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
-import { PaginationProps } from '../../common/dto/pagination-req.dto';
+import { PaginationProps } from '../../common/dto/get-pagination-query.dto';
 
 @Injectable()
 export class PhotoBoothBrandRepository {
@@ -24,13 +24,13 @@ export class PhotoBoothBrandRepository {
     brand: PhotoBoothBrand,
     page: PaginationProps,
   ): Promise<[PhotoBoothBrand[], number]> {
-    const options = this.findBrandManyOptions(page, brand);
+    const options = this.findBrandManyOptions(brand, page);
     return await this.photoBoothBrandRepository.findAndCount(options);
   }
 
-  async findOneBrandBy(brand: PhotoBoothBrand): Promise<PhotoBoothBrand> {
-    const where = this.findBrandOptionsWhere(brand);
-    return await this.photoBoothBrandRepository.findOneBy(where);
+  async findOneBrand(brand: PhotoBoothBrand): Promise<PhotoBoothBrand> {
+    const options = this.findBrandManyOptions(brand);
+    return await this.photoBoothBrandRepository.findOne(options);
   }
 
   async updateBoothBrand(id: number, brand: PhotoBoothBrand): Promise<boolean> {
@@ -44,24 +44,17 @@ export class PhotoBoothBrandRepository {
   }
 
   private findBrandManyOptions(
-    page: PaginationProps,
     brand: PhotoBoothBrand,
+    page?: PaginationProps,
   ): FindManyOptions<PhotoBoothBrand> {
-    const { take, skip } = page;
+    const { take, skip } = page ?? {};
     const where = this.findBrandOptionsWhere(brand);
-    const relations = { photo_booth_hashtags: true };
+    const relations = { brandHashtags: true };
     const select: FindOptionsSelect<PhotoBoothBrand> = {
       id: true,
       name: true,
-      main_thumbnail_image_url: true,
-      is_event: true,
-      photo_booth_hashtags: {
-        id: false,
-        hashtag: {
-          id: true,
-          name: true,
-        },
-      },
+      mainThumbnailImageUrl: true,
+      isEvent: true,
     };
     return { where, relations, take, skip, select };
   }
@@ -72,8 +65,8 @@ export class PhotoBoothBrandRepository {
     return {
       id: brand.id,
       name: brand.name,
-      is_event: brand.is_event,
-      photo_booth_hashtags: brand.photo_booth_hashtags?.map((hashtag) => ({
+      isEvent: brand.isEvent,
+      brandHashtags: brand.brandHashtags?.map((hashtag) => ({
         hashtag: { name: hashtag.hashtag.name },
       })),
     };

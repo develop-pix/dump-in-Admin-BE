@@ -7,7 +7,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PhotoBooth } from '../entity/photo-booth.entity';
-import { PaginationProps } from '../../common/dto/pagination-req.dto';
+import { PaginationProps } from '../../common/dto/get-pagination-query.dto';
 
 @Injectable()
 export class PhotoBoothRepository {
@@ -20,13 +20,13 @@ export class PhotoBoothRepository {
     booth: PhotoBooth,
     page: PaginationProps,
   ): Promise<[PhotoBooth[], number]> {
-    const options = this.findBoothManyOptions(page, booth);
+    const options = this.findBoothManyOptions(booth, page);
     return await this.photoBoothRepository.findAndCount(options);
   }
 
-  async findOneBoothBy(booth: PhotoBooth): Promise<PhotoBooth> {
-    const where = this.findBoothOptionsWhere(booth);
-    return await this.photoBoothRepository.findOneBy(where);
+  async findOneBooth(booth: PhotoBooth): Promise<PhotoBooth> {
+    const options = this.findBoothManyOptions(booth);
+    return await this.photoBoothRepository.findOne(options);
   }
 
   async saveOpenBooth(booth: PhotoBooth): Promise<PhotoBooth> {
@@ -48,19 +48,19 @@ export class PhotoBoothRepository {
   }
 
   private findBoothManyOptions(
-    page: PaginationProps,
     booth: PhotoBooth,
+    page?: PaginationProps,
   ): FindManyOptions<PhotoBooth> {
-    const { take, skip } = page;
+    const { take, skip } = page ?? {};
     const where = this.findBoothOptionsWhere(booth);
-    const relations = { photo_booth_brand: true };
+    const relations = { photoBoothBrand: true };
     const select: FindOptionsSelect<PhotoBooth> = {
       id: true,
       name: true,
       location: true,
-      road_address: true,
-      street_address: true,
-      photo_booth_brand: {
+      roadAddress: true,
+      streetAddress: true,
+      photoBoothBrand: {
         name: true,
       },
     };
@@ -74,7 +74,7 @@ export class PhotoBoothRepository {
       id: booth.id,
       location: booth.location,
       name: booth.name,
-      photo_booth_brand: booth.photo_booth_brand,
+      photoBoothBrand: booth.photoBoothBrand,
     };
   }
 }

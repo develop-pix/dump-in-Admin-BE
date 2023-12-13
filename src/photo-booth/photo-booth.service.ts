@@ -10,7 +10,7 @@ import {
   GetPhotoBoothListDto,
 } from './dto/get-photo-booth-list.dto';
 import { PhotoBooth } from './entity/photo-booth.entity';
-import { PaginationProps } from 'src/common/dto/pagination-req.dto';
+import { PaginationProps } from 'src/common/dto/get-pagination-query.dto';
 import {
   FindBoothOptionProps,
   FindBrandOptionProps,
@@ -46,7 +46,7 @@ export class PhotoBoothService {
      *       - 쿼리 옵션이 없으면 전체 포토부스 데이터 반환
      */
 
-    query.brand = await this.findOneBrandByName(query.brandName);
+    await this.isExistByBrandName(query.brandName);
 
     const [results, count] =
       await this.photoBoothRepository.findBoothByOptionAndCount(
@@ -70,29 +70,12 @@ export class PhotoBoothService {
      * @desc 포토부스 지점에 대한 상세 데이터 반환
      */
 
-    const photoBooth = await this.photoBoothRepository.findOneBoothBy(
+    const photoBooth = await this.photoBoothRepository.findOneBooth(
       PhotoBooth.byId(id),
     );
 
     if (!photoBooth) {
       throw new NotFoundException(`포토부스 지점을 찾지 못했습니다. ID: ${id}`);
-    }
-
-    return photoBooth;
-  }
-
-  async findOneOpenBoothByName(name: string): Promise<PhotoBooth> {
-    /**
-     * @param name - 공개 포토부스의 지점명
-     * @desc 포토부스 지점에 대한 상세 데이터 반환
-     */
-
-    const photoBooth = await this.photoBoothRepository.findOneBoothBy(
-      PhotoBooth.of({ name }),
-    );
-
-    if (!photoBooth) {
-      throw new NotFoundException('포토부스 지점을 찾지 못했습니다');
     }
 
     return photoBooth;
@@ -108,7 +91,7 @@ export class PhotoBoothService {
      * @desc 포토부스 지점에 대한 데이터 수정
      */
 
-    updateProps.brand = await this.findOneBrandByName(updateProps.brandName);
+    await this.isExistByBrandName(updateProps.brandName);
 
     const isUpdated = await this.photoBoothRepository.updatePhotoBooth(
       id,
@@ -176,7 +159,7 @@ export class PhotoBoothService {
      * @desc 공개되지 않은 포토부스에 대한 디테일 데이터 반환
      */
 
-    const hiddenBooth = await this.hiddenBoothRepository.findOneHiddenBoothBy(
+    const hiddenBooth = await this.hiddenBoothRepository.findOneHiddenBooth(
       HiddenPhotoBooth.byId(id),
     );
 
@@ -233,7 +216,7 @@ export class PhotoBoothService {
       throw new BadRequestException('이미 포토부스가 존재합니다');
     }
 
-    moveProps.brand = await this.findOneBrandByName(moveProps.brandName);
+    await this.isExistByBrandName(moveProps.brandName);
     await this.photoBoothRepository.saveOpenBooth(PhotoBooth.to(id, moveProps));
     await this.deleteHiddenBooth(id);
 
@@ -283,26 +266,26 @@ export class PhotoBoothService {
     ];
   }
 
-  async findOneBrandByName(name: string): Promise<PhotoBoothBrand> {
+  async isExistByBrandName(name: string): Promise<boolean> {
     /**
      * @param name 포토부스 업체명
-     * @desc - 이름으로 포토부스 업체명 검색 후 포토부스 업체 정보 반환
+     * @desc - 이름으로 포토부스 업체명이 존재하는지 확인
      */
     if (typeof name === 'undefined') return undefined;
 
-    const photoBoothBrand = await this.photoBoothBrandRepository.findOneBrandBy(
+    const isExistBrand = await this.photoBoothBrandRepository.isExistBrand(
       PhotoBoothBrand.byName(name),
     );
 
-    if (!photoBoothBrand) {
+    if (!isExistBrand) {
       throw new NotFoundException('포토부스 업체를 찾지 못했습니다.');
     }
 
-    return photoBoothBrand;
+    return true;
   }
 
   async findOneBrandById(id: number): Promise<PhotoBoothBrand> {
-    const photoBoothBrand = await this.photoBoothBrandRepository.findOneBrandBy(
+    const photoBoothBrand = await this.photoBoothBrandRepository.findOneBrand(
       PhotoBoothBrand.byId(id),
     );
 
@@ -325,13 +308,7 @@ export class PhotoBoothService {
      *       - 해시태그와 브랜드 연결
      */
 
-    const isExistBrand = await this.photoBoothBrandRepository.isExistBrand(
-      PhotoBoothBrand.of({ name: createProps.name }),
-    );
-
-    if (isExistBrand) {
-      throw new NotFoundException('이미 포토부스 업체가 존재합니다');
-    }
+    await this.isExistByBrandName(createProps.name);
 
     const brand = await this.photoBoothBrandRepository.saveBrand(
       PhotoBoothBrand.create(createProps),

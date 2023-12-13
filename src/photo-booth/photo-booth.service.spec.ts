@@ -12,7 +12,7 @@ import { HashtagService } from '../hashtag/hashtag.service';
 
 class MockPhotoBoothRepository {
   findBoothByOptionAndCount = jest.fn();
-  findOneBoothBy = jest.fn();
+  findOneBooth = jest.fn();
   saveOpenBooth = jest.fn();
   updatePhotoBooth = jest.fn();
   deletePhotoBooth = jest.fn();
@@ -21,14 +21,14 @@ class MockPhotoBoothRepository {
 
 class MockHiddenPhotoBoothRepository {
   findHiddenBoothByOptionAndCount = jest.fn();
-  findOneHiddenBoothBy = jest.fn();
+  findOneHiddenBooth = jest.fn();
   updateHiddenBooth = jest.fn();
 }
 
 class MockPhotoBoothBrandRepository {
   saveBrand = jest.fn();
   findBrandByOptionAndCount = jest.fn();
-  findOneBrandBy = jest.fn();
+  findOneBrand = jest.fn();
   updateBoothBrand = jest.fn();
   isExistBrand = jest.fn();
 }
@@ -103,7 +103,7 @@ describe('PhotoBoothService', () => {
       });
 
     jest
-      .spyOn(photoBoothRepository, 'findOneBoothBy')
+      .spyOn(photoBoothRepository, 'findOneBooth')
       .mockImplementation((booth: PhotoBooth) => {
         if (booth.id === 'uuid') {
           const savePhotoBooth = new PhotoBooth();
@@ -158,7 +158,7 @@ describe('PhotoBoothService', () => {
       });
 
     jest
-      .spyOn(photoBoothBrandRepository, 'findOneBrandBy')
+      .spyOn(photoBoothBrandRepository, 'findOneBrand')
       .mockImplementation((brand: PhotoBoothBrand) => {
         if (brand.name === '업체명') {
           const saveBrand = new PhotoBoothBrand();
@@ -261,7 +261,7 @@ describe('PhotoBoothService', () => {
       // Given
       const id = 'uuid';
 
-      const photoBoothInDb = await photoBoothRepository.findOneBoothBy(
+      const photoBoothInDb = await photoBoothRepository.findOneBooth(
         PhotoBooth.byId(id),
       );
 
@@ -347,7 +347,7 @@ describe('PhotoBoothService', () => {
           photoBoothUpdateProps,
         );
       }).rejects.toThrowError(
-        new NotFoundException(`포토부스를 찾지 못했습니다. ID:${notBoothId}`),
+        new NotFoundException('포토부스 업체를 찾지 못했습니다.'),
       );
     });
 

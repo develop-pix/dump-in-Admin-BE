@@ -8,7 +8,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { HiddenPhotoBooth } from '../entity/photo-booth-hidden.entity';
-import { PaginationProps } from '../../common/dto/pagination-req.dto';
+import { PaginationProps } from '../../common/dto/get-pagination-query.dto';
 
 @Injectable()
 export class HiddenBoothRepository {
@@ -21,15 +21,13 @@ export class HiddenBoothRepository {
     booth: HiddenPhotoBooth,
     page: PaginationProps,
   ): Promise<[HiddenPhotoBooth[], number]> {
-    const options = this.findHiddenBoothManyOptions(page, booth);
+    const options = this.findHiddenBoothManyOptions(booth, page);
     return await this.hiddenBoothRepository.findAndCount(options);
   }
 
-  async findOneHiddenBoothBy(
-    booth: HiddenPhotoBooth,
-  ): Promise<HiddenPhotoBooth> {
-    const where = this.findHiddenBoothOptionsWhere(booth);
-    return await this.hiddenBoothRepository.findOneBy(where);
+  async findOneHiddenBooth(booth: HiddenPhotoBooth): Promise<HiddenPhotoBooth> {
+    const options = this.findHiddenBoothManyOptions(booth);
+    return await this.hiddenBoothRepository.findOne(options);
   }
 
   async updateHiddenBooth(
@@ -41,17 +39,17 @@ export class HiddenBoothRepository {
   }
 
   private findHiddenBoothManyOptions(
-    page: PaginationProps,
     booth: HiddenPhotoBooth,
+    page?: PaginationProps,
   ): FindManyOptions<HiddenPhotoBooth> {
-    const { take, skip } = page;
+    const { take, skip } = page ?? {};
     const where = this.findHiddenBoothOptionsWhere(booth);
     const select: FindOptionsSelect<HiddenPhotoBooth> = {
       id: true,
       name: true,
       location: true,
-      road_address: true,
-      street_address: true,
+      roadAddress: true,
+      streetAddress: true,
     };
     return { where, take, skip, select };
   }
@@ -63,7 +61,7 @@ export class HiddenBoothRepository {
       id: booth.id,
       location: booth.location,
       name: booth.name,
-      preprocessed_at: IsNull(),
+      preprocessedAt: IsNull(),
     };
   }
 }

@@ -22,7 +22,7 @@ import {
   BoothQueryDto,
   BoothBrandQueryDto,
 } from './dto/get-photo-booth-query.dto';
-import { Page } from '../common/dto/pagination-res.dto';
+import { Page } from '../common/dto/get-pagination-list.dto';
 import {
   GetBoothBrandDetailDto,
   GetPhotoBoothDetailDto,
