@@ -30,12 +30,11 @@ describe('ReviewService', () => {
     jest
       .spyOn(reviewRepository, 'findReviewByOptionAndCount')
       .mockImplementation((review: Review) => {
+        const savedReview = new Review();
         if (review.photoBooth?.name === '지점명') {
-          const savedReview = new Review();
           savedReview.photoBooth = review.photoBooth;
           return Promise.resolve([[savedReview], 1]);
         } else if (review.user?.nickname === '유저 닉네임') {
-          const savedReview = new Review();
           savedReview.user = review.user;
           return Promise.resolve([[savedReview], 1]);
         } else {
