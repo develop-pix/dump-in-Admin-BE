@@ -15,15 +15,15 @@ export class Hashtag {
 
   @OneToMany(
     () => BrandHashtag,
-    (photoBoothHashtag: BrandHashtag) => photoBoothHashtag.hashtag,
+    (brandHashtag: BrandHashtag) => brandHashtag.hashtag,
   )
-  photo_booth_hashtags: BrandHashtag[];
+  brandhashtags: BrandHashtag[];
 
   @OneToMany(
     () => EventHashtag,
     (eventHashtag: EventHashtag) => eventHashtag.hashtag,
   )
-  event_hashtag: EventHashtag[];
+  eventHashtags: EventHashtag[];
 
   static of({ id, name }: FindHashtagOptionsProps): Hashtag {
     const hashtag = new Hashtag();
