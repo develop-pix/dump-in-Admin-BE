@@ -4,7 +4,6 @@ import { FindBrandOptionProps } from '../dto/get-photo-booth-query.dto';
 import { BrandCreateProps } from '../dto/post-photo-booth.dto';
 import { BrandUpdateProps } from '../dto/patch-photo-booth.dto';
 import { Events } from '../../event/entity/event.entity';
-import { Hashtag } from '../../hashtag/entity/hashtag.entity';
 import { BrandHashtag } from '../../hashtag/entity/brand-hashtag.entity';
 
 @Entity('photo_booth_brand')
@@ -74,21 +73,11 @@ export class PhotoBoothBrand {
     return brand;
   }
 
-  static of({
-    name,
-    isEvent,
-    hashtags,
-  }: FindBrandOptionProps): PhotoBoothBrand {
+  static of({ name, isEvent }: FindBrandOptionProps): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.name = name;
     brand.isEvent = isEvent;
-    brand.brandHashtags = hashtags.map((tag) => {
-      const hashtag = new BrandHashtag();
-      hashtag.hashtag = new Hashtag();
-      hashtag.hashtag.name = tag;
-      return hashtag;
-    });
 
     return brand;
   }

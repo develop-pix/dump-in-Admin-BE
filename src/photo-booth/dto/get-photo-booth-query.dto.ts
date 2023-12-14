@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
-  ArrayMaxSize,
-  IsArray,
   IsBoolean,
   IsOptional,
   IsString,
@@ -10,10 +8,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
-import {
-  BrandReqBodyProps,
-  PhotoBoothReqBodyProps,
-} from './req-photo-booth-body.dto';
+import { PhotoBoothReqBodyProps } from './req-photo-booth-body.dto';
 
 export class BoothQueryDto extends PaginationDto {
   @ApiProperty({
@@ -81,29 +76,17 @@ export class BoothBrandQueryDto extends PaginationDto {
   @Type(() => Boolean)
   isEvent: boolean;
 
-  @ApiProperty({
-    description: '포토부스 업체의 해시태그',
-    required: false,
-    example: '카페,스튜디오,이벤트',
-  })
-  @IsOptional()
-  @IsArray()
-  @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
-  @IsString({ each: true })
-  @Type(() => String)
-  hashtags: string;
-
   getQueryProps(): FindBrandOptionProps {
     return {
       name: this.decodeString(this.name),
       isEvent: this.isEvent,
-      hashtags: this.decodeString(this.hashtags)
-        ?.split(',')
-        .map((tag) => tag.trim()),
     };
   }
 }
 
-export interface FindBrandOptionProps extends Partial<BrandReqBodyProps> {}
+export interface FindBrandOptionProps {
+  name: string;
+  isEvent: boolean;
+}
 
 export interface FindBoothOptionProps extends Partial<PhotoBoothReqBodyProps> {}

@@ -11,16 +11,16 @@ export class GetPhotoBoothListDto {
   @Exclude() readonly _location: string;
   @Exclude() readonly _latitude: number;
   @Exclude() readonly _longitude: number;
-  @Exclude() readonly _created_at: Date;
-  @Exclude() readonly _updated_at: Date;
-  @Exclude() readonly _like_count: number | undefined;
-  @Exclude() readonly _view_count: number | undefined;
-  @Exclude() readonly _street_address?: string | null;
-  @Exclude() readonly _road_address?: string | null;
-  @Exclude() readonly _operation_time?: string | null;
+  @Exclude() readonly _createdAt: Date;
+  @Exclude() readonly _updatedAt: Date;
+  @Exclude() readonly _likeCount: number | undefined;
+  @Exclude() readonly _viewCount: number | undefined;
+  @Exclude() readonly _streetAddress?: string | null;
+  @Exclude() readonly _roadAddress?: string | null;
+  @Exclude() readonly _operationTime?: string | null;
   @Type(() => PhotoBoothBrand)
   @Exclude()
-  readonly _photo_booth_brand: PhotoBoothBrand | undefined;
+  readonly _photoBoothBrand: PhotoBoothBrand | undefined;
 
   constructor(data: PhotoBooth | HiddenPhotoBooth) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
@@ -56,7 +56,7 @@ export class GetPhotoBoothListDto {
   })
   @Expose()
   get streetAddress(): string | null {
-    return this._street_address;
+    return this._streetAddress;
   }
 
   @ApiProperty({
@@ -65,7 +65,7 @@ export class GetPhotoBoothListDto {
   })
   @Expose()
   get roadAddress(): string | null {
-    return this._road_address;
+    return this._roadAddress;
   }
 
   @ApiProperty({
@@ -75,20 +75,20 @@ export class GetPhotoBoothListDto {
   @Expose()
   @Type(() => PhotoBoothBrand)
   get brandName(): PhotoBoothBrand {
-    return this._photo_booth_brand;
+    return this._photoBoothBrand;
   }
 }
 
 export class GetBoothBrandListDto {
   @Exclude() readonly _id: number;
   @Exclude() readonly _name: string;
-  @Exclude() readonly _main_thumbnail_image_url?: string | null;
+  @Exclude() readonly _mainThumbnailImageUrl?: string | null;
   @Exclude() readonly _description?: string | null;
-  @Exclude() readonly _photo_booth_url?: string | null;
-  @Exclude() readonly _is_event: boolean;
+  @Exclude() readonly _photoBoothUrl?: string | null;
+  @Exclude() readonly _isEvent: boolean;
   @Exclude()
   @Type(() => BrandHashtag)
-  readonly _photo_booth_hashtags: BrandHashtag[] | null;
+  readonly _brandHashtags: BrandHashtag[] | null;
 
   constructor(data: PhotoBoothBrand) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
@@ -115,7 +115,7 @@ export class GetBoothBrandListDto {
   })
   @Expose()
   get isEvent(): boolean {
-    return this._is_event;
+    return this._isEvent;
   }
 
   @ApiProperty({
@@ -123,7 +123,7 @@ export class GetBoothBrandListDto {
   })
   @Expose()
   get mainThumbnailImageUrl(): string | null {
-    return this._main_thumbnail_image_url;
+    return this._mainThumbnailImageUrl;
   }
 
   @ApiProperty({
@@ -131,6 +131,6 @@ export class GetBoothBrandListDto {
   })
   @Expose()
   get hashtags(): BrandHashtag[] {
-    return this._photo_booth_hashtags;
+    return this._brandHashtags;
   }
 }

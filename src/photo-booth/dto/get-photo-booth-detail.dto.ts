@@ -30,7 +30,7 @@ export class GetPhotoBoothDetailDto extends GetPhotoBoothListDto {
   })
   @Expose()
   get operationTime(): string | null {
-    return this._operation_time;
+    return this._operationTime;
   }
 }
 
@@ -48,7 +48,7 @@ export class GetBoothBrandDetailDto extends GetBoothBrandListDto {
   })
   @Expose()
   get photoBoothUrl(): string | null {
-    return this._photo_booth_url;
+    return this._photoBoothUrl;
   }
 
   @ApiProperty({
@@ -57,6 +57,6 @@ export class GetBoothBrandDetailDto extends GetBoothBrandListDto {
   })
   @Expose()
   get isEvent(): boolean {
-    return this._is_event;
+    return this._isEvent;
   }
 }
