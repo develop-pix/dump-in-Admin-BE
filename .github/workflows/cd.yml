@@ -48,11 +48,3 @@ jobs:
             npm run build
             nohup npm run start:prod > output.log 2>&1 &
             echo $! > pid.txt
-
-      - name: Save deployment logs as artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: deployment-logs
-          path: |
-            output.log
-            pid.txt
