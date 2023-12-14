@@ -74,6 +74,8 @@ async function bootstrap(): Promise<void> {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('/api/swagger', app, document);
 
+  app.getHttpAdapter().getInstance().set('trust proxy', 1);
+
   app.use(session(sessionOptions));
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
   app.useGlobalPipes(new ValidationPipe(validationPipeOptions));
