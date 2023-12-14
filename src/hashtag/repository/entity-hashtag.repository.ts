@@ -1,4 +1,9 @@
-import { DataSource, FindOptionsWhere, Repository } from 'typeorm';
+import {
+  DataSource,
+  FindManyOptions,
+  FindOptionsWhere,
+  Repository,
+} from 'typeorm';
 import { BrandHashtag } from '../entity/brand-hashtag.entity';
 import { EventHashtag } from '../entity/event-hashtag.entity';
 import { Injectable } from '@nestjs/common';
@@ -19,40 +24,52 @@ export class EntityToHashtagRepository extends Repository<
   }
 
   async saveHashtags(
-    hashtags: (BrandHashtag | EventHashtag)[],
+    entityToHashtag: (BrandHashtag | EventHashtag)[],
   ): Promise<(BrandHashtag | EventHashtag)[]> {
-    return await this.save(hashtags);
+    return await this.save(entityToHashtag);
   }
 
   async findManyHashtags(
-    commonHashtagOptions: BrandHashtag | EventHashtag,
+    entityToHashtag: BrandHashtag | EventHashtag,
   ): Promise<(BrandHashtag | EventHashtag)[]> {
-    const where = this.findOptionsWhere(commonHashtagOptions);
-    return await this.findBy(where);
+    const options = this.findEntityToHashtagManyOptions(entityToHashtag);
+    return await this.find(options);
   }
 
   async removeAllHashtags(
-    hashtags: (BrandHashtag | EventHashtag)[],
+    entityToHashtag: (BrandHashtag | EventHashtag)[],
   ): Promise<boolean> {
-    if (hashtags.length === 0) {
-      return false;
-    }
-    const result = await this.remove(hashtags);
+    const result = await this.remove(entityToHashtag);
     return result.length > 0;
   }
 
-  private findOptionsWhere(
-    tag: BrandHashtag | EventHashtag,
-  ): FindOptionsWhere<BrandHashtag | EventHashtag> {
-    if (tag instanceof EventHashtag) {
-      return {
-        event: tag.event,
-      };
-    }
-    if (tag instanceof BrandHashtag) {
-      return {
-        photo_booth_brand: tag.photo_booth_brand,
-      };
-    }
+  private findEntityToHashtagManyOptions(
+    entityToHashtag: BrandHashtag | EventHashtag,
+  ): FindManyOptions<BrandHashtag | EventHashtag> {
+    const where =
+      entityToHashtag instanceof BrandHashtag
+        ? this.findBrandHashtagOptionsWhere(entityToHashtag)
+        : this.findEventHashtagOptionsWhere(entityToHashtag);
+    const relations =
+      entityToHashtag instanceof BrandHashtag
+        ? { photoBoothBrand: true }
+        : { event: true };
+    return { where, relations };
+  }
+
+  private findBrandHashtagOptionsWhere(
+    tag: BrandHashtag,
+  ): FindOptionsWhere<BrandHashtag> {
+    return {
+      photoBoothBrand: tag.photoBoothBrand,
+    };
+  }
+
+  private findEventHashtagOptionsWhere(
+    tag: EventHashtag,
+  ): FindOptionsWhere<EventHashtag> {
+    return {
+      event: tag.event,
+    };
   }
 }

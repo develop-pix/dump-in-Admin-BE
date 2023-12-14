@@ -24,8 +24,9 @@ export class ReviewRepository extends Repository<Review> {
     review: Review,
     page: PaginationProps,
   ): Promise<[Review[], number]> {
-    const options = this.findReviewManyOptions(review, page);
-    return await this.findAndCount(options);
+    const { take, skip } = page;
+    const options = this.findReviewManyOptions(review);
+    return await this.findAndCount({ take, skip, ...options });
   }
 
   async findOneReview(review: Review): Promise<Review> {
@@ -38,11 +39,7 @@ export class ReviewRepository extends Repository<Review> {
     return result.affected > 0;
   }
 
-  private findReviewManyOptions(
-    review: Review,
-    page?: PaginationProps,
-  ): FindManyOptions<Review> {
-    const { take, skip } = page ?? {};
+  private findReviewManyOptions(review: Review): FindManyOptions<Review> {
     const where = this.findReviewOptionsWhere(review);
     const relations = {
       reviewConcepts: true,
@@ -57,7 +54,7 @@ export class ReviewRepository extends Repository<Review> {
       viewCount: true,
       likeCount: true,
     };
-    return { where, relations, take, skip, select };
+    return { where, relations, select };
   }
 
   private findReviewOptionsWhere(review: Review): FindOptionsWhere<Review> {

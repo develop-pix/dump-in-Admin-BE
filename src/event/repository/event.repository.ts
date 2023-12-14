@@ -1,53 +1,54 @@
 import {
+  DataSource,
   FindManyOptions,
   FindOptionsSelect,
   FindOptionsWhere,
   Repository,
 } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Events } from '../entity/event.entity';
 import { PaginationProps } from '../../common/dto/get-pagination-query.dto';
 
 @Injectable()
-export class EventRepository {
-  constructor(
-    @InjectRepository(Events)
-    private readonly eventRepository: Repository<Events>,
-  ) {}
+export class EventRepository extends Repository<Events> {
+  constructor(private readonly dataSource: DataSource) {
+    const baseRepository = dataSource.getRepository(Events);
+    super(
+      baseRepository.target,
+      baseRepository.manager,
+      baseRepository.queryRunner,
+    );
+  }
 
   async saveEvent(event: Events): Promise<Events> {
-    return await this.eventRepository.save(event);
+    return await this.save(event);
   }
 
   async findEventByOptionAndCount(
     event: Events,
     page: PaginationProps,
   ): Promise<[Events[], number]> {
-    const options = this.findEventManyOptions(event, page);
-    return await this.eventRepository.findAndCount(options);
+    const { skip, take } = page;
+    const options = this.findEventManyOptions(event);
+    return await this.findAndCount({ skip, take, ...options });
   }
 
   async findOneEvent(event: Events): Promise<Events> {
     const options = this.findEventManyOptions(event);
-    return await this.eventRepository.findOne(options);
+    return await this.findOne(options);
   }
 
   async updateEvent(id: number, event: Events): Promise<boolean> {
-    const result = await this.eventRepository.update({ id }, event);
+    const result = await this.update({ id }, event);
     return result.affected > 0;
   }
 
   async isExistEvent(event: Events): Promise<boolean> {
     const where = this.findEventOptionsWhere(event);
-    return await this.eventRepository.exist({ where });
+    return await this.exist({ where });
   }
 
-  private findEventManyOptions(
-    event: Events,
-    page?: PaginationProps,
-  ): FindManyOptions<Events> {
-    const { take, skip } = page ?? {};
+  private findEventManyOptions(event: Events): FindManyOptions<Events> {
     const where = this.findEventOptionsWhere(event);
     const relations = {
       eventImages: true,
@@ -65,7 +66,7 @@ export class EventRepository {
       likeCount: true,
       isPublic: true,
     };
-    return { where, relations, take, skip, select };
+    return { where, relations, select };
   }
 
   private findEventOptionsWhere(event: Events): FindOptionsWhere<Events> {
