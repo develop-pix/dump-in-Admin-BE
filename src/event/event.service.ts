@@ -100,8 +100,10 @@ export class EventService {
       throw new NotFoundException(`이벤트가 업데이트되지 않았습니다. ID:${id}`);
     }
 
-    const event = await this.findOneEventById(id);
-    await this.hashtagService.handleHashtags(event, updateProps.hashtags);
+    await this.hashtagService.handleHashtags(
+      Events.byId(id),
+      updateProps.hashtags,
+    );
 
     return true;
   }

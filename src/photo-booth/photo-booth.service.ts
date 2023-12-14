@@ -54,7 +54,7 @@ export class PhotoBoothService {
         pageProps,
       );
 
-    if (results.length === 0) {
+    if (count === 0) {
       throw new NotFoundException('공개된 포토부스 지점을 찾지 못했습니다');
     }
 
@@ -139,7 +139,7 @@ export class PhotoBoothService {
         pageProps,
       );
 
-    if (results.length === 0) {
+    if (count === 0) {
       throw new NotFoundException(
         '공개되지 않은 포토부스 지점 목록을 찾지 못했습니다',
       );
@@ -217,8 +217,10 @@ export class PhotoBoothService {
     }
 
     await this.isExistByBrandName(moveProps.brandName);
-    await this.photoBoothRepository.saveOpenBooth(PhotoBooth.to(id, moveProps));
-    await this.deleteHiddenBooth(id);
+    await Promise.all([
+      this.photoBoothRepository.saveOpenBooth(PhotoBooth.to(id, moveProps)),
+      this.deleteHiddenBooth(id),
+    ]);
 
     return true;
   }
@@ -254,7 +256,7 @@ export class PhotoBoothService {
         pageProps,
       );
 
-    if (results.length === 0) {
+    if (count === 0) {
       throw new NotFoundException('포토부스 업체를 찾지 못했습니다');
     }
 
