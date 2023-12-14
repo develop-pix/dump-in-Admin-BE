@@ -7,7 +7,6 @@ import {
   Param,
   ParseIntPipe,
   Body,
-  UseGuards,
 } from '@nestjs/common';
 import { EventService } from './event.service';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
@@ -19,11 +18,9 @@ import { GetEventDetailDto } from './dto/get-event-detail.dto';
 import { CreateEventDto } from './dto/post-event.dto';
 import { UpdateEventDto } from './dto/patch-event.dto';
 import { ApiTags } from '@nestjs/swagger';
-import { AdminCheckGuard } from '../auth/guard/admin-check.guard';
 
 @ApiTags('이벤트')
 @Controller('event')
-@UseGuards(AdminCheckGuard)
 export class EventController {
   constructor(private readonly eventService: EventService) {}
 

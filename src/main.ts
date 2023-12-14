@@ -11,9 +11,14 @@ import { WINSTON_MODULE_NEST_PROVIDER } from 'nest-winston';
 import { TypeormStore } from 'connect-typeorm';
 import { Session } from './auth/entity/session.entity';
 import { DataSource } from 'typeorm';
+import { rateLimit } from 'express-rate-limit';
 import * as session from 'express-session';
+import { LoggedCheckGuard } from './auth/guard/logged-check.guard';
 
 async function bootstrap(): Promise<void> {
+  const maxRequests = process.env.NODE_ENV === 'production' ? 30 : 90;
+  const maxLoginRequests = process.env.NODE_ENV === 'production' ? 5 : 15;
+  const minute = 60 * 1000;
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
@@ -42,11 +47,23 @@ async function bootstrap(): Promise<void> {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      Secure: true,
-      maxAge: 24 * 60 * 60 * 1000, // 1 day
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 24 * 60 * minute,
     },
     name: 'session-cookie',
   };
+
+  const limiter = rateLimit({
+    windowMs: 15 * minute,
+    max: maxRequests,
+    message: '요청 횟수가 너무 많습니다. 잠시 후에 시도하세요.',
+  });
+
+  const loginLimiter = rateLimit({
+    windowMs: 30 * minute,
+    max: maxLoginRequests,
+    message: '로그인 요청 횟수가 너무 많습니다. 잠시 후에 시도하세요.',
+  });
 
   const config = new DocumentBuilder()
     .setTitle('Dump-In-Admin API')
@@ -55,18 +72,19 @@ async function bootstrap(): Promise<void> {
     .addServer('/api')
     .build();
   const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('/api/swagger', app, document);
 
   app.use(session(sessionOptions));
   app.useLogger(app.get(WINSTON_MODULE_NEST_PROVIDER));
-  app
-    .useGlobalPipes(new ValidationPipe(validationPipeOptions))
-    .useGlobalFilters(new HttpExceptionFilter(new Logger()))
-    .enableCors(corsOptions);
+  app.useGlobalPipes(new ValidationPipe(validationPipeOptions));
+  app.useGlobalFilters(new HttpExceptionFilter(new Logger()));
+  app.enableCors(corsOptions);
+  app.useGlobalGuards(new LoggedCheckGuard());
   app.setGlobalPrefix('api');
-
+  app.use(limiter);
+  app.use('/api/auth/login', loginLimiter);
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 
-  SwaggerModule.setup('/api/swagger', app, document);
   await app.listen(+process.env.APP_SERVER_PORT);
 }
 bootstrap();
