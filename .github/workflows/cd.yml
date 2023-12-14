@@ -33,7 +33,7 @@ jobs:
           username: ${{ secrets.LIGHTSAIL_NAME }}
           port: ${{ secrets.AWS_INSTANCE_PORT }}
           script: |
-            cd ${{ secrets.AWS_INSTANCE_PATHH }} 
+            cd ${{ secrets.AWS_INSTANCE_PATH }} 
 
             if [ -f pid.txt ]; then
 
