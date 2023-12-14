@@ -1,9 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { validate } from './common/env.validation';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { utilities, WinstonModule } from 'nest-winston';
-import * as winston from 'winston';
 import { ExceptionModule } from './common/filter/exception-filter.module';
 import { PhotoBoothModule } from './photo-booth/photo-booth.module';
 import { AuthModule } from './auth/auth.module';
@@ -11,14 +8,13 @@ import { UserModule } from './user/user.module';
 import { HashtagModule } from './hashtag/hashtag.module';
 import { ReviewModule } from './review/review.module';
 import { EventModule } from './event/event.module';
+import { winstonConsoleTransport } from './common/config/winston.config';
+import { envConfigOptions } from './common/config/env.config';
+import { WinstonModule } from 'nest-winston';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      envFilePath: `.env.${process.env.NODE_ENV}`,
-      isGlobal: true,
-      validate,
-    }),
+    ConfigModule.forRoot(envConfigOptions),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DATABASE_HOST,
@@ -35,19 +31,7 @@ import { EventModule } from './event/event.module';
           : { rejectUnauthorized: false },
     }),
     WinstonModule.forRoot({
-      transports: [
-        new winston.transports.Console({
-          level: process.env.NODE_ENV === 'production' ? 'info' : 'silly',
-          format: winston.format.combine(
-            winston.format.timestamp(),
-            winston.format.colorize(),
-            utilities.format.nestLike('DumpInAdmin', {
-              prettyPrint: true,
-              colors: true,
-            }),
-          ),
-        }),
-      ],
+      transports: [winstonConsoleTransport],
     }),
     PhotoBoothModule,
     ExceptionModule,
