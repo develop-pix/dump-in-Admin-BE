@@ -1,6 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayMaxSize,
+  IsArray,
   IsBoolean,
   IsOptional,
   IsString,
@@ -88,7 +90,9 @@ export class BoothBrandQueryDto extends PaginationDto {
     example: '카페,스튜디오,이벤트',
   })
   @IsOptional()
-  @IsString()
+  @IsArray()
+  @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
+  @IsString({ each: true })
   @Type(() => String)
   hashtags: string;
 
