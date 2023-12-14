@@ -15,28 +15,25 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install Dependencies
-        run: npm ci
-
-      - name: Run Tests with Coverage
-        run: npm run test:cov
-
-      - name: Run Lint
-        run: npm run lint
+      - name: npm install, test and lint
+        run: |
+          npm ci
+          npm run test:cov
+          npm run lint
 
   deploy:
     runs-on: ubuntu-latest
     needs: test-lint
     steps:
       - name: Deploy
-        uses: appleboy/ssh-action@v0.1.5
+        uses: appleboy/ssh-action@master
         with:
-          key: ${{ secrets.LIGHTSAIL_KEY }}
-          host: ${{ secrets.LIGHTSAIL_IP }}
+          key: ${{ secrets.AWS_SECRET_KEY }}
+          host: ${{ secrets.AWS_INSTANCE_IP }}
           username: ${{ secrets.LIGHTSAIL_NAME }}
-          port: ${{ secrets.LIGHTSAIL_PORT }}
+          port: ${{ secrets.AWS_INSTANCE_PORT }}
           script: |
-            cd ${{ secrets.LIGHTSAIL_PATH }} 
+            cd ${{ secrets.AWS_INSTANCE_PATHH }} 
 
             if [ -f pid.txt ]; then
 
@@ -52,4 +49,10 @@ jobs:
             nohup npm run start:prod > output.log 2>&1 &
             echo $! > pid.txt
 
-            cat output.log
+      - name: Save deployment logs as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: deployment-logs
+          path: |
+            output.log
+            pid.txt
