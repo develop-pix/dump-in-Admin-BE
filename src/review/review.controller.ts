@@ -5,6 +5,7 @@ import {
   Delete,
   ParseIntPipe,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ReviewService } from './review.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -14,9 +15,11 @@ import { GetReviewListDto } from './dto/get-review-list.dto';
 import { Page } from '../common/dto/get-pagination-list.dto';
 import { GetReviewDetailDto } from './dto/get-review-detail.dto';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
+import { AdminCheckGuard } from '../auth/guard/admin-check.guard';
 
 @ApiTags('리뷰')
 @Controller('review')
+@UseGuards(AdminCheckGuard)
 export class ReviewController {
   constructor(private readonly reviewService: ReviewService) {}
 
