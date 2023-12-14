@@ -1,7 +1,9 @@
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsWhere, In } from 'typeorm';
 import { Hashtag } from '../entity/hashtag.entity';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class HashtagRepository {
   constructor(
     @InjectRepository(Hashtag)

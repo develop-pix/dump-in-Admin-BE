@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
-import { PaginationProps } from './pagination-req.dto';
+import { PaginationProps } from './get-pagination-query.dto';
 
 export class Page<T> {
   @Exclude() private readonly _take: number;
@@ -37,6 +37,22 @@ export class Page<T> {
   @Expose()
   get totalPage(): number {
     return Math.ceil(this._count / this._take);
+  }
+
+  @ApiProperty({
+    description: '쿼리 결과 항목 수 (전체)',
+  })
+  @Expose()
+  get queryCount(): number {
+    return this._count;
+  }
+
+  @ApiProperty({
+    description: '현재 페이지의 항목 수',
+  })
+  @Expose()
+  get resultsLength(): number {
+    return this._results.length;
   }
 
   static create<T>(

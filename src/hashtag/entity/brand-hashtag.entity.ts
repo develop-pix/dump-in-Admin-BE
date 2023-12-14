@@ -2,44 +2,38 @@ import { Entity, PrimaryGeneratedColumn, ManyToOne, JoinColumn } from 'typeorm';
 import { Hashtag } from './hashtag.entity';
 import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
 
-@Entity('photo_booth_hashtag')
+@Entity('photo_booth_brand_hashtag')
 export class BrandHashtag {
-  @PrimaryGeneratedColumn({ name: 'id' })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(
     () => PhotoBoothBrand,
-    (photoBoothBrand: PhotoBoothBrand) => photoBoothBrand.photo_booth_hashtags,
+    (photoBoothBrand: PhotoBoothBrand) => photoBoothBrand.brandHashtags,
   )
   @JoinColumn({ name: 'photo_booth_brand_id' })
-  photo_booth_brand: PhotoBoothBrand;
+  photoBoothBrand: PhotoBoothBrand;
 
-  @ManyToOne(
-    () => Hashtag,
-    (hashtag: Hashtag) => hashtag.photo_booth_hashtags,
-    { eager: true },
-  )
+  @ManyToOne(() => Hashtag, (hashtag: Hashtag) => hashtag.brandhashtags, {
+    eager: true,
+  })
   @JoinColumn({ name: 'hashtag_id' })
   hashtag: Hashtag;
 
   static of(brand: PhotoBoothBrand): BrandHashtag {
-    const photoBoothHashtag = new BrandHashtag();
+    const brandHashtag = new BrandHashtag();
 
-    photoBoothHashtag.photo_booth_brand = new PhotoBoothBrand();
-    photoBoothHashtag.photo_booth_brand = brand;
+    brandHashtag.photoBoothBrand = brand;
 
-    return photoBoothHashtag;
+    return brandHashtag;
   }
 
   static create(brand: PhotoBoothBrand, hashtag: Hashtag): BrandHashtag {
-    const photoBoothHashtag = new BrandHashtag();
+    const brandHashtag = new BrandHashtag();
 
-    photoBoothHashtag.photo_booth_brand = new PhotoBoothBrand();
-    photoBoothHashtag.hashtag = new Hashtag();
+    brandHashtag.hashtag = hashtag;
+    brandHashtag.photoBoothBrand = brand;
 
-    photoBoothHashtag.hashtag = hashtag;
-    photoBoothHashtag.photo_booth_brand = brand;
-
-    return photoBoothHashtag;
+    return brandHashtag;
   }
 }

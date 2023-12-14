@@ -1,19 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { PaginationProps } from '../common/dto/pagination-req.dto';
+import { PaginationProps } from '../common/dto/get-pagination-query.dto';
 import { FindReviewOptionsProps } from './dto/get-review-query.dto';
 import { GetReviewListDto } from './dto/get-review-list.dto';
-import { PhotoBoothService } from '../photo-booth/photo-booth.service';
 import { ReviewRepository } from './repository/review.repository';
 import { Review } from './entity/review.entity';
-import { UserService } from '../user/user.service';
 
 @Injectable()
 export class ReviewService {
-  constructor(
-    private readonly reviewRepository: ReviewRepository,
-    private readonly photoBoothService: PhotoBoothService,
-    private readonly userService: UserService,
-  ) {}
+  constructor(private readonly reviewRepository: ReviewRepository) {}
 
   async findReviewByQueryParam(
     pageProps: PaginationProps,
@@ -25,11 +19,6 @@ export class ReviewService {
      * @desc - 쿼리 파라미터에 맞는 리뷰 목록 조회
      *       - 쿼리 옵션이 없으면 전체 리뷰 조회
      */
-
-    [query.photoBooth, query.user] = await Promise.all([
-      this.photoBoothService.findOneOpenBoothByName(query.boothName),
-      this.userService.findOneUserByNickname(query.userName),
-    ]);
 
     const [results, count] =
       await this.reviewRepository.findReviewByOptionAndCount(
@@ -48,7 +37,7 @@ export class ReviewService {
   }
 
   async findOneReviewById(id: number): Promise<Review> {
-    const review = await this.reviewRepository.findOneReviewBy(Review.byId(id));
+    const review = await this.reviewRepository.findOneReview(Review.byId(id));
 
     if (!review) {
       throw new NotFoundException('리뷰를 찾지 못했습니다.');

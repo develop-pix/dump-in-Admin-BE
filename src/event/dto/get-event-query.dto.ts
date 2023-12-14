@@ -1,40 +1,38 @@
+import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
+import { EventReqBodyProps } from './req-event-body.dto';
+import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsOptional, IsString } from 'class-validator';
-import { PaginationDto } from '../../common/dto/pagination-req.dto';
-import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
 
 export class EventQueryDto extends PaginationDto {
   @ApiProperty({
-    description: '포토부스 업체명',
+    description: '이벤트와 관련된 포토부스 업체명',
     required: false,
-    example: '하루필름',
   })
   @IsString()
+  @MinLength(3)
+  @MaxLength(64)
   @IsOptional()
-  @IsString()
-  @Type(() => String)
-  brandName?: string;
+  brandName: string;
 
   @ApiProperty({
     description: '이벤트의 제목',
     required: false,
   })
-  @IsOptional()
   @IsString()
+  @MinLength(3)
+  @MaxLength(64)
   @Type(() => String)
-  title?: string;
+  @IsOptional()
+  title: string;
 
   getQueryProps(): FindEventOptionProps {
     return {
-      brandName: this.brandName,
-      title: this.title,
+      brandName: this.decodeString(this.brandName),
+      title: this.decodeString(this.title),
     };
   }
 }
 
-export interface FindEventOptionProps {
-  brand?: PhotoBoothBrand;
-  brandName?: string;
-  title?: string;
-}
+export interface FindEventOptionProps
+  extends Pick<Partial<EventReqBodyProps>, 'brandName' | 'title'> {}

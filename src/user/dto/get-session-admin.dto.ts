@@ -10,7 +10,7 @@ export class GetAdminSessionDto {
   constructor(user: User) {
     this._email = user.email;
     this._username = user.username;
-    this._isAdmin = user.is_admin;
+    this._isAdmin = user.isAdmin;
   }
 
   @ApiProperty({

@@ -2,15 +2,22 @@ import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
 import { Events } from '../entity/event.entity';
+import { EventImage } from '../entity/event-image.entity';
+import { EventHashtag } from '../../hashtag/entity/event-hashtag.entity';
 
 export class GetEventListDto {
-  @Exclude() private readonly _id: number;
-  @Exclude() private readonly _title: string;
-  @Exclude() private readonly _content: string;
-  @Exclude() private readonly _main_thumbnail_url: string;
-  @Exclude()
-  @Type(() => PhotoBoothBrand)
-  private readonly _photo_booth_brand: PhotoBoothBrand;
+  @Exclude() readonly _id: number;
+  @Exclude() readonly _title: string;
+  @Exclude() readonly _content: string;
+  @Exclude() readonly _mainThumbnailUrl: string;
+  @Exclude() readonly _startDate: Date;
+  @Exclude() readonly _endDate: Date;
+  @Exclude() readonly _viewCount: number;
+  @Exclude() readonly _likeCount: number;
+  @Exclude() readonly _isPublic: boolean;
+  @Exclude() readonly _photoBoothBrand: PhotoBoothBrand;
+  @Exclude() readonly _eventImages: EventImage[];
+  @Exclude() readonly _eventHashtags: EventHashtag[];
 
   constructor(data: Events) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
@@ -43,14 +50,15 @@ export class GetEventListDto {
   })
   @Expose()
   get mainThumbnailUrl(): string {
-    return this._main_thumbnail_url;
+    return this._mainThumbnailUrl;
   }
 
   @ApiProperty({
     description: '이벤트와 관련된 포토부스 업체명',
   })
   @Expose()
-  get brandName(): string {
-    return this._photo_booth_brand.name;
+  @Type(() => PhotoBoothBrand)
+  get brandName(): PhotoBoothBrand {
+    return this._photoBoothBrand;
   }
 }

@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose, Type } from 'class-transformer';
-import { IsInt, IsOptional, Min } from 'class-validator';
+import { IsInt, IsNotEmpty, Min } from 'class-validator';
 
 export interface PaginationProps {
   take: number;
@@ -8,39 +8,39 @@ export interface PaginationProps {
   page: number;
 }
 
-export class PaginationDto {
+export class PaginationDto implements PaginationProps {
   @ApiProperty({
     description: '리스트에 요구할 페이지 숫자',
-    required: false,
+    required: true,
     example: 1,
     default: 1,
   })
   @IsInt()
   @Min(0)
   @Type(() => Number)
-  @IsOptional()
+  @IsNotEmpty()
   @Expose()
-  page?: number = 1;
+  page: number;
 
   @ApiProperty({
     description: '리스트에 요구할 페이지당 항목 수',
-    required: false,
-    example: 20,
+    required: true,
+    example: 10,
     default: 10,
   })
   @IsInt()
   @Min(0)
-  @IsOptional()
+  @IsNotEmpty()
   @Type(() => Number)
   @Expose()
-  perPage?: number = 10;
+  perPage: number;
 
   get skip(): number {
-    return this.page < 0 ? 0 : (this.page - 1) * this.perPage;
+    return this.page < 0 ? 0 : (this.page - 1) * (this.perPage ?? 10);
   }
 
   get take(): number {
-    return this.perPage;
+    return this.perPage || 10;
   }
 
   getPageProps(): PaginationProps {
@@ -49,5 +49,10 @@ export class PaginationDto {
       skip: this.skip,
       page: this.page,
     };
+  }
+
+  decodeString(encodedString: string): string {
+    if (typeof encodedString === 'undefined') return undefined;
+    return decodeURIComponent(encodedString);
   }
 }

@@ -1,59 +1,40 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ReviewService } from './review.service';
-import { PhotoBoothService } from '../photo-booth/photo-booth.service';
-import { UserService } from '../user/user.service';
 import { ReviewRepository } from './repository/review.repository';
-import { User } from '../user/entity/user.entity';
 import { NotFoundException } from '@nestjs/common';
-import { PhotoBooth } from '../photo-booth/entity/photo-booth.entity';
 import { Review } from './entity/review.entity';
 import { GetReviewListDto } from './dto/get-review-list.dto';
 import { FindReviewOptionsProps } from './dto/get-review-query.dto';
 
 class MockReviewRepository {
   findReviewByOptionAndCount = jest.fn();
-  findOneReviewBy = jest.fn();
+  findOneReview = jest.fn();
   updateReview = jest.fn();
 }
 
-class MockUserService {
-  findOneUserByNickname = jest.fn();
-}
-
-class MockPhotoBoothService {
-  findOneOpenBoothByName = jest.fn();
-}
-
 describe('ReviewService', () => {
-  let userService: UserService;
   let reviewService: ReviewService;
   let reviewRepository: ReviewRepository;
-  let photoBoothService: PhotoBoothService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ReviewService,
-        { provide: UserService, useClass: MockUserService },
         { provide: ReviewRepository, useClass: MockReviewRepository },
-        { provide: PhotoBoothService, useClass: MockPhotoBoothService },
       ],
     }).compile();
 
-    userService = module.get<UserService>(UserService);
     reviewService = module.get<ReviewService>(ReviewService);
     reviewRepository = module.get<ReviewRepository>(ReviewRepository);
-    photoBoothService = module.get<PhotoBoothService>(PhotoBoothService);
 
     jest
       .spyOn(reviewRepository, 'findReviewByOptionAndCount')
       .mockImplementation((review: Review) => {
-        if (review.photo_booth) {
-          const savedReview = new Review();
-          savedReview.photo_booth = review.photo_booth;
+        const savedReview = new Review();
+        if (review.photoBooth?.name === '지점명') {
+          savedReview.photoBooth = review.photoBooth;
           return Promise.resolve([[savedReview], 1]);
-        } else if (review.user) {
-          const savedReview = new Review();
+        } else if (review.user?.nickname === '유저 닉네임') {
           savedReview.user = review.user;
           return Promise.resolve([[savedReview], 1]);
         } else {
@@ -62,7 +43,7 @@ describe('ReviewService', () => {
       });
 
     jest
-      .spyOn(reviewRepository, 'findOneReviewBy')
+      .spyOn(reviewRepository, 'findOneReview')
       .mockImplementation((review: Review) => {
         if (review.id === 1) {
           const savedReview = new Review();
@@ -82,45 +63,11 @@ describe('ReviewService', () => {
           return Promise.resolve(false);
         }
       });
-
-    jest
-      .spyOn(userService, 'findOneUserByNickname')
-      .mockImplementation((name: string) => {
-        if (name === '유저 닉네임') {
-          const savedUser = new User();
-          savedUser.nickname = '유저 닉네임';
-          return Promise.resolve(savedUser);
-        } else if (typeof name === 'undefined') {
-          return Promise.resolve(name);
-        } else {
-          return Promise.reject(
-            new NotFoundException('유저 정보를 찾지 못했습니다'),
-          );
-        }
-      });
-
-    jest
-      .spyOn(photoBoothService, 'findOneOpenBoothByName')
-      .mockImplementation((name: string) => {
-        if (name === '지점명') {
-          const savedPhotoBooth = new PhotoBooth();
-          savedPhotoBooth.name = '지점명';
-          return Promise.resolve(savedPhotoBooth);
-        } else if (typeof name === 'undefined') {
-          return Promise.resolve(name);
-        } else {
-          return Promise.reject(
-            new NotFoundException('포토부스 지점을 찾지 못했습니다'),
-          );
-        }
-      });
   });
 
   it('should be defined', () => {
-    expect(userService).toBeDefined();
     expect(reviewService).toBeDefined();
     expect(reviewRepository).toBeDefined();
-    expect(photoBoothService).toBeDefined();
   });
 
   describe('findReviewByQueryParam()', () => {
@@ -134,14 +81,12 @@ describe('ReviewService', () => {
       // Given
       const queryProps: FindReviewOptionsProps = {
         boothName: '지점명',
+        nickname: undefined,
       };
-
-      const photoBooth = new PhotoBooth();
-      photoBooth.name = queryProps.boothName;
 
       const [reviewInDb, countInDb] =
         await reviewRepository.findReviewByOptionAndCount(
-          Review.of({ photoBooth }),
+          Review.of(queryProps),
           pageProps,
         );
 
@@ -163,23 +108,21 @@ describe('ReviewService', () => {
     it('SUCCESS: 유저 닉네임으로 쿼리했을 때 데이터와 데이터 개수 반환', async () => {
       // Given
       const queryProps: FindReviewOptionsProps = {
-        userName: '유저 닉네임',
+        boothName: undefined,
+        nickname: '유저 닉네임',
       };
-
-      const user = new User();
-      user.nickname = queryProps.userName;
 
       const [reviewInDb, countInDb] =
         await reviewRepository.findReviewByOptionAndCount(
-          Review.of({ user }),
+          Review.of(queryProps),
           pageProps,
         );
 
       const expectedResult = reviewInDb.map(
         (result) => new GetReviewListDto(result),
       );
-      // When
 
+      // When
       const [result, resultCount] = await reviewService.findReviewByQueryParam(
         pageProps,
         queryProps,
@@ -194,28 +137,26 @@ describe('ReviewService', () => {
       // Given
       const queryProps: FindReviewOptionsProps = {
         boothName: '없는 지점명',
+        nickname: undefined,
       };
 
       // When & Then
       expect(async () => {
         await reviewService.findReviewByQueryParam(pageProps, queryProps);
-      }).rejects.toThrowError(
-        new NotFoundException('포토부스 지점을 찾지 못했습니다'),
-      );
+      }).rejects.toThrowError(new NotFoundException('리뷰를 찾지 못했습니다'));
     });
 
     it('FAILURE: 유저 닉네임으로 쿼리했을 때 리뷰가 존재하지 않으면 404 에러', async () => {
       // Given
       const queryProps: FindReviewOptionsProps = {
-        userName: '없는 유저 닉네임',
+        nickname: '없는 유저 닉네임',
+        boothName: undefined,
       };
 
       // When & Then
       expect(async () => {
         await reviewService.findReviewByQueryParam(pageProps, queryProps);
-      }).rejects.toThrowError(
-        new NotFoundException('유저 정보를 찾지 못했습니다'),
-      );
+      }).rejects.toThrowError(new NotFoundException('리뷰를 찾지 못했습니다'));
     });
   });
 
@@ -224,9 +165,7 @@ describe('ReviewService', () => {
       // Given
       const id = 1;
 
-      const reviewInDb = await reviewRepository.findOneReviewBy(
-        Review.byId(id),
-      );
+      const reviewInDb = await reviewRepository.findOneReview(Review.byId(id));
 
       // When
       const result = await reviewService.findOneReviewById(id);

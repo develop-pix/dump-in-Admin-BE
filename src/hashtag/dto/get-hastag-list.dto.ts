@@ -5,6 +5,7 @@ import { Hashtag } from '../entity/hashtag.entity';
 export class GetHashtagListDto {
   @Exclude() private readonly _id: string;
   @Exclude() private readonly _name: string;
+  @Exclude() private readonly _description: string;
 
   constructor(data: Hashtag) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));

@@ -7,21 +7,16 @@ import { ReviewImage } from '../entity/review-image.entity';
 import { Review } from '../entity/review.entity';
 
 export class GetReviewListDto {
-  @Exclude() private readonly _id: number;
-  @Exclude() private readonly _content: string;
-  @Exclude() private readonly _date: Date;
-  @Exclude()
-  @Type(() => ReviewConcept)
-  private readonly _review_concepts: ReviewConcept[];
-  @Exclude()
-  @Type(() => ReviewImage)
-  private readonly _review_images: ReviewImage[];
-  @Exclude()
-  @Type(() => PhotoBooth)
-  private readonly _photo_booth: PhotoBooth;
-  @Exclude()
-  @Type(() => User)
-  private readonly _user: User;
+  @Exclude() readonly _id: number;
+  @Exclude() readonly _content: string;
+  @Exclude() readonly _date: Date;
+  @Exclude() readonly _isPublic: boolean;
+  @Exclude() readonly _viewCount: number;
+  @Exclude() readonly _likeCount: number;
+  @Exclude() readonly _reviewConcepts: ReviewConcept[];
+  @Exclude() readonly _reviewImages: ReviewImage[];
+  @Exclude() readonly _photoBooth: PhotoBooth;
+  @Exclude() readonly _user: User;
 
   constructor(data: Review) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
@@ -32,6 +27,7 @@ export class GetReviewListDto {
   get id(): number {
     return this._id;
   }
+
   @ApiProperty({
     description: '리뷰의 내용',
   })
@@ -52,16 +48,18 @@ export class GetReviewListDto {
     description: '리뷰의 컨셉',
   })
   @Expose()
+  @Type(() => ReviewConcept)
   get reviewConcept(): ReviewConcept[] {
-    return this._review_concepts;
+    return this._reviewConcepts;
   }
 
   @ApiProperty({
     description: '리뷰에 작성된 이미지들',
   })
   @Expose()
+  @Type(() => ReviewImage)
   get reviewImages(): ReviewImage[] {
-    return this._review_images;
+    return this._reviewImages;
   }
 
   @ApiProperty({
@@ -69,7 +67,7 @@ export class GetReviewListDto {
   })
   @Expose()
   get boothName(): string {
-    return this._photo_booth.name;
+    return this._photoBooth.name;
   }
 
   @ApiProperty({

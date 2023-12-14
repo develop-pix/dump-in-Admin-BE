@@ -1,26 +1,37 @@
 import {
+  DataSource,
   FindManyOptions,
   FindOptionsSelect,
   FindOptionsWhere,
   Repository,
 } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { PaginationProps } from '../../common/dto/pagination-req.dto';
+import { PaginationProps } from '../../common/dto/get-pagination-query.dto';
 import { Review } from '../entity/review.entity';
 
 @Injectable()
 export class ReviewRepository extends Repository<Review> {
+  constructor(private readonly dataSource: DataSource) {
+    const baseRepository = dataSource.getRepository(Review);
+    super(
+      baseRepository.target,
+      baseRepository.manager,
+      baseRepository.queryRunner,
+    );
+  }
+
   async findReviewByOptionAndCount(
     review: Review,
     page: PaginationProps,
   ): Promise<[Review[], number]> {
-    const options = this.findReviewManyOptions(page, review);
-    return await this.findAndCount(options);
+    const { take, skip } = page;
+    const options = this.findReviewManyOptions(review);
+    return await this.findAndCount({ take, skip, ...options });
   }
 
-  async findOneReviewBy(review: Review): Promise<Review> {
-    const where = this.findReviewOptionsWhere(review);
-    return await this.findOneBy(where);
+  async findOneReview(review: Review): Promise<Review> {
+    const options = this.findReviewManyOptions(review);
+    return await this.findOne(options);
   }
 
   async updateReview(id: number, review: Review): Promise<boolean> {
@@ -28,32 +39,30 @@ export class ReviewRepository extends Repository<Review> {
     return result.affected > 0;
   }
 
-  private findReviewManyOptions(
-    page: PaginationProps,
-    review: Review,
-  ): FindManyOptions<Review> {
-    const { take, skip } = page;
+  private findReviewManyOptions(review: Review): FindManyOptions<Review> {
     const where = this.findReviewOptionsWhere(review);
     const relations = {
-      review_concepts: true,
-      review_images: true,
-      photo_booth: true,
+      reviewConcepts: true,
+      reviewImages: true,
+      photoBooth: true,
       user: true,
     };
     const select: FindOptionsSelect<Review> = {
       id: true,
       content: true,
       date: true,
+      viewCount: true,
+      likeCount: true,
     };
-    return { where, relations, take, skip, select };
+    return { where, relations, select };
   }
 
   private findReviewOptionsWhere(review: Review): FindOptionsWhere<Review> {
     return {
       id: review.id,
-      photo_booth: review.photo_booth,
+      photoBooth: review.photoBooth,
       user: review.user,
-      is_deleted: false,
+      isDeleted: false,
     };
   }
 }

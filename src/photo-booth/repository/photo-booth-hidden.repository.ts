@@ -1,4 +1,5 @@
 import {
+  DataSource,
   FindManyOptions,
   FindOptionsSelect,
   FindOptionsWhere,
@@ -6,54 +7,54 @@ import {
   Repository,
 } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { HiddenPhotoBooth } from '../entity/photo-booth-hidden.entity';
-import { PaginationProps } from '../../common/dto/pagination-req.dto';
+import { PaginationProps } from '../../common/dto/get-pagination-query.dto';
 
 @Injectable()
-export class HiddenBoothRepository {
-  constructor(
-    @InjectRepository(HiddenPhotoBooth)
-    private readonly hiddenBoothRepository: Repository<HiddenPhotoBooth>,
-  ) {}
+export class HiddenBoothRepository extends Repository<HiddenPhotoBooth> {
+  constructor(private readonly dataSource: DataSource) {
+    const baseRepository = dataSource.getRepository(HiddenPhotoBooth);
+    super(
+      baseRepository.target,
+      baseRepository.manager,
+      baseRepository.queryRunner,
+    );
+  }
 
   async findHiddenBoothByOptionAndCount(
     booth: HiddenPhotoBooth,
     page: PaginationProps,
   ): Promise<[HiddenPhotoBooth[], number]> {
-    const options = this.findHiddenBoothManyOptions(page, booth);
-    return await this.hiddenBoothRepository.findAndCount(options);
+    const { take, skip } = page;
+    const options = this.findHiddenBoothManyOptions(booth);
+    return await this.findAndCount({ take, skip, ...options });
   }
 
-  async findOneHiddenBoothBy(
-    booth: HiddenPhotoBooth,
-  ): Promise<HiddenPhotoBooth> {
-    const where = this.findHiddenBoothOptionsWhere(booth);
-    return await this.hiddenBoothRepository.findOneBy(where);
+  async findOneHiddenBooth(booth: HiddenPhotoBooth): Promise<HiddenPhotoBooth> {
+    const options = this.findHiddenBoothManyOptions(booth);
+    return await this.findOne(options);
   }
 
   async updateHiddenBooth(
     id: string,
     booth: HiddenPhotoBooth,
   ): Promise<boolean> {
-    const result = await this.hiddenBoothRepository.update({ id }, booth);
+    const result = await this.update({ id }, booth);
     return result.affected > 0;
   }
 
   private findHiddenBoothManyOptions(
-    page: PaginationProps,
     booth: HiddenPhotoBooth,
   ): FindManyOptions<HiddenPhotoBooth> {
-    const { take, skip } = page;
     const where = this.findHiddenBoothOptionsWhere(booth);
     const select: FindOptionsSelect<HiddenPhotoBooth> = {
       id: true,
       name: true,
       location: true,
-      road_address: true,
-      street_address: true,
+      roadAddress: true,
+      streetAddress: true,
     };
-    return { where, take, skip, select };
+    return { where, select };
   }
 
   private findHiddenBoothOptionsWhere(
@@ -63,7 +64,7 @@ export class HiddenBoothRepository {
       id: booth.id,
       location: booth.location,
       name: booth.name,
-      preprocessed_at: IsNull(),
+      preprocessedAt: IsNull(),
     };
   }
 }

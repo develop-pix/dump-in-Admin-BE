@@ -8,7 +8,7 @@ import {
   OneToMany,
 } from 'typeorm';
 
-@Entity('users')
+@Entity('user')
 @Unique(['email'])
 export class User extends BaseDateEntity {
   @PrimaryGeneratedColumn()
@@ -26,23 +26,23 @@ export class User extends BaseDateEntity {
   @Column()
   password: string;
 
-  @Column()
-  is_active: boolean;
+  @Column({ name: 'is_active' })
+  isActive: boolean;
 
-  @Column()
-  is_deleted: boolean;
+  @Column({ name: 'is_deleted' })
+  isDeleted: boolean;
 
-  @Column()
-  deleted_at: Date;
+  @Column({ name: 'deleted_at' })
+  deletedAt: Date;
 
-  @Column()
-  is_agree_privacy: boolean;
+  @Column({ name: 'is_agree_privacy' })
+  isAgreePrivacy: boolean;
 
-  @Column()
-  is_agree_marketing: boolean;
+  @Column({ name: 'is_agree_marketing' })
+  isAgreeMarketing: boolean;
 
-  @Column()
-  last_login_at: Date;
+  @Column({ name: 'last_login' })
+  lastLogin: Date;
 
   @Column()
   gender: string;
@@ -50,8 +50,8 @@ export class User extends BaseDateEntity {
   @Column()
   birth: Date;
 
-  @Column()
-  is_admin: boolean;
+  @Column({ name: 'is_admin' })
+  isAdmin: boolean;
 
   @OneToMany(() => Review, (review: Review) => review.user)
   reviews: Review[];
@@ -60,7 +60,7 @@ export class User extends BaseDateEntity {
     const users = new User();
 
     users.username = username;
-    users.is_admin = true;
+    users.isAdmin = true;
 
     return users;
   }

@@ -1,21 +1,18 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString } from 'class-validator';
-import { PaginationDto } from '../../common/dto/pagination-req.dto';
-import { PhotoBooth } from '../../photo-booth/entity/photo-booth.entity';
-import { User } from '../../user/entity/user.entity';
+import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
 
 export class ReviewQueryDto extends PaginationDto {
   @ApiProperty({
     description: '포토부스 업체명',
     required: false,
-    example: '하루필름',
   })
   @IsString()
   @IsOptional()
   @IsString()
   @Type(() => String)
-  boothName?: string;
+  boothName: string;
 
   @ApiProperty({
     description: '리뷰를 작성한 유저닉네임',
@@ -25,19 +22,17 @@ export class ReviewQueryDto extends PaginationDto {
   @IsOptional()
   @IsString()
   @Type(() => String)
-  userName?: string;
+  nickname: string;
 
   getQueryProps(): FindReviewOptionsProps {
     return {
-      boothName: this.boothName,
-      userName: this.userName,
+      boothName: this.decodeString(this.boothName),
+      nickname: this.decodeString(this.nickname),
     };
   }
 }
 
 export interface FindReviewOptionsProps {
-  boothName?: string;
-  photoBooth?: PhotoBooth;
-  userName?: string;
-  user?: User;
+  boothName: string;
+  nickname: string;
 }

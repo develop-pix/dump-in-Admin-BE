@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EventRepository } from './repository/event.repository';
 import { HashtagService } from '../hashtag/hashtag.service';
-import { PaginationProps } from '../common/dto/pagination-req.dto';
+import { PaginationProps } from '../common/dto/get-pagination-query.dto';
 import { FindEventOptionProps } from './dto/get-event-query.dto';
 import { GetEventListDto } from './dto/get-event-list.dto';
 import { Events } from './entity/event.entity';
@@ -28,17 +28,13 @@ export class EventService {
      *       - 쿼리 옵션이 없으면 전체 이벤트 조회
      */
 
-    query.brand = await this.photoBoothService.findOneBrandByName(
-      query.brandName,
-    );
-
     const [results, count] =
       await this.eventRepository.findEventByOptionAndCount(
         Events.of(query),
         pageProps,
       );
 
-    if (results.length === 0) {
+    if (count === 0) {
       throw new NotFoundException('이벤트를 찾지 못했습니다');
     }
 
@@ -49,7 +45,7 @@ export class EventService {
   }
 
   async findOneEventById(id: number): Promise<Events> {
-    const event = await this.eventRepository.findOneEventBy(Events.byId(id));
+    const event = await this.eventRepository.findOneEvent(Events.byId(id));
 
     if (!event) {
       throw new NotFoundException('이벤트를 찾지 못했습니다.');
@@ -70,9 +66,7 @@ export class EventService {
      *       - 해시태그와 이벤트 연결
      */
 
-    createProps.brand = await this.photoBoothService.findOneBrandByName(
-      createProps.brandName,
-    );
+    await this.photoBoothService.isExistByBrandName(createProps.brandName);
 
     const event = await this.eventRepository.saveEvent(
       Events.create(createProps),
@@ -95,9 +89,7 @@ export class EventService {
      * @TODO 이벤트 이미지를 여러장 수정
      */
 
-    updateProps.brand = await this.photoBoothService.findOneBrandByName(
-      updateProps.brandName,
-    );
+    await this.photoBoothService.isExistByBrandName(updateProps.brandName);
 
     const isUpdated = await this.eventRepository.updateEvent(
       id,
@@ -108,8 +100,10 @@ export class EventService {
       throw new NotFoundException(`이벤트가 업데이트되지 않았습니다. ID:${id}`);
     }
 
-    const event = await this.findOneEventById(id);
-    await this.hashtagService.handleHashtags(event, updateProps.hashtags);
+    await this.hashtagService.handleHashtags(
+      Events.byId(id),
+      updateProps.hashtags,
+    );
 
     return true;
   }

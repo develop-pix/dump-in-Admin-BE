@@ -10,15 +10,15 @@ import {
 import { Review } from './review.entity';
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 
-@Entity()
+@Entity('review_image')
 export class ReviewImage extends BaseDateEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Review, (review) => review.review_images)
+  @ManyToOne(() => Review, (review) => review.reviewImages)
   @JoinColumn({ name: 'review_id' })
   review: Review;
 
-  @Column()
-  review_image_url: string;
+  @Column({ name: 'review_image_url' })
+  reviewImageUrl: string;
 }

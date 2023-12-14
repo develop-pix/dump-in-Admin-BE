@@ -40,7 +40,7 @@ describe('AuthService', () => {
           savedUser.username = 'admin';
           savedUser.email = 'admin@example.com';
           savedUser.password = 'admin hashed 12';
-          savedUser.is_admin = true;
+          savedUser.isAdmin = true;
           return Promise.resolve(savedUser);
         } else {
           return Promise.reject(

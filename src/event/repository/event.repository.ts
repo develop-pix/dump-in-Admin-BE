@@ -1,72 +1,79 @@
 import {
+  DataSource,
   FindManyOptions,
   FindOptionsSelect,
   FindOptionsWhere,
   Repository,
 } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Events } from '../entity/event.entity';
-import { PaginationProps } from '../../common/dto/pagination-req.dto';
+import { PaginationProps } from '../../common/dto/get-pagination-query.dto';
 
 @Injectable()
-export class EventRepository {
-  constructor(
-    @InjectRepository(Events)
-    private readonly eventRepository: Repository<Events>,
-  ) {}
+export class EventRepository extends Repository<Events> {
+  constructor(private readonly dataSource: DataSource) {
+    const baseRepository = dataSource.getRepository(Events);
+    super(
+      baseRepository.target,
+      baseRepository.manager,
+      baseRepository.queryRunner,
+    );
+  }
 
   async saveEvent(event: Events): Promise<Events> {
-    return await this.eventRepository.save(event);
+    return await this.save(event);
   }
 
   async findEventByOptionAndCount(
     event: Events,
     page: PaginationProps,
   ): Promise<[Events[], number]> {
-    const options = this.findEventManyOptions(page, event);
-    return await this.eventRepository.findAndCount(options);
+    const { skip, take } = page;
+    const options = this.findEventManyOptions(event);
+    return await this.findAndCount({ skip, take, ...options });
   }
 
-  async findOneEventBy(event: Events): Promise<Events> {
-    const where = this.findEventOptionsWhere(event);
-    return await this.eventRepository.findOneBy(where);
+  async findOneEvent(event: Events): Promise<Events> {
+    const options = this.findEventManyOptions(event);
+    return await this.findOne(options);
   }
 
   async updateEvent(id: number, event: Events): Promise<boolean> {
-    const result = await this.eventRepository.update({ id }, event);
+    const result = await this.update({ id }, event);
     return result.affected > 0;
   }
 
   async isExistEvent(event: Events): Promise<boolean> {
     const where = this.findEventOptionsWhere(event);
-    return await this.eventRepository.exist({ where });
+    return await this.exist({ where });
   }
 
-  private findEventManyOptions(
-    page: PaginationProps,
-    event: Events,
-  ): FindManyOptions<Events> {
-    const { take, skip } = page;
+  private findEventManyOptions(event: Events): FindManyOptions<Events> {
     const where = this.findEventOptionsWhere(event);
     const relations = {
-      event_images: true,
-      photo_booth_brand: true,
-      event_hashtag: true,
+      eventImages: true,
+      photoBoothBrand: true,
+      eventHashtags: true,
     };
     const select: FindOptionsSelect<Events> = {
       id: true,
       title: true,
       content: true,
+      mainThumbnailUrl: true,
+      startDate: true,
+      endDate: true,
+      viewCount: true,
+      likeCount: true,
+      isPublic: true,
     };
-    return { where, relations, take, skip, select };
+    return { where, relations, select };
   }
 
   private findEventOptionsWhere(event: Events): FindOptionsWhere<Events> {
     return {
       id: event.id,
       title: event.title,
-      photo_booth_brand: event.photo_booth_brand,
+      photoBoothBrand: event.photoBoothBrand,
     };
   }
 }

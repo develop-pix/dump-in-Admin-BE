@@ -1,43 +1,37 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { PickType } from '@nestjs/swagger';
+import { IsOptional } from 'class-validator';
 import {
-  ArrayMaxSize,
-  IsArray,
-  IsBoolean,
-  IsOptional,
-  IsString,
-} from 'class-validator';
-import { MoveToOpenBoothProps } from './put-photo-booth.dto';
+  BrandReqBodyDto,
+  BrandReqBodyProps,
+  PhotoBoothReqBodyDto,
+  PhotoBoothReqBodyProps,
+} from './req-photo-booth-body.dto';
 
-export class UpdatePhotoBoothDto {
-  @ApiProperty({
-    description: '포토부스의 업체 + 지점명',
-    example: '하루필름 홍대 1호점',
-  })
-  @IsString()
+export class UpdatePhotoBoothDto extends PickType(PhotoBoothReqBodyDto, [
+  'name',
+  'location',
+  'streetAddress',
+  'roadAddress',
+  'brandName',
+  'operationTime',
+]) {
   @IsOptional()
-  name?: string;
+  name: string;
 
-  @ApiProperty({
-    description: '포토부스의 지역',
-    example: '서울',
-  })
-  @IsString()
   @IsOptional()
-  location?: string;
+  location: string;
 
-  @ApiProperty({
-    description: '포토부스의 지번 주소',
-  })
-  @IsString()
   @IsOptional()
-  streetAddress?: string;
+  streetAddress: string;
 
-  @ApiProperty({
-    description: '포토부스의 도로명 주소',
-  })
-  @IsString()
   @IsOptional()
-  roadAddress?: string;
+  roadAddress: string;
+
+  @IsOptional()
+  brandName: string;
+
+  @IsOptional()
+  operationTime: string;
 
   getUpdateProps(): PhotoBoothUpdateProps {
     return {
@@ -45,58 +39,31 @@ export class UpdatePhotoBoothDto {
       location: this.location,
       streetAddress: this.streetAddress,
       roadAddress: this.roadAddress,
+      brandName: this.brandName,
+      operationTime: this.operationTime,
       isDelete: false,
     };
   }
 }
 
-export class UpdateBoothBrandDto {
-  @ApiProperty({
-    description: '포토부스의 업체명',
-    example: '하루필름',
-  })
-  @IsString()
+export class UpdateBoothBrandDto extends BrandReqBodyDto {
   @IsOptional()
-  name?: string;
+  name: string;
 
-  @ApiProperty({
-    description: '포토부스의 업체 설명',
-  })
-  @IsString()
   @IsOptional()
-  description?: string;
+  description: string;
 
-  @ApiProperty({
-    description: '포토부스의 업체 관련 홈페이지 주소',
-  })
-  @IsString()
   @IsOptional()
-  photoBoothUrl?: string;
+  photoBoothUrl: string;
 
-  @ApiProperty({
-    description: '포토부스의 업체 이벤트 허용 여부',
-    example: true,
-  })
-  @IsBoolean()
   @IsOptional()
-  isEvent?: boolean;
+  isEvent: boolean;
 
-  @ApiProperty({
-    description: '포토부스의 대표 이미지',
-  })
-  @IsString()
   @IsOptional()
-  mainThumbnailImageUrl?: string;
+  mainThumbnailImageUrl: string;
 
-  @ApiProperty({
-    description: '포토부스 업체 해시태그 목록 (최대 4개)',
-    example: ['행사', '웨딩', '파티', '스냅'],
-  })
   @IsOptional()
-  @IsArray()
-  @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
-  @IsString({ each: true })
-  hashtags?: string[];
+  hashtags: string[];
 
   getUpdateProps(): BrandUpdateProps {
     return {
@@ -110,15 +77,8 @@ export class UpdateBoothBrandDto {
   }
 }
 
-export interface BrandUpdateProps {
-  name: string;
-  description: string;
-  photoBoothUrl: string;
-  mainThumbnailImageUrl: string;
-  isEvent: boolean;
-  hashtags: string[];
-}
+export interface BrandUpdateProps extends BrandReqBodyProps {}
 
-export interface PhotoBoothUpdateProps extends Partial<MoveToOpenBoothProps> {
+export interface PhotoBoothUpdateProps extends Partial<PhotoBoothReqBodyProps> {
   isDelete: boolean;
 }

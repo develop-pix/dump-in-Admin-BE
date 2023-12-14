@@ -1,21 +1,19 @@
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../entity/user.entity';
 import { Review } from '../../review/entity/review.entity';
 
 export class GetUserDto {
-  @Exclude() private readonly _id: number;
-  @Exclude() private readonly _username: string;
-  @Exclude() private readonly _nickname: string;
-  @Exclude() private readonly _email: string;
-  @Exclude() private readonly _created_at: Date;
-  @Exclude() private readonly _deleted_at: Date | null;
-  @Exclude()
-  @Type(() => Review)
-  private readonly _reviews: Review[];
+  @Exclude() readonly _id: number;
+  @Exclude() readonly _username: string;
+  @Exclude() readonly _nickname: string;
+  @Exclude() readonly _email: string;
+  @Exclude() readonly _createdAt: Date;
+  @Exclude() readonly _deletedAt: Date | null;
+  @Exclude() readonly _reviews: Review[];
 
   constructor(data: User) {
-    Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
+    Object.keys(data).map((key) => (this[`_${key}`] = data[key]));
   }
 
   @ApiProperty({ description: '유저 테이블 내의 id 값' })
@@ -53,7 +51,7 @@ export class GetUserDto {
   })
   @Expose()
   get deletedAt(): Date {
-    return this._deleted_at;
+    return this._deletedAt;
   }
 
   @ApiProperty({
@@ -61,15 +59,14 @@ export class GetUserDto {
   })
   @Expose()
   get createdAt(): Date {
-    return this._created_at;
+    return this._createdAt;
   }
 
   @ApiProperty({
     description: '유저가 작성한 리뷰들',
   })
   @Expose()
-  @Type(() => Review)
-  get review(): Review[] {
-    return this._reviews;
+  get review(): number {
+    return this._reviews.length;
   }
 }

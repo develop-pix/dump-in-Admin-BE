@@ -1,4 +1,5 @@
 import {
+  DataSource,
   FindManyOptions,
   FindOptionsSelect,
   FindOptionsWhere,
@@ -6,10 +7,19 @@ import {
 } from 'typeorm';
 import { User } from '../entity/user.entity';
 import { Injectable } from '@nestjs/common';
-import { PaginationProps } from 'src/common/dto/pagination-req.dto';
+import { PaginationProps } from 'src/common/dto/get-pagination-query.dto';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
+  constructor(private readonly dataSource: DataSource) {
+    const baseRepository = dataSource.getRepository(User);
+    super(
+      baseRepository.target,
+      baseRepository.manager,
+      baseRepository.queryRunner,
+    );
+  }
+
   async findUserByOptionAndCount(
     page: PaginationProps,
   ): Promise<[User[], number]> {
@@ -30,8 +40,8 @@ export class UserRepository extends Repository<User> {
       username: true,
       nickname: true,
       email: true,
-      created_at: true,
-      deleted_at: true,
+      createdAt: true,
+      deletedAt: true,
     };
     return { relations, take, skip, select };
   }
@@ -41,7 +51,7 @@ export class UserRepository extends Repository<User> {
       id: user.id,
       username: user.username,
       nickname: user.nickname,
-      is_admin: user.is_admin,
+      isAdmin: user.isAdmin,
     };
   }
 }
