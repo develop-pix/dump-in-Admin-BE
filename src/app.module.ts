@@ -8,13 +8,25 @@ import { UserModule } from './user/user.module';
 import { HashtagModule } from './hashtag/hashtag.module';
 import { ReviewModule } from './review/review.module';
 import { EventModule } from './event/event.module';
-import { winstonConsoleTransport } from './common/config/winston.config';
+import {
+  consoleTransport,
+  errorLogFileTransport,
+  infoLogFileTransport,
+} from './common/config/winston.config';
 import { envConfigOptions } from './common/config/env.config';
 import { WinstonModule } from 'nest-winston';
 
 @Module({
   imports: [
     ConfigModule.forRoot(envConfigOptions),
+    WinstonModule.forRoot({
+      transports: [
+        consoleTransport,
+        ...(process.env.NODE_ENV === 'production'
+          ? [infoLogFileTransport, errorLogFileTransport]
+          : []),
+      ],
+    }),
     TypeOrmModule.forRoot({
       type: 'postgres',
       host: process.env.DATABASE_HOST,
@@ -29,9 +41,6 @@ import { WinstonModule } from 'nest-winston';
         process.env.NODE_ENV === 'local'
           ? undefined
           : { rejectUnauthorized: false },
-    }),
-    WinstonModule.forRoot({
-      transports: [winstonConsoleTransport],
     }),
     PhotoBoothModule,
     ExceptionModule,
