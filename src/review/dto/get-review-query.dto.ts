@@ -7,7 +7,6 @@ export class ReviewQueryDto extends PaginationDto {
   @ApiProperty({
     description: '포토부스 업체명',
     required: false,
-    example: '하루필름',
   })
   @IsString()
   @IsOptional()

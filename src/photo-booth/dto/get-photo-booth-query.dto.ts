@@ -31,7 +31,6 @@ export class BoothQueryDto extends PaginationDto {
   @ApiProperty({
     description: '포토부스에서 지점명을 검색하는 쿼리스트링',
     required: false,
-    example: '하루필름 홍대 1호점',
   })
   @IsString()
   @MinLength(3)
@@ -43,7 +42,6 @@ export class BoothQueryDto extends PaginationDto {
   @ApiProperty({
     description: '포토부스에서 업체명을 검색하는 쿼리스트링',
     required: false,
-    example: '하루필름',
   })
   @IsString()
   @MinLength(3)
@@ -77,7 +75,6 @@ export class BoothBrandQueryDto extends PaginationDto {
   @ApiProperty({
     description: '포토부스 업체의 이벤트 허용 여부',
     required: false,
-    example: true,
   })
   @IsOptional()
   @IsBoolean()
