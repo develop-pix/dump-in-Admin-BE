@@ -1,15 +1,13 @@
-import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { HashtagService } from './hashtag.service';
 import { ApiTags } from '@nestjs/swagger';
 import { GetHashtagListDto } from './dto/get-hastag-list.dto';
 import { ResponseEntity } from '../common/entity/response.entity';
 import { CreateHashtagsDto } from './dto/post-hashtag.dto';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
-import { AdminCheckGuard } from '../auth/guard/admin-check.guard';
 
 @ApiTags('해시태그')
 @Controller('hashtag')
-@UseGuards(AdminCheckGuard)
 export class HashtagController {
   constructor(private readonly hashtagService: HashtagService) {}
 

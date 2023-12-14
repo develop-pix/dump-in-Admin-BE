@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { GetAdminSessionDto } from '../user/dto/get-session-admin.dto';
 import { UserService } from '../user/user.service';
@@ -26,7 +26,7 @@ export class AuthService {
     );
 
     if (!isSamePassword) {
-      throw new ConflictException('관리자 정보가 일치하지 않습니다');
+      throw new NotFoundException('관리자 정보를 찾지 못했습니다');
     }
 
     session.user = new GetAdminSessionDto(admin);

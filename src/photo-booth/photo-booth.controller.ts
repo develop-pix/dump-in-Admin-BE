@@ -10,7 +10,6 @@ import {
   ParseUUIDPipe,
   Body,
   ParseIntPipe,
-  UseGuards,
 } from '@nestjs/common';
 import { PhotoBoothService } from './photo-booth.service';
 import { ApiTags } from '@nestjs/swagger';
@@ -35,11 +34,9 @@ import {
 import { CreateBoothBrandDto } from './dto/post-photo-booth.dto';
 import { MoveHiddenToOpenBoothDto } from './dto/put-photo-booth.dto';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
-import { AdminCheckGuard } from '../auth/guard/admin-check.guard';
 
 @ApiTags('포토부스')
 @Controller('photo-booth')
-@UseGuards(AdminCheckGuard)
 export class PhotoBoothController {
   constructor(private readonly photoBoothService: PhotoBoothService) {}
 
