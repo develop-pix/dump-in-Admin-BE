@@ -53,7 +53,7 @@ export class EventRepository extends Repository<Events> {
     const relations = {
       eventImages: true,
       photoBoothBrand: true,
-      eventHashtag: true,
+      eventHashtags: true,
     };
     const select: FindOptionsSelect<Events> = {
       id: true,

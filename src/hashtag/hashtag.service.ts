@@ -33,7 +33,7 @@ export class HashtagService {
 
     const existingHashtags =
       await this.hashtagRepository.findManyHashtagByOption(
-        uniqueHashtags.map((name) => Hashtag.of({ name })),
+        uniqueHashtags.map((name) => Hashtag.byName(name)),
       );
 
     const existingHashtagNameSet = new Set(

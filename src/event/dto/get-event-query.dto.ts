@@ -7,6 +7,7 @@ import { Type } from 'class-transformer';
 export class EventQueryDto extends PaginationDto {
   @ApiProperty({
     description: '이벤트와 관련된 포토부스 업체명',
+    required: false,
   })
   @IsString()
   @MinLength(3)
@@ -16,6 +17,7 @@ export class EventQueryDto extends PaginationDto {
 
   @ApiProperty({
     description: '이벤트의 제목',
+    required: false,
   })
   @IsString()
   @MinLength(3)

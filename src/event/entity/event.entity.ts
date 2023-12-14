@@ -25,7 +25,7 @@ export class Events extends BaseDateEntity {
   @Column()
   content: string;
 
-  @Column({ name: 'main_thumbnail_url' })
+  @Column({ name: 'main_thumbnail_image_url' })
   mainThumbnailUrl: string;
 
   @Column({ name: 'start_date' })

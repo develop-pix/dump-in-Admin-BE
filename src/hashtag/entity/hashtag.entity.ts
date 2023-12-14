@@ -25,11 +25,10 @@ export class Hashtag {
   )
   eventHashtags: EventHashtag[];
 
-  static of({ id, name }: FindHashtagOptionsProps): Hashtag {
+  static byName(name: string): Hashtag {
     const hashtag = new Hashtag();
 
     hashtag.name = name;
-    hashtag.id = id;
 
     return hashtag;
   }
@@ -41,9 +40,4 @@ export class Hashtag {
 
     return hashtag;
   }
-}
-
-export interface FindHashtagOptionsProps {
-  id?: number;
-  name: string;
 }

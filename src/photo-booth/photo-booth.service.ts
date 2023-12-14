@@ -345,8 +345,10 @@ export class PhotoBoothService {
       );
     }
 
-    const brand = await this.findOneBrandById(id);
-    await this.hashtagService.handleHashtags(brand, updateProps.hashtags);
+    await this.hashtagService.handleHashtags(
+      PhotoBoothBrand.byId(id),
+      updateProps.hashtags,
+    );
 
     return true;
   }

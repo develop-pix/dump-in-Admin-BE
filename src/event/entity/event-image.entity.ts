@@ -10,7 +10,7 @@ import { BaseDateEntity } from '../../common/entity/common-date.entity';
 
 @Entity('event_image')
 export class EventImage extends BaseDateEntity {
-  @PrimaryGeneratedColumn({ name: 'event_image_id' })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @ManyToOne(() => Events, (event: Events) => event.eventImages)
