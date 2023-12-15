@@ -23,8 +23,8 @@ export class ReviewController {
   @Get()
   @SwaggerAPI({
     name: '리뷰 목록 조회',
-    response: GetReviewListDto,
-    isArray: true,
+    model: GetReviewListDto,
+    isPagination: true,
   })
   async findReviewByQueryParam(
     @Query() request: ReviewQueryDto,
@@ -42,7 +42,7 @@ export class ReviewController {
   @Get(':id')
   @SwaggerAPI({
     name: '리뷰 정보 조회',
-    response: GetReviewDetailDto,
+    model: GetReviewDetailDto,
   })
   async findOneReviewById(
     @Param('id', ParseIntPipe) id: number,

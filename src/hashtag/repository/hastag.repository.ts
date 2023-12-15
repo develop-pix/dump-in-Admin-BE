@@ -1,37 +1,30 @@
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, FindOptionsWhere, In } from 'typeorm';
+import { Repository, FindOptionsWhere, In, DataSource } from 'typeorm';
 import { Hashtag } from '../entity/hashtag.entity';
 import { Injectable } from '@nestjs/common';
+import { PaginationProps } from '../../common/dto/get-pagination-query.dto';
 
 @Injectable()
-export class HashtagRepository {
-  constructor(
-    @InjectRepository(Hashtag)
-    private readonly hashtagRepository: Repository<Hashtag>,
-  ) {}
+export class HashtagRepository extends Repository<Hashtag> {
+  constructor(private readonly dataSource: DataSource) {
+    const baseRepository = dataSource.getRepository(Hashtag);
+    super(
+      baseRepository.target,
+      baseRepository.manager,
+      baseRepository.queryRunner,
+    );
+  }
   async saveHashtags(tags: Hashtag[]): Promise<Hashtag[]> {
-    return await this.hashtagRepository.save(tags);
+    return await this.save(tags);
   }
 
-  async findAll(): Promise<Hashtag[]> {
-    return await this.hashtagRepository.find();
+  async findAll(page: PaginationProps): Promise<[Hashtag[], number]> {
+    const { take, skip } = page;
+    return await this.findAndCount({ take, skip });
   }
 
   async findManyHashtagByOption(tags: Hashtag[]): Promise<Hashtag[]> {
     const where = this.findManyHashtagOptionsWhere(tags);
-    return await this.hashtagRepository.findBy(where);
-  }
-
-  async findOneHashtagBy(tag: Hashtag): Promise<Hashtag> {
-    const where = this.findHashtagOptionsWhere(tag);
-    return await this.hashtagRepository.findOneBy(where);
-  }
-
-  private findHashtagOptionsWhere(tag: Hashtag): FindOptionsWhere<Hashtag> {
-    return {
-      id: tag.id,
-      name: tag.name,
-    };
+    return await this.find({ where });
   }
 
   private findManyHashtagOptionsWhere(

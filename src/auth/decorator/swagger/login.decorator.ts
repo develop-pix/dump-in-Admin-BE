@@ -1,10 +1,12 @@
 import { HttpStatus, applyDecorators } from '@nestjs/common';
 import {
   ApiBadRequestResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
+import { createSchema } from '../../../common/swagger/api.schema';
 
 export const SwaggerLogIn = (): MethodDecorator =>
   applyDecorators(
@@ -19,41 +21,39 @@ export const SwaggerLogIn = (): MethodDecorator =>
         '로그인 성공 시 응답입니다. 200 상태코드와 함께 요청 성공 메시지가 반환됩니다',
       schema: {
         allOf: [
-          {
-            properties: {
-              code: { enum: [HttpStatus.OK] },
-              message: {
-                type: 'string',
-                example: '로그인 했습니다',
-              },
-              success: { type: 'boolean', example: true },
-              data: {
-                type: 'string',
-                example: '',
-              },
-            },
-          },
+          createSchema({
+            status: HttpStatus.OK,
+            message: '로그인 했습니다',
+            success: true,
+          }),
         ],
       },
     }),
 
     ApiUnauthorizedResponse({
       description:
-        '로그인 실패 시 응답입니다. 401 상태코드와 함께 요청 실패 메시지가 반환됩니다',
+        '로그인하지 않았을 때 응답입니다. 401 상태코드와 함께 요청 실패 메시지가 반환됩니다',
       schema: {
         allOf: [
-          {
-            properties: {
-              code: { enum: [HttpStatus.UNAUTHORIZED] },
-              message: {
-                type: 'string',
-                example:
-                  '로그인에 실패했습니다. 아이디와 비밀번호를 다시 입력해주세요.',
-              },
-              success: { type: 'boolean', example: false },
-              data: { type: 'string', example: '' },
-            },
-          },
+          createSchema({
+            status: HttpStatus.UNAUTHORIZED,
+            message: '로그인이 필요합니다.',
+            success: false,
+          }),
+        ],
+      },
+    }),
+
+    ApiNotFoundResponse({
+      description:
+        '로그인 실패시 응답입니다. 404 상태코드와 함께 요청 실패 메시지가 반환됩니다',
+      schema: {
+        allOf: [
+          createSchema({
+            status: HttpStatus.NOT_FOUND,
+            message: '관리자 정보를 찾지 못했습니다',
+            success: false,
+          }),
         ],
       },
     }),
@@ -63,17 +63,11 @@ export const SwaggerLogIn = (): MethodDecorator =>
         '이미 로그인 했을 때 응답입니다. 400 상태코드와 함께 요청 실패 메시지가 반환됩니다',
       schema: {
         allOf: [
-          {
-            properties: {
-              code: { enum: [HttpStatus.BAD_REQUEST] },
-              success: { type: 'boolean', example: false },
-              message: {
-                type: 'string',
-                example: '이미 로그인한 사용자입니다.',
-              },
-              data: { type: 'string', example: '' },
-            },
-          },
+          createSchema({
+            status: HttpStatus.BAD_REQUEST,
+            message: '이미 로그인한 사용자입니다.',
+            success: false,
+          }),
         ],
       },
     }),

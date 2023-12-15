@@ -1,10 +1,12 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { HashtagService } from './hashtag.service';
 import { ApiTags } from '@nestjs/swagger';
 import { GetHashtagListDto } from './dto/get-hastag-list.dto';
 import { ResponseEntity } from '../common/entity/response.entity';
 import { CreateHashtagsDto } from './dto/post-hashtag.dto';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
+import { PaginationDto } from 'src/common/dto/get-pagination-query.dto';
+import { Page } from '../common/dto/get-pagination-list.dto';
 
 @ApiTags('해시태그')
 @Controller('hashtag')
@@ -14,15 +16,19 @@ export class HashtagController {
   @Get()
   @SwaggerAPI({
     name: '해시태그 목록 조회',
-    response: GetHashtagListDto,
-    isArray: true,
+    model: GetHashtagListDto,
+    isPagination: true,
   })
-  async findAllHashtags(): Promise<ResponseEntity<GetHashtagListDto[]>> {
-    const response = await this.hashtagService.findAllHashtags();
+  async findAllHashtags(
+    @Query() request: PaginationDto,
+  ): Promise<ResponseEntity<Page<GetHashtagListDto>>> {
+    const [response, count] = await this.hashtagService.findAllHashtags(
+      request.getPageProps(),
+    );
 
-    return ResponseEntity.OK_WITH<GetHashtagListDto[]>(
+    return ResponseEntity.OK_WITH<Page<GetHashtagListDto>>(
       '해시태그 목록입니다.',
-      response.map((hashtag) => new GetHashtagListDto(hashtag)),
+      Page.create(request.getPageProps(), count, response),
     );
   }
 

@@ -27,8 +27,8 @@ export class EventController {
   @Get()
   @SwaggerAPI({
     name: '이벤트 목록 조회',
-    response: GetEventListDto,
-    isArray: true,
+    model: GetEventListDto,
+    isPagination: true,
   })
   async findEventByQueryParam(
     @Query() request: EventQueryDto,
@@ -55,7 +55,7 @@ export class EventController {
   @Get(':id')
   @SwaggerAPI({
     name: '이벤트 정보 조회',
-    response: GetEventDetailDto,
+    model: GetEventDetailDto,
   })
   async findOneEvent(
     @Param('id', ParseIntPipe) id: number,

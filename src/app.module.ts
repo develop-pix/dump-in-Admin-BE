@@ -22,9 +22,8 @@ import { WinstonModule } from 'nest-winston';
     WinstonModule.forRoot({
       transports: [
         consoleTransport,
-        ...(process.env.NODE_ENV === 'production'
-          ? [infoLogFileTransport, errorLogFileTransport]
-          : []),
+        infoLogFileTransport,
+        errorLogFileTransport,
       ],
     }),
     TypeOrmModule.forRoot({

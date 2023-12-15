@@ -14,10 +14,16 @@ import { DataSource } from 'typeorm';
 import { rateLimit } from 'express-rate-limit';
 import * as session from 'express-session';
 import { LoggedCheckGuard } from './auth/guard/logged-check.guard';
+import { GetAdminSessionDto } from './user/dto/get-session-admin.dto';
+
+declare module 'express-session' {
+  interface SessionData {
+    user?: GetAdminSessionDto;
+  }
+}
 
 async function bootstrap(): Promise<void> {
-  const maxRequests = process.env.NODE_ENV === 'production' ? 30 : 90;
-  const maxLoginRequests = process.env.NODE_ENV === 'production' ? 5 : 15;
+  const maxRequests = process.env.NODE_ENV === 'production' ? 5 : 15;
   const minute = 60 * 1000;
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
@@ -55,14 +61,15 @@ async function bootstrap(): Promise<void> {
 
   const limiter = rateLimit({
     windowMs: 15 * minute,
-    max: maxRequests,
+    max: maxRequests * 6,
     message: '요청 횟수가 너무 많습니다. 잠시 후에 시도하세요.',
   });
 
   const loginLimiter = rateLimit({
     windowMs: 30 * minute,
-    max: maxLoginRequests,
+    max: maxRequests,
     message: '로그인 요청 횟수가 너무 많습니다. 잠시 후에 시도하세요.',
+    skip: (req) => req.session?.user !== undefined,
   });
 
   const config = new DocumentBuilder()

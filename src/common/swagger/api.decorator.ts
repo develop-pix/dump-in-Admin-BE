@@ -1,87 +1,88 @@
 import { HttpStatus, Type, applyDecorators } from '@nestjs/common';
 import {
+  ApiExtraModels,
   ApiNotFoundResponse,
   ApiOperation,
   ApiResponse,
+  ApiUnauthorizedResponse,
+  getSchemaPath,
 } from '@nestjs/swagger';
-import {
-  GetPhotoBoothDetailDto,
-  GetBoothBrandDetailDto,
-} from '../../photo-booth/dto/get-photo-booth-detail.dto';
+import { Page } from '../dto/get-pagination-list.dto';
 import { ResponseEntity } from '../entity/response.entity';
-import { GetEventDetailDto } from '../../event/dto/get-event-detail.dto';
-import {
-  GetBoothBrandListDto,
-  GetPhotoBoothListDto,
-} from '../../photo-booth/dto/get-photo-booth-list.dto';
-import { GetEventListDto } from '../../event/dto/get-event-list.dto';
-import { GetHashtagListDto } from '../../hashtag/dto/get-hastag-list.dto';
-import { GetReviewListDto } from '../../review/dto/get-review-list.dto';
-import { GetReviewDetailDto } from '../../review/dto/get-review-detail.dto';
-import { GetUserDto } from '../../user/dto/get-user.dto';
-
-export type Dtos =
-  | GetPhotoBoothDetailDto
-  | GetBoothBrandDetailDto
-  | GetEventDetailDto
-  | GetPhotoBoothListDto
-  | GetBoothBrandListDto
-  | GetEventListDto
-  | GetHashtagListDto
-  | ResponseEntity<string>
-  | GetReviewListDto
-  | GetReviewDetailDto
-  | GetUserDto;
-
-interface OptionsProps {
-  name: string;
-  response?: Type<Dtos>;
-  status?: number;
-  isArray?: boolean;
-}
+import { createSchema } from './api.schema';
 
 export const SwaggerAPI = ({
   name,
-  response,
   status = HttpStatus.OK,
-  isArray = false,
-}: OptionsProps): MethodDecorator =>
-  applyDecorators(
+  model = Object,
+  isPagination = false,
+}: OptionsProps): MethodDecorator => {
+  return applyDecorators(
     ApiOperation({
       summary: `${name} API`,
     }),
 
-    ApiResponse({
-      status,
-      isArray,
-      type: response || ResponseEntity,
-      description: isArray
-        ? '성공 시 OK 응답과 목록과 페이지를 반환합니다.'
-        : '성공 시 OK 응답을 반환합니다.',
-    }),
-
+    ApiExtraModels(Page, ResponseEntity, model),
     ApiNotFoundResponse({
       description:
         '실패 시 응답입니다. 404 상태코드와 함께 요청 실패 메시지가 반환됩니다',
       schema: {
         allOf: [
-          {
-            properties: {
-              code: { enum: [HttpStatus.NOT_FOUND] },
-              message: {
-                type: 'string',
-              },
-              success: {
-                type: 'boolean',
-                example: false,
-              },
-              data: {
-                type: 'string',
-                example: '',
-              },
-            },
-          },
+          createSchema({
+            status: HttpStatus.NOT_FOUND,
+            message: `${name} 요청에 실패했습니다.`,
+            success: false,
+          }),
+        ],
+      },
+    }),
+
+    ApiUnauthorizedResponse({
+      description:
+        '로그인하지 않았을 때 응답입니다. 401 상태코드와 함께 요청 실패 메시지가 반환됩니다',
+      schema: {
+        allOf: [
+          createSchema({
+            status: HttpStatus.UNAUTHORIZED,
+            message: '로그인이 필요합니다.',
+            success: false,
+          }),
+        ],
+      },
+    }),
+
+    ApiResponse({
+      status,
+      description: '성공 시 OK 응답을 반환합니다.',
+      schema: {
+        allOf: [
+          createSchema({
+            status,
+            message: `${name} 했습니다.`,
+            success: true,
+            data: isPagination
+              ? {
+                  $ref: getSchemaPath(Page),
+                  properties: {
+                    results: {
+                      type: 'array',
+                      items: { $ref: getSchemaPath(model) },
+                    },
+                  },
+                }
+              : {
+                  $ref: getSchemaPath(model),
+                },
+          }),
         ],
       },
     }),
   );
+};
+
+interface OptionsProps {
+  name: string;
+  status?: number;
+  isPagination?: boolean;
+  model?: Type<unknown>;
+}
