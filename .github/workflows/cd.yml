@@ -30,7 +30,7 @@ jobs:
         with:
           key: ${{ secrets.AWS_SECRET_KEY }}
           host: ${{ secrets.AWS_INSTANCE_IP }}
-          username: ${{ secrets.LIGHTSAIL_NAME }}
+          username: ${{ secrets.AWS_INSTANCE_USERNAME }}
           port: ${{ secrets.AWS_INSTANCE_PORT }}
           script: |
             cd ${{ secrets.AWS_INSTANCE_PATH }} 
