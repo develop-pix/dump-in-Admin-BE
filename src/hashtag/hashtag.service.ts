@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Hashtag } from './entity/hashtag.entity';
 import { HashtagRepository } from './repository/hastag.repository';
 import { Events } from '../event/entity/event.entity';
@@ -6,6 +6,8 @@ import { EventHashtag } from './entity/event-hashtag.entity';
 import { BrandHashtag } from './entity/brand-hashtag.entity';
 import { PhotoBoothBrand } from '../photo-booth/entity/photo-booth-brand.entity';
 import { EntityToHashtagRepository } from './repository/entity-hashtag.repository';
+import { PaginationProps } from '../common/dto/get-pagination-query.dto';
+import { GetHashtagListDto } from './dto/get-hastag-list.dto';
 
 @Injectable()
 export class HashtagService {
@@ -14,8 +16,20 @@ export class HashtagService {
     private readonly entityToHashtagRepository: EntityToHashtagRepository,
   ) {}
 
-  async findAllHashtags(): Promise<Hashtag[]> {
-    return await this.hashtagRepository.findAll();
+  async findAllHashtags(
+    pageProps: PaginationProps,
+  ): Promise<[GetHashtagListDto[], number]> {
+    /**
+     * @param pageProps - pagination - 항목수, 페이지
+     * @desc - 전체 해시태그 목록 조회
+     */
+
+    const [results, count] = await this.hashtagRepository.findAll(pageProps);
+
+    if (count === 0) {
+      throw new NotFoundException('해시태그를 찾지 못했습니다');
+    }
+    return [results.map((hashtag) => new GetHashtagListDto(hashtag)), count];
   }
 
   async createHashtags(hashtags: string[]): Promise<Hashtag[]> {
