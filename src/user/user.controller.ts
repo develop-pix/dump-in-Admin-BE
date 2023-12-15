@@ -13,7 +13,7 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @SwaggerAPI({ name: '유저 목록 조회', response: GetUserDto, isArray: true })
+  @SwaggerAPI({ name: '유저 목록 조회', model: GetUserDto, isPagination: true })
   async findAllUser(
     @Query() request: PaginationDto,
   ): Promise<ResponseEntity<Page<GetUserDto>>> {

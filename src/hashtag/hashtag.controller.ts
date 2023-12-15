@@ -14,8 +14,8 @@ export class HashtagController {
   @Get()
   @SwaggerAPI({
     name: '해시태그 목록 조회',
-    response: GetHashtagListDto,
-    isArray: true,
+    model: GetHashtagListDto,
+    isPagination: true,
   })
   async findAllHashtags(): Promise<ResponseEntity<GetHashtagListDto[]>> {
     const response = await this.hashtagService.findAllHashtags();

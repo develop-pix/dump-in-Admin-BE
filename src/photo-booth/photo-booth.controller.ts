@@ -43,8 +43,8 @@ export class PhotoBoothController {
   @Get()
   @SwaggerAPI({
     name: '앱에 공개된 포토부스 목록 조회',
-    response: GetPhotoBoothListDto,
-    isArray: true,
+    model: GetPhotoBoothListDto,
+    isPagination: true,
   })
   async findOpenBoothByQueryParam(
     @Query() request: BoothQueryDto,
@@ -63,8 +63,8 @@ export class PhotoBoothController {
   @Get('brand')
   @SwaggerAPI({
     name: '포토부스 업체 목록 조회',
-    response: GetBoothBrandListDto,
-    isArray: true,
+    model: GetBoothBrandListDto,
+    isPagination: true,
   })
   async findBrandByQueryParam(
     @Query() request: BoothBrandQueryDto,
@@ -94,8 +94,8 @@ export class PhotoBoothController {
   @Get('raw')
   @SwaggerAPI({
     name: '비공개 포토부스 목록 조회',
-    response: GetPhotoBoothListDto,
-    isArray: true,
+    model: GetPhotoBoothListDto,
+    isPagination: true,
   })
   async findHiddenBoothByQueryParam(
     @Query() request: BoothQueryDto,
@@ -114,7 +114,7 @@ export class PhotoBoothController {
   @Get(':id')
   @SwaggerAPI({
     name: '앱에 공개된 포토부스 상세 조회',
-    response: GetPhotoBoothDetailDto,
+    model: GetPhotoBoothDetailDto,
   })
   async findOneOpenBooth(
     @Param('id', ParseUUIDPipe) id: string,
@@ -148,7 +148,7 @@ export class PhotoBoothController {
   @Get('raw/:id')
   @SwaggerAPI({
     name: '비공개 포토부스 조회',
-    response: GetPhotoBoothDetailDto,
+    model: GetPhotoBoothDetailDto,
   })
   async findOneHiddenBooth(
     @Param('id', ParseUUIDPipe) id: string,
@@ -198,7 +198,7 @@ export class PhotoBoothController {
   @Get('brand/:id')
   @SwaggerAPI({
     name: '포토부스 업체 조회',
-    response: GetBoothBrandDetailDto,
+    model: GetBoothBrandDetailDto,
   })
   async findOneBrand(
     @Param('id', ParseIntPipe) id: number,
