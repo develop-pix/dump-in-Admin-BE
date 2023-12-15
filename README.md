@@ -1,190 +1,105 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a name="readme-top"></a>
-<!--
-*** Thanks for checking out the Best-README-Template. If you have a suggestion
-*** that would make this better, please fork the repo and create a pull request
-*** or simply open an issue with the tag "enhancement".
-*** Don't forget to give the project a star!
-*** Thanks again! Now go create something AMAZING! :D
--->
+![Image](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/26fc155b-4a01-433e-9643-cbc1beefeadf)
 
+# Dump-In-Admin-Server
 
+[배포 링크](https://admin.dump-in.co.kr/api/swagger)
 
-<!-- PROJECT SHIELDS -->
-<!--
-*** I'm using markdown "reference style" links for readability.
-*** Reference links are enclosed in brackets [ ] instead of parentheses ( ).
-*** See the bottom of this document for the declaration of the reference variables
-*** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.
-*** https://www.markdownguide.org/basic-syntax/#reference-style-links
--->
-[![Stargazers][stars-shield]][stars-url]
-[![Issues][issues-shield]][issues-url]
-[![MIT License][license-shield]][license-url]
+<br>
 
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
-<!-- PROJECT LOGO -->
+## 목차 :clipboard:
 
-<h3 align="center">Dump-in-Admin</h3>
+- [Dump-In-Admin-Server](#dump-in-admin-server)
+  - [목차 :clipboard:](#목차-clipboard)
+  - [개요](#개요)
+  - [사용 기술](#사용-기술)
+  - [프로젝트 진행 및 이슈 관리](#프로젝트-진행-및-이슈-관리)
+  - [구현 과정 및 설명](#구현-과정-및-설명)
+  - [API Endpoint](#api-endpoint)
+  - [API Reference](#api-reference)
 
-  <p align="center">
-    This is the Backend Repository for the Dump-in App's Admin Page.
-    <br />
-    <a href="https://github.com/develop-pix/dump-in-Admin-BE">View Demo</a>
-    ·
-    <a href="https://github.com/develop-pix/dump-in-Admin-BE/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/develop-pix/dump-in-Admin-BE/issues">Request Feature</a>
-  </p>
-</div>
+<br/>
 
-<!-- ABOUT THE PROJECT -->
-## About The Project
+## 개요
 
-- 작성 중
+덤핀 어플리케이션은 사용자 주변의 다양한 포토부스를 소개하고 프레임 및 진행 중인 이벤트 정보를 제공하는 플랫폼입니다.
+사용자들은 덤핀 어플을 통해 지역 내 포토부스의 다양한 특징과 프레임을 확인할 수 있으며, 현재 진행 중인 이벤트에 참여할 수 있습니다.
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+덤핀 어드민은 어플리케이션의 관리 백오피스로서, 포토부스 정보의 업데이트, 이벤트 관리, 사용자 데이터 분석 등을 수행합니다.
+어드민을 통해 쉽게 어플리케이션의 콘텐츠를 관리하고 최신 정보를 반영할 수 있습니다.
 
+이를 통해 사용자들은 항상 다양하고 흥미로운 포토부스 경험을 즐길 수 있으며,
+어플리케이션은 지속적인 업데이트와 새로운 이벤트를 통해 사용자들을 유지하고 확장할 수 있습니다.
 
+<br/>
 
-### Built With
+## 사용 기술
 
-* [![Next][Next.js]][Next-url]
+<br/>
 
+![NestJS][NestJS] ![TypeScript][TypeScript] ![TypeORM][TypeORM]
+![PostgreSQL][PostgreSQL] ![Swagger][Swagger]
+![GitHubActions][GitHubActions]
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<br/>
 
-<!-- GETTING STARTED -->
-## Getting Started
+## 프로젝트 진행 및 이슈 관리
 
-```bash
-# 의존성 패키지 설치
-npm ci
-# 빌드 후 시작
-docker compose up --build
-```
+[![GitHub][GitHub]](https://github.com/orgs/develop-pix/projects/1/views/1)
 
-### Prerequisites
+<br/>
 
-```bash
-# 로컬 환경에서 커밋 템플릿 적용
-git config --local commit.template .gitmessage.txt
+<!-- ## 모델링 -->
 
-# 커밋 템플릿으로 커밋
-git commit
-```
+## 구현 과정 및 설명
 
-### Installation
+- **포토부스 관리 기능**
 
-1. Clone the repo
-   ```sh
-   git clone https://github.com/develop-pix/dump-in-Admin-BE.git
-   ```
-2. Install NPM packages
-   ```sh
-   npm install
-   ```
-3. set `.env`
-    ```text
-    # Nest CORS - URL
-    ALLOWED_ORIGINS=
+- **이벤트 관리 기능**
 
-    # NestJS - DB configs
-    DATABASE_NAME= # YOUR_DATABASE_NAME
-    DATABASE_USER= # YOUR_DATABASE_USER
-    DATABASE_PASS= # YOUR DATABASE_PASS
-    DATABASE_HOST= # YOUR_DATABASE_URI, example: database(docker-service-name)
-    ```
+- **리뷰 관리 기능**
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+- **유저 관리 기능**
 
+- **대시보드 기능 (통계)**
 
+- **세션 인증 및 인가**
 
-<!-- USAGE EXAMPLES -->
-## Usage
+- **Rate Limit**
 
-Use this space to show useful examples of how a project can be used. Additional screenshots, code examples and demos work well in this space. You may also link to more resources.
+- **알림 관리 기능**
 
-_For more examples, please refer to the [Documentation](https://example.com)_
+- **로깅**
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<!-- ## Did You Know -->
 
+## API Endpoint
 
+[![Notion][Notion]](https://secret-leech-e86.notion.site/6b8d9782457c4ae3859e18e308b1bad8?v=0addcbd8c185449f9cee2ab5922366e9&pvs=4)
 
-<!-- ROADMAP -->
-## Roadmap
+![API-endpoint](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/74d5aa54-d37e-4f64-b224-0934388f1817)
 
-- [ ] Feature 1
-- [ ] Feature 2
-- [ ] Feature 3
-    - [ ] Nested Feature
+<br/>
 
-See the [open issues](https://github.com/github_username/repo_name/issues) for a full list of proposed features (and known issues).
+## API Reference
 
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
+<https://admin.dump-in.co.kr/api/swagger>
 
+<details>
 
+<summary>Swagger 이미지</summary>
 
-<!-- CONTRIBUTING -->
-## Contributing
+![1](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/beecf55a-de66-4722-b237-17f46f78bc27)
+![2](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/13fd5bec-4412-4d05-adb9-9c90dad679a9)
 
-Contributions are what make the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+</details>
 
-If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement".
-Don't forget to give the project a star! Thanks again!
+<br/>
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- LICENSE -->
-## License
-
-Distributed under the MIT License. See `LICENSE.txt` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- CONTACT -->
-## Contact
-
-Your Name - [@twitter_handle](https://twitter.com/twitter_handle) - email@email_client.com
-
-Project Link: [https://github.com/github_username/repo_name](https://github.com/github_username/repo_name)
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* []()
-* []()
-* []()
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
-
-
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-
-[stars-shield]: https://img.shields.io/github/stars/develop-pix/dump-in-Admin-BE.svg?style=for-the-badge
-[stars-url]: https://github.com/develop-pix/dump-in-Admin-BE/stargazers
-[issues-shield]: https://img.shields.io/github/issues/develop-pix/dump-in-Admin-BE.svg?style=for-the-badge
-[issues-url]: https://github.com/develop-pix/dump-in-Admin-BE/issues
-[license-shield]: https://img.shields.io/github/license/develop-pix/dump-in-Admin-BE.svg?style=for-the-badge
-[license-url]: https://github.com/develop-pix/dump-in-Admin-BE/blob/master/LICENSE.txt
-
-[Next.js]: https://img.shields.io/badge/nestjs-E0234E?style=for-the-badge&logo=nestjs&logoColor=white
-[Next-url]: https://nextjs.org/
+[NestJS]: https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white
+[TypeScript]: https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white
+[TypeORM]: https://img.shields.io/badge/TypeORM-%2334567c.svg?style=for-the-badge&logo=adminer&logoColor=white
+[PostgreSQL]: https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white
+[Swagger]: https://img.shields.io/badge/swagger-%23Clojure.svg?style=for-the-badge&logo=swagger&logoColor=white
+[GitHubActions]: https://img.shields.io/badge/GitHub%20Actions-%232088ff.svg?style=for-the-badge&logo=githubactions&logoColor=white
+[GitHub]: https://img.shields.io/badge/GitHub%20Project-%23181717.svg?style=for-the-badge&logo=github&logoColor=white
+[Notion]: https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white
