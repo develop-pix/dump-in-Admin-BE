@@ -1,4 +1,4 @@
-interface ErrorResponseProps {
+interface ResponseProps {
   status: number;
   message: string;
   success: boolean;
@@ -10,7 +10,7 @@ export const createSchema = ({
   message,
   success,
   data,
-}: ErrorResponseProps) => ({
+}: ResponseProps) => ({
   properties: {
     code: { enum: [status] },
     message: {
