@@ -15,6 +15,7 @@ import {
 } from './common/config/winston.config';
 import { envConfigOptions } from './common/config/env.config';
 import { WinstonModule } from 'nest-winston';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { WinstonModule } from 'nest-winston';
     AuthModule,
     HashtagModule,
     ReviewModule,
+    DashboardModule,
   ],
 })
 export class AppModule {}
