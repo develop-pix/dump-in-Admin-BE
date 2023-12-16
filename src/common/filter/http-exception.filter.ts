@@ -36,7 +36,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
       ip: logIp,
       url: req.url,
       response: formattedResponse,
-      stack,
+      stack: process.env.NODE_ENV === 'production' ? undefined : stack,
     };
     this.logger.error(log);
 

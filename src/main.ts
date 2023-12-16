@@ -23,7 +23,7 @@ declare module 'express-session' {
 }
 
 async function bootstrap(): Promise<void> {
-  const maxRequests = process.env.NODE_ENV === 'production' ? 5 : 15;
+  const maxRequests = process.env.NODE_ENV === 'production' ? 3 : 15;
   const minute = 60 * 1000;
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
@@ -60,8 +60,8 @@ async function bootstrap(): Promise<void> {
   };
 
   const limiter = rateLimit({
-    windowMs: 15 * minute,
-    max: maxRequests * 6,
+    windowMs: minute,
+    max: maxRequests,
     message: '요청 횟수가 너무 많습니다. 잠시 후에 시도하세요.',
   });
 

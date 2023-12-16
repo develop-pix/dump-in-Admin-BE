@@ -8,6 +8,7 @@ import {
 import { Injectable } from '@nestjs/common';
 import { PaginationProps } from '../../common/dto/get-pagination-query.dto';
 import { Review } from '../entity/review.entity';
+import { RawCountByDate } from '../../dashboard/dto/get-statistics.dto';
 
 @Injectable()
 export class ReviewRepository extends Repository<Review> {
@@ -37,6 +38,16 @@ export class ReviewRepository extends Repository<Review> {
   async updateReview(id: number, review: Review): Promise<boolean> {
     const result = await this.update(id, review);
     return result.affected > 0;
+  }
+
+  async countReviewsByDate(): Promise<RawCountByDate[]> {
+    const queryResult = await this.createQueryBuilder('review')
+      .select(['DATE(created_at) as created', 'COUNT(id) as review'])
+      .groupBy('created')
+      .orderBy('created', 'DESC')
+      .getRawMany();
+
+    return queryResult;
   }
 
   private findReviewManyOptions(review: Review): FindManyOptions<Review> {

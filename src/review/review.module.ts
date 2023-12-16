@@ -15,5 +15,6 @@ import { PhotoBoothModule } from '../photo-booth/photo-booth.module';
   ],
   controllers: [ReviewController],
   providers: [ReviewService, ReviewRepository],
+  exports: [ReviewRepository],
 })
 export class ReviewModule {}

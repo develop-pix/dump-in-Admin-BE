@@ -8,6 +8,7 @@ import {
 import { User } from '../entity/user.entity';
 import { Injectable } from '@nestjs/common';
 import { PaginationProps } from 'src/common/dto/get-pagination-query.dto';
+import { RawCountByDate } from '../../dashboard/dto/get-statistics.dto';
 
 @Injectable()
 export class UserRepository extends Repository<User> {
@@ -30,6 +31,17 @@ export class UserRepository extends Repository<User> {
   async findOneUserBy(user: User): Promise<User> {
     const where = this.findUserOptionsWhere(user);
     return await this.findOneBy(where);
+  }
+
+  async countUsersByDate(): Promise<RawCountByDate[]> {
+    const queryResult = await this.createQueryBuilder('user')
+      .select(['DATE(created_at) as created', 'COUNT(id) as user'])
+      .where('deleted_at IS NULL')
+      .groupBy('created')
+      .orderBy('created', 'DESC')
+      .getRawMany();
+
+    return queryResult;
   }
 
   private findUserManyOptions(page: PaginationProps): FindManyOptions<User> {
