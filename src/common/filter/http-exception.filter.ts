@@ -7,6 +7,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
+import { createLog, formattedResponse } from '../config/log-helper.config';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -17,31 +18,20 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const res = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();
     const stack = exception.stack;
-    const logIp = req.ip;
 
     if (!(exception instanceof HttpException)) {
       exception = new InternalServerErrorException();
     }
 
     const statusCode = (exception as HttpException).getStatus();
-    const response = (exception as HttpException).getResponse();
-    const formattedResponse = {
-      code: statusCode,
-      message: response['message'] || 'Internal Server Error',
-      success: false,
-      data: '',
-    };
+    const getResponse = (exception as HttpException).getResponse();
+    const response = formattedResponse(
+      statusCode,
+      getResponse['message'] || 'Internal Server Error',
+    );
 
-    const log = {
-      ip: logIp,
-      url: req.url,
-      response: formattedResponse,
-      stack: process.env.NODE_ENV === 'production' ? undefined : stack,
-    };
-    this.logger.error(log);
+    this.logger.error(createLog({ req, stack, response: response }));
 
-    res
-      .status((exception as HttpException).getStatus())
-      .json(formattedResponse);
+    res.status(statusCode).json(response);
   }
 }
