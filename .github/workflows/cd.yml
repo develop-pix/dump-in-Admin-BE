@@ -34,17 +34,8 @@ jobs:
           port: ${{ secrets.AWS_INSTANCE_PORT }}
           script: |
             cd ${{ secrets.AWS_INSTANCE_PATH }} 
-
-            if [ -f pid.txt ]; then
-
-              pid=$(cat pid.txt)
-
-              kill $pid
-              echo "Stopped the previous process with PID $pid"
-            fi
-
             git pull origin main
             npm install
             npm run build
-            nohup npm run start:prod > output.log 2>&1 &
-            echo $! > pid.txt
+            pm2 restart admin-server
+            pm2 list
