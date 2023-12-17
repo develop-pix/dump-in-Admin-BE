@@ -17,7 +17,10 @@ export class DashboardController {
   })
   async combineResultsByDate(): Promise<ResponseEntity<GetStatisticsDto[]>> {
     const response = await this.dashboardService.combineResultsByDate();
-    return ResponseEntity.OK_WITH('날짜별 리뷰수, 가입자수 입니다.', response);
+    return ResponseEntity.OK_WITH(
+      '날짜별 리뷰수, 가입자수 입니다.',
+      response.map((result) => new GetStatisticsDto(result)),
+    );
   }
 
   @Get('user')
@@ -27,7 +30,10 @@ export class DashboardController {
   })
   async countUsersByDate(): Promise<ResponseEntity<GetStatisticsDto[]>> {
     const response = await this.dashboardService.countUsersByDate();
-    return ResponseEntity.OK_WITH('날짜별 유저수 입니다.', response);
+    return ResponseEntity.OK_WITH(
+      '날짜별 유저수 입니다.',
+      response.map((result) => new GetStatisticsDto(result)),
+    );
   }
 
   @Get('review')
@@ -37,6 +43,9 @@ export class DashboardController {
   })
   async countReviewsByDate(): Promise<ResponseEntity<GetStatisticsDto[]>> {
     const response = await this.dashboardService.countReviewsByDate();
-    return ResponseEntity.OK_WITH('날짜별 리뷰수 입니다.', response);
+    return ResponseEntity.OK_WITH(
+      '날짜별 리뷰수 입니다.',
+      response.map((result) => new GetStatisticsDto(result)),
+    );
   }
 }
