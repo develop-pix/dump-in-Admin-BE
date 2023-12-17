@@ -3,7 +3,7 @@ import { plainToClass } from 'class-transformer';
 import { IsEnum, IsString, validateSync } from 'class-validator';
 
 export const envConfigOptions: ConfigModuleOptions = {
-  envFilePath: `.env.${process.env.NODE_ENV}`,
+  envFilePath: [`.env.${process.env.NODE_ENV}`, '.env'],
   isGlobal: true,
   validate,
 };
