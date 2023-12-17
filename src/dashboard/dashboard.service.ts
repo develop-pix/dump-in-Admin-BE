@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserRepository } from '../user/repository/user.repository';
-import { GetStatisticsDto, RawCountByDate } from './dto/get-statistics.dto';
+import { RawCountByDate } from './dto/get-statistics.dto';
 import { ReviewRepository } from '../review/repository/review.repository';
 
 @Injectable()
@@ -10,46 +10,39 @@ export class DashboardService {
     private readonly reviewRepository: ReviewRepository,
   ) {}
 
-  async countUsersByDate(): Promise<GetStatisticsDto[]> {
+  async countUsersByDate(): Promise<RawCountByDate[]> {
     const results = await this.userRepository.countUsersByDate();
     if (!results.length) {
       throw new NotFoundException(
         '날짜별 가입 유저수 조회 요청에 실패했습니다.',
       );
     }
-    return results.map((result) => new GetStatisticsDto(result));
+    return results;
   }
 
-  async countReviewsByDate(): Promise<GetStatisticsDto[]> {
+  async countReviewsByDate(): Promise<RawCountByDate[]> {
     const results = await this.reviewRepository.countReviewsByDate();
     if (!results.length) {
       throw new NotFoundException('날짜별 리뷰수 조회 요청에 실패했습니다.');
     }
-
-    return results.map((result) => new GetStatisticsDto(result));
+    return results;
   }
 
-  async combineResultsByDate(): Promise<GetStatisticsDto[]> {
+  async combineResultsByDate(): Promise<RawCountByDate[]> {
     const [userResults, reviewResults] = await Promise.all([
-      this.userRepository.countUsersByDate(),
-      this.reviewRepository.countReviewsByDate(),
+      this.countUsersByDate(),
+      this.countReviewsByDate(),
     ]);
-
-    if (!userResults.length || !reviewResults.length) {
-      throw new NotFoundException(
-        '날짜별 리뷰수, 가입자수 조회 요청에 실패했습니다.',
-      );
-    }
 
     const mergedResults: Map<string, RawCountByDate> = new Map();
 
     const mergeResult = (result: RawCountByDate): void => {
-      const date = result.created;
+      const date = result.created.toISOString();
       const existingResult = mergedResults.get(date);
 
       if (!existingResult) {
         mergedResults.set(date, {
-          created: date,
+          created: new Date(date),
           user: result.user,
           review: result.review,
         });
@@ -61,8 +54,8 @@ export class DashboardService {
 
     [...userResults, ...reviewResults].forEach((result) => mergeResult(result));
 
-    return Array.from(mergedResults.values())
-      .map((result) => new GetStatisticsDto(result))
-      .sort((a, b) => b.date.getTime() - a.date.getTime());
+    return Array.from(mergedResults.values()).sort(
+      (a, b) => b.created.getTime() - a.created.getTime(),
+    );
   }
 }
