@@ -20,32 +20,23 @@ export class EventRepository extends Repository<Events> {
     );
   }
 
-  async saveEvent(event: Events): Promise<Events> {
-    return await this.save(event);
-  }
-
-  async findEventByOptionAndCount(
+  findEventByOptionAndCount(
     event: Events,
     page: PaginationProps,
   ): Promise<[Events[], number]> {
     const { skip, take } = page;
     const options = this.findEventManyOptions(event);
-    return await this.findAndCount({ skip, take, ...options });
+    return this.findAndCount({ skip, take, ...options });
   }
 
-  async findOneEvent(event: Events): Promise<Events> {
+  findOneEvent(event: Events): Promise<Events> {
     const options = this.findEventManyOptions(event);
-    return await this.findOne(options);
+    return this.findOne(options);
   }
 
-  async updateEvent(id: number, event: Events): Promise<boolean> {
-    const result = await this.update({ id }, event);
-    return result.affected > 0;
-  }
-
-  async isExistEvent(event: Events): Promise<boolean> {
+  isExistEvent(event: Events): Promise<boolean> {
     const where = this.findEventOptionsWhere(event);
-    return await this.exist({ where });
+    return this.exist({ where });
   }
 
   private findEventManyOptions(event: Events): FindManyOptions<Events> {

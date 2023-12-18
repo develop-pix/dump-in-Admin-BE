@@ -8,6 +8,8 @@ import { Events } from './entity/event.entity';
 import { PhotoBoothService } from '../photo-booth/photo-booth.service';
 import { EventCreateProps } from './dto/post-event.dto';
 import { EventUpdateProps } from './dto/patch-event.dto';
+import { plainToInstance } from 'class-transformer';
+import { EventImage } from './entity/event-image.entity';
 
 @Injectable()
 export class EventService {
@@ -66,12 +68,14 @@ export class EventService {
      *       - 해시태그와 이벤트 연결
      */
 
-    await this.photoBoothService.isExistByBrandName(createProps.brandName);
+    const [photoBoothBrand, eventImages] = await Promise.all([
+      this.photoBoothService.findOneBrandByName(createProps.brandName),
+      createProps.images?.map((image) => EventImage.create(image)),
+    ]);
 
-    const event = await this.eventRepository.saveEvent(
-      Events.create(createProps),
+    this.eventRepository.save(
+      plainToInstance(Events, { photoBoothBrand, eventImages, ...createProps }),
     );
-    await this.hashtagService.handleHashtags(event, createProps.hashtags);
 
     return true;
   }
@@ -85,24 +89,30 @@ export class EventService {
      * @param updateProps
      *        - 수정이 필요한 데이터 일부
      *        - 제목, 내용, 업체명, 대표이미지, 시작일, 마감일, 공개여부, 해시태그들
-     * @desc 이벤트와 이벤트 관련 해시태그 수정
-     * @TODO 이벤트 이미지를 여러장 수정
+     * @desc  - 이벤트와 이벤트 관련 해시태그 수정
+     *        - 이벤트 이미지를 여러장 수정
      */
 
-    await this.photoBoothService.isExistByBrandName(updateProps.brandName);
-
-    const isUpdated = await this.eventRepository.updateEvent(
-      id,
-      Events.updateBy(updateProps),
+    const isExistEvent = await this.eventRepository.isExistEvent(
+      Events.byId(id),
     );
 
-    if (!isUpdated) {
-      throw new NotFoundException(`이벤트가 업데이트되지 않았습니다. ID:${id}`);
+    if (!isExistEvent) {
+      throw new NotFoundException('업데이트할 이벤트가 없습니다.');
     }
 
-    await this.hashtagService.handleHashtags(
-      Events.byId(id),
-      updateProps.hashtags,
+    const [photoBoothBrand, eventImages] = await Promise.all([
+      this.photoBoothService.findOneBrandByName(updateProps.brandName),
+      updateProps.images?.map((image) => EventImage.create(image)),
+    ]);
+
+    this.eventRepository.save(
+      plainToInstance(Events, {
+        id,
+        eventImages,
+        photoBoothBrand,
+        ...updateProps,
+      }),
     );
 
     return true;
