@@ -23,8 +23,11 @@ export class CreateEventDto extends EventReqBodyDto {
   @IsNotEmpty()
   endDate: Date;
 
-  @IsNotEmpty()
+  @IsNotEmpty({ each: true })
   hashtags: string[];
+
+  @IsNotEmpty({ each: true })
+  images: string[];
 
   getCreateProps(): EventCreateProps {
     return {
@@ -35,9 +38,15 @@ export class CreateEventDto extends EventReqBodyDto {
       isPublic: this.isPublic,
       startDate: this.startDate,
       endDate: this.endDate,
-      hashtags: (this.hashtags || []).filter((tag) => tag.trim() !== ''),
+      hashtags: this.hashtags,
+      images: this.images,
+      createdAt: new Date(),
+      updatedAt: new Date(),
     };
   }
 }
 
-export interface EventCreateProps extends EventReqBodyProps {}
+export interface EventCreateProps extends EventReqBodyProps {
+  createdAt: Date;
+  updatedAt: Date;
+}

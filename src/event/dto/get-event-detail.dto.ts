@@ -42,4 +42,12 @@ export class GetEventDetailDto extends GetEventListDto {
   get isPublic(): boolean {
     return this._isPublic;
   }
+
+  @ApiProperty({
+    description: '이벤트 이미지 url',
+  })
+  @Expose()
+  get images(): string[] {
+    return this._eventImages.map((images) => images.eventImageUrl);
+  }
 }

@@ -2,10 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   ArrayMaxSize,
   IsArray,
-  IsBoolean,
   IsDate,
   IsNotEmpty,
   IsString,
+  IsUrl,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -20,6 +20,7 @@ export interface EventReqBodyProps {
   startDate: Date;
   endDate: Date;
   hashtags: string[];
+  images: string[];
 }
 
 export class EventReqBodyDto implements EventReqBodyProps {
@@ -44,9 +45,9 @@ export class EventReqBodyDto implements EventReqBodyProps {
   @ApiProperty({
     description: '이벤트의 대표 이미지',
   })
-  @IsString()
   @MinLength(3)
   @MaxLength(256)
+  @IsUrl()
   @Type(() => String)
   mainThumbnailUrl: string;
 
@@ -61,8 +62,10 @@ export class EventReqBodyDto implements EventReqBodyProps {
 
   @ApiProperty({
     description: '이벤트 공개 여부',
+    example: 'true',
   })
-  @IsBoolean()
+  @IsString()
+  @Type(() => Boolean)
   isPublic: boolean;
 
   @ApiProperty({
@@ -88,4 +91,13 @@ export class EventReqBodyDto implements EventReqBodyProps {
   @ArrayMaxSize(5, { message: '해시태그는 최대 5개까지 입력 가능합니다.' })
   @IsString({ each: true })
   hashtags: string[];
+
+  @ApiProperty({
+    description: '포토부스 업체 이미지 URL (최대 4개)',
+    example: ['url', 'url2', 'url3', 'url4'],
+  })
+  @IsArray()
+  @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
+  @IsUrl({}, { each: true })
+  images: string[];
 }
