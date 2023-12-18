@@ -28,7 +28,7 @@ export class EventReqBodyDto implements EventReqBodyProps {
     description: '이벤트의 제목',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   @Type(() => String)
   title: string;
@@ -37,7 +37,7 @@ export class EventReqBodyDto implements EventReqBodyProps {
     description: '이벤트의 내용',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(512)
   @Type(() => String)
   content: string;
@@ -45,7 +45,7 @@ export class EventReqBodyDto implements EventReqBodyProps {
   @ApiProperty({
     description: '이벤트의 대표 이미지',
   })
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(256)
   @IsUrl()
   @Type(() => String)
@@ -55,7 +55,7 @@ export class EventReqBodyDto implements EventReqBodyProps {
     description: '이벤트와 관련된 포토부스 업체명',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   @Type(() => String)
   brandName: string;
