@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { GetAdminSessionDto } from '../user/dto/get-session-admin.dto';
 import { UserService } from '../user/user.service';
-import { AdminLogInProps } from './dto/post-login-req.dto';
+import { AdminLogInProps } from './dto/post-login.dto';
 
 @Injectable()
 export class AuthService {
