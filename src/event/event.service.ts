@@ -10,6 +10,8 @@ import { EventCreateProps } from './dto/post-event.dto';
 import { EventUpdateProps } from './dto/patch-event.dto';
 import { plainToInstance } from 'class-transformer';
 import { EventImage } from './entity/event-image.entity';
+import { EventHashtag } from '../hashtag/entity/event-hashtag.entity';
+import { PhotoBoothBrand } from '../photo-booth/entity/photo-booth-brand.entity';
 
 @Injectable()
 export class EventService {
@@ -68,13 +70,16 @@ export class EventService {
      *       - 해시태그와 이벤트 연결
      */
 
-    const [photoBoothBrand, eventImages] = await Promise.all([
-      this.photoBoothService.findOneBrandByName(createProps.brandName),
-      createProps.images?.map((image) => EventImage.create(image)),
-    ]);
+    const [photoBoothBrand, eventImages, eventHashtags] =
+      await this.prepareEventAttributes(createProps);
 
-    this.eventRepository.save(
-      plainToInstance(Events, { photoBoothBrand, eventImages, ...createProps }),
+    await this.eventRepository.save(
+      plainToInstance(Events, {
+        photoBoothBrand,
+        eventImages,
+        eventHashtags,
+        ...createProps,
+      }),
     );
 
     return true;
@@ -93,28 +98,40 @@ export class EventService {
      *        - 이벤트 이미지를 여러장 수정
      */
 
-    const isExistEvent = await this.eventRepository.isExistEvent(
-      Events.byId(id),
-    );
+    const eventId = Events.byId(id);
+    const isExistEvent = await this.eventRepository.isExistEvent(eventId);
 
     if (!isExistEvent) {
       throw new NotFoundException('업데이트할 이벤트가 없습니다.');
     }
 
-    const [photoBoothBrand, eventImages] = await Promise.all([
-      this.photoBoothService.findOneBrandByName(updateProps.brandName),
-      updateProps.images?.map((image) => EventImage.create(image)),
-    ]);
+    const [photoBoothBrand, eventImages, eventHashtags] =
+      await this.prepareEventAttributes(updateProps);
 
-    this.eventRepository.save(
+    await this.hashtagService.handleEventHashtags(eventId);
+
+    await this.eventRepository.save(
       plainToInstance(Events, {
         id,
         eventImages,
+        eventHashtags,
         photoBoothBrand,
         ...updateProps,
       }),
     );
 
     return true;
+  }
+
+  private async prepareEventAttributes(
+    props: EventCreateProps | EventUpdateProps,
+  ): Promise<[PhotoBoothBrand, EventImage[], EventHashtag[]]> {
+    return Promise.all([
+      this.photoBoothService.findOneBrandByName(props.brandName),
+      props.images?.map((image) => EventImage.create(image)),
+      (await this.hashtagService.createHashtags(props.hashtags)).map(
+        (hashtag) => EventHashtag.create(hashtag),
+      ),
+    ]);
   }
 }
