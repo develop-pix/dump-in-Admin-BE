@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HashtagService } from './hashtag.service';
 import { HashtagRepository } from './repository/hastag.repository';
-import { EntityToHashtagRepository } from './repository/entity-hashtag.repository';
+import { BrandHashtagRepository } from './repository/brand-hashtag.repository';
 
 class MockHashtagRepository {}
 
@@ -10,7 +10,7 @@ class MockEntityToHashtagRepository {}
 describe('HashtagService', () => {
   let hashtagService: HashtagService;
   let hashtagRepository: HashtagRepository;
-  let entityToHashtagRepository: EntityToHashtagRepository;
+  let entityToHashtagRepository: BrandHashtagRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -18,7 +18,7 @@ describe('HashtagService', () => {
         HashtagService,
         { provide: HashtagRepository, useClass: MockHashtagRepository },
         {
-          provide: EntityToHashtagRepository,
+          provide: BrandHashtagRepository,
           useClass: MockEntityToHashtagRepository,
         },
       ],
@@ -26,8 +26,8 @@ describe('HashtagService', () => {
 
     hashtagService = module.get<HashtagService>(HashtagService);
     hashtagRepository = module.get<HashtagRepository>(HashtagRepository);
-    entityToHashtagRepository = module.get<EntityToHashtagRepository>(
-      EntityToHashtagRepository,
+    entityToHashtagRepository = module.get<BrandHashtagRepository>(
+      BrandHashtagRepository,
     );
   });
 
