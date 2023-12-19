@@ -21,27 +21,23 @@ export class UserRepository extends Repository<User> {
     );
   }
 
-  async findUserByOptionAndCount(
-    page: PaginationProps,
-  ): Promise<[User[], number]> {
+  findUserByOptionAndCount(page: PaginationProps): Promise<[User[], number]> {
     const options = this.findUserManyOptions(page);
-    return await this.findAndCount(options);
+    return this.findAndCount(options);
   }
 
-  async findOneUserBy(user: User): Promise<User> {
+  findOneUserBy(user: User): Promise<User> {
     const where = this.findUserOptionsWhere(user);
-    return await this.findOneBy(where);
+    return this.findOneBy(where);
   }
 
-  async countUsersByDate(): Promise<RawCountByDate[]> {
-    const queryResult = await this.createQueryBuilder('user')
+  countUsersByDate(): Promise<RawCountByDate[]> {
+    return this.createQueryBuilder('user')
       .select(['DATE(created_at) as created', 'COUNT(id) as user'])
       .where('deleted_at IS NULL')
       .groupBy('created')
       .orderBy('created', 'DESC')
       .getRawMany();
-
-    return queryResult;
   }
 
   private findUserManyOptions(page: PaginationProps): FindManyOptions<User> {
@@ -51,6 +47,7 @@ export class UserRepository extends Repository<User> {
       id: true,
       username: true,
       nickname: true,
+      reviews: { id: true },
       email: true,
       createdAt: true,
       deletedAt: true,

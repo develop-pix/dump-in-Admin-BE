@@ -4,6 +4,7 @@ import { FindReviewOptionsProps } from './dto/get-review-query.dto';
 import { GetReviewListDto } from './dto/get-review-list.dto';
 import { ReviewRepository } from './repository/review.repository';
 import { Review } from './entity/review.entity';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ReviewService {
@@ -51,17 +52,18 @@ export class ReviewService {
 
   /**
    * @param id - 삭제할 리뷰 id
-   * @desc 해당 리뷰의 is_deleted 컬럼을 true로 수정
+   * @desc 해당 리뷰의 is_deleted 컬럼을 true로 수정 (soft)
    */
   async removeReview(id: number): Promise<boolean> {
-    const isDeleted = await this.reviewRepository.updateReview(
-      id,
-      Review.delete(true),
-    );
+    const isExistReview = this.reviewRepository.hasId(Review.byId(id));
 
-    if (!isDeleted) {
-      throw new NotFoundException('리뷰 삭제가 불가능합니다.');
+    if (!isExistReview) {
+      throw new NotFoundException('리뷰를 찾지 못했습니다.');
     }
+
+    await this.reviewRepository.save(
+      plainToInstance(Review, { id, isDelete: true }),
+    );
 
     return true;
   }

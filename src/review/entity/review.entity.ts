@@ -83,12 +83,4 @@ export class Review extends BaseDateEntity {
 
     return review;
   }
-
-  static delete(isDeleted: boolean): Review {
-    const review = new Review();
-
-    review.isDeleted = isDeleted;
-
-    return review;
-  }
 }
