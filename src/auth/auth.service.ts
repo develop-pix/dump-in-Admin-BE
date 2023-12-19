@@ -8,16 +8,15 @@ import { AdminLogInProps } from './dto/post-login.dto';
 export class AuthService {
   constructor(private readonly userService: UserService) {}
 
+  /**
+   * @param props - 유저 정보 (username, password)
+   * @desc - 유저 검증 로직
+   *       - props에서 전달받은 비밀번호를 DB에 저장된 장고 패스워드와 비교
+   */
   async validateAdminForLogIn(
     props: AdminLogInProps,
     session: Record<string, GetAdminSessionDto>,
   ): Promise<GetAdminSessionDto> {
-    /**
-     * @param props - 컨트롤러에서 받은 유저 정보 (username, password)
-     * @desc - 유저 검증 로직
-     *       - props에서 전달받은 비밀번호를 DB에 저장된 장고 패스워드와 비교
-     */
-
     const admin = await this.userService.findOneAdminBy(props);
     const parsingDBPassword = admin.password.replace('bcrypt_sha256$', '');
     const isSamePassword = await bcrypt.compare(
