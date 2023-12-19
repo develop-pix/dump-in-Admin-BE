@@ -47,6 +47,12 @@ export class EventService {
     ];
   }
 
+  /**
+   * @param pageProps - Pagination (항목수, 페이지)
+   * @param query - Request Query (업체명, 제목)
+   * @desc - 쿼리 파라미터에 맞는 이벤트 목록 조회
+   *       - 쿼리 옵션이 없으면 전체 이벤트 조회
+   */
   async findOneEventById(id: number): Promise<Events> {
     const event = await this.eventRepository.findOneEvent(Events.byId(id));
 
@@ -119,7 +125,6 @@ export class EventService {
   }
 
   /**
-   * @param id - 이벤트 id
    * @param props - 이벤트 생성 및 수정에 필요한 속성들
    * @desc  - 이벤트 관련 업체명 가져오기
    *        - 이벤트 관련 해시태그 가져오기
@@ -130,7 +135,7 @@ export class EventService {
   ): Promise<[PhotoBoothBrand, EventImage[], EventHashtag[]]> {
     const [photoBoothBrand, eventImages, hashtags] = await Promise.all([
       this.photoBoothService.findOneBrandByName(props.brandName),
-      props.images.map((image) => EventImage.create(image)),
+      props.images?.map((image) => EventImage.create(image)),
       this.hashtagService.createHashtags(props.hashtags),
     ]);
 
