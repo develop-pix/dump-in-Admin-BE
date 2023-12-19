@@ -34,11 +34,6 @@ export class EventRepository extends Repository<Events> {
     return this.findOne(options);
   }
 
-  isExistEvent(event: Events): Promise<boolean> {
-    const where = this.findEventOptionsWhere(event);
-    return this.exist({ where });
-  }
-
   private findEventManyOptions(event: Events): FindManyOptions<Events> {
     const where = this.findEventOptionsWhere(event);
     const relations = {

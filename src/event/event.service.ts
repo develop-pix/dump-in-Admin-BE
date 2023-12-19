@@ -99,7 +99,7 @@ export class EventService {
      */
 
     const eventId = Events.byId(id);
-    const isExistEvent = await this.eventRepository.isExistEvent(eventId);
+    const isExistEvent = this.eventRepository.hasId(eventId);
 
     if (!isExistEvent) {
       throw new NotFoundException('업데이트할 이벤트가 없습니다.');
