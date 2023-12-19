@@ -41,7 +41,6 @@ export class UpdatePhotoBoothDto extends PickType(PhotoBoothReqBodyDto, [
       roadAddress: this.roadAddress,
       brandName: this.brandName,
       operationTime: this.operationTime,
-      isDelete: false,
     };
   }
 }
@@ -83,6 +82,5 @@ export class UpdateBoothBrandDto extends BrandReqBodyDto {
 
 export interface BrandUpdateProps extends BrandReqBodyProps {}
 
-export interface PhotoBoothUpdateProps extends Partial<PhotoBoothReqBodyProps> {
-  isDelete: boolean;
-}
+export interface PhotoBoothUpdateProps
+  extends Partial<PhotoBoothReqBodyProps> {}

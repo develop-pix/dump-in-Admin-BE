@@ -10,10 +10,10 @@ export class PhotoBoothBrand {
   @PrimaryGeneratedColumn({ name: 'id' })
   id: number;
 
-  @Column({ type: 'varchar' })
+  @Column()
   name: string;
 
-  @Column({ type: 'varchar' })
+  @Column()
   description: string;
 
   @Column({ name: 'photo_booth_url' })
@@ -43,7 +43,7 @@ export class PhotoBoothBrand {
   @OneToMany(() => BrandImage, (image) => image.photoBoothBrand, {
     cascade: true,
   })
-  images: BrandImage[];
+  brandImages: BrandImage[];
 
   static of({ name, isEvent }: FindBrandOptionProps): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();

@@ -21,7 +21,7 @@ export class HiddenBoothRepository extends Repository<HiddenPhotoBooth> {
     );
   }
 
-  async findHiddenBoothByOptionAndCount(
+  findHiddenBoothByOptionAndCount(
     booth: HiddenPhotoBooth,
     page: PaginationProps,
   ): Promise<[HiddenPhotoBooth[], number]> {

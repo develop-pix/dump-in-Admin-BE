@@ -10,12 +10,16 @@ export class BrandHashtag {
   @ManyToOne(
     () => PhotoBoothBrand,
     (photoBoothBrand: PhotoBoothBrand) => photoBoothBrand.brandHashtags,
+    {
+      orphanedRowAction: 'delete',
+    },
   )
   @JoinColumn({ name: 'photo_booth_brand_id' })
   photoBoothBrand: PhotoBoothBrand;
 
   @ManyToOne(() => Hashtag, (hashtag: Hashtag) => hashtag.brandhashtags, {
     eager: true,
+    orphanedRowAction: 'delete',
   })
   @JoinColumn({ name: 'hashtag_id' })
   hashtag: Hashtag;
@@ -28,11 +32,10 @@ export class BrandHashtag {
     return brandHashtag;
   }
 
-  static create(brand: PhotoBoothBrand, hashtag: Hashtag): BrandHashtag {
+  static create(hashtag: Hashtag): BrandHashtag {
     const brandHashtag = new BrandHashtag();
 
     brandHashtag.hashtag = hashtag;
-    brandHashtag.photoBoothBrand = brand;
 
     return brandHashtag;
   }
