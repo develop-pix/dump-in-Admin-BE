@@ -1,17 +1,11 @@
 import { Request } from 'express';
+import { ResponseEntity } from '../entity/response.entity';
 
 interface createLogProps {
   req: Request;
   stack?: string | undefined;
-  response?: Record<string, unknown>;
+  response?: ResponseEntity<string>;
 }
-
-export const formattedResponse = (code: number, message: string) => ({
-  code: code,
-  message: message,
-  success: false,
-  data: '',
-});
 
 export const createLog = ({ req, response, stack }: createLogProps) => ({
   ip: req.ip,

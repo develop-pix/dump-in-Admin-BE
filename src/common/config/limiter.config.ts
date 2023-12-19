@@ -1,8 +1,9 @@
 import { rateLimit } from 'express-rate-limit';
 import { GetAdminSessionDto } from '../../user/dto/get-session-admin.dto';
 import { Request } from 'express';
-import { createLog, formattedResponse } from './log-helper.config';
+import { createLog } from './log-helper.config';
 import { HttpStatus, Logger } from '@nestjs/common';
+import { ResponseEntity } from '../entity/response.entity';
 
 declare module 'express-session' {
   interface SessionData {
@@ -18,9 +19,9 @@ function createRateLimiter(windowMs: number) {
     windowMs,
     max: maxRequests,
     message: (req: Request) => {
-      const response = formattedResponse(
-        HttpStatus.TOO_MANY_REQUESTS,
+      const response = ResponseEntity.EXCEPTION(
         '요청 횟수가 너무 많습니다. 잠시 후 다시 시도해주세요.',
+        HttpStatus.TOO_MANY_REQUESTS,
       );
       logger.error(createLog({ req, response }));
       return response;

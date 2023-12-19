@@ -7,7 +7,8 @@ import {
   Logger,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { createLog, formattedResponse } from '../config/log-helper.config';
+import { createLog } from '../config/log-helper.config';
+import { ResponseEntity } from '../entity/response.entity';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -25,12 +26,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     const statusCode = (exception as HttpException).getStatus();
     const getResponse = (exception as HttpException).getResponse();
-    const response = formattedResponse(
-      statusCode,
+    const response = ResponseEntity.EXCEPTION(
       getResponse['message'] || 'Internal Server Error',
+      statusCode,
     );
 
-    this.logger.error(createLog({ req, stack, response: response }));
+    this.logger.error(createLog({ req, stack, response }));
 
     res.status(statusCode).json(response);
   }
