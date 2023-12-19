@@ -4,6 +4,7 @@ import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
 import { BrandHashtag } from '../../hashtag/entity/brand-hashtag.entity';
 import { PhotoBooth } from '../entity/photo-booth.entity';
 import { HiddenPhotoBooth } from '../entity/photo-booth-hidden.entity';
+import { BrandImage } from '../entity/photo-booth-brand-image.entity';
 
 export class GetPhotoBoothListDto {
   @Exclude() readonly _id: string;
@@ -84,6 +85,7 @@ export class GetBoothBrandListDto {
   @Exclude() readonly _photoBoothUrl: string;
   @Exclude() readonly _isEvent: boolean;
   @Exclude() readonly _brandHashtags: BrandHashtag[];
+  @Exclude() readonly _brandImages: BrandImage[];
 
   constructor(data: PhotoBoothBrand) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));

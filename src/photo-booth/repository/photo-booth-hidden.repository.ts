@@ -27,20 +27,12 @@ export class HiddenBoothRepository extends Repository<HiddenPhotoBooth> {
   ): Promise<[HiddenPhotoBooth[], number]> {
     const { take, skip } = page;
     const options = this.findHiddenBoothManyOptions(booth);
-    return await this.findAndCount({ take, skip, ...options });
+    return this.findAndCount({ take, skip, ...options });
   }
 
-  async findOneHiddenBooth(booth: HiddenPhotoBooth): Promise<HiddenPhotoBooth> {
+  findOneHiddenBooth(booth: HiddenPhotoBooth): Promise<HiddenPhotoBooth> {
     const options = this.findHiddenBoothManyOptions(booth);
-    return await this.findOne(options);
-  }
-
-  async updateHiddenBooth(
-    id: string,
-    booth: HiddenPhotoBooth,
-  ): Promise<boolean> {
-    const result = await this.update({ id }, booth);
-    return result.affected > 0;
+    return this.findOne(options);
   }
 
   private findHiddenBoothManyOptions(

@@ -1,7 +1,6 @@
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 import { FindBoothOptionProps } from '../dto/get-photo-booth-query.dto';
-import { PhotoBoothUpdateProps } from '../dto/patch-photo-booth.dto';
 
 @Entity('photo_booth_raw_data')
 export class HiddenPhotoBooth extends BaseDateEntity {
@@ -45,24 +44,6 @@ export class HiddenPhotoBooth extends BaseDateEntity {
     const hiddenBooth = new HiddenPhotoBooth();
 
     hiddenBooth.id = id;
-
-    return hiddenBooth;
-  }
-
-  static updateBy({
-    name,
-    location,
-    streetAddress,
-    roadAddress,
-    isDelete,
-  }: PhotoBoothUpdateProps): HiddenPhotoBooth {
-    const hiddenBooth = new HiddenPhotoBooth();
-
-    hiddenBooth.name = name;
-    hiddenBooth.location = location;
-    hiddenBooth.streetAddress = streetAddress;
-    hiddenBooth.roadAddress = roadAddress;
-    hiddenBooth.preprocessedAt = isDelete ? new Date() : null;
 
     return hiddenBooth;
   }

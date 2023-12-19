@@ -103,6 +103,7 @@ export interface BrandReqBodyProps {
   description: string;
   photoBoothUrl: string;
   mainThumbnailImageUrl: string;
+  images: string[];
 }
 
 export class BrandReqBodyDto implements BrandReqBodyProps {
@@ -146,6 +147,7 @@ export class BrandReqBodyDto implements BrandReqBodyProps {
     example: true,
   })
   @IsBoolean()
+  @Type(() => Boolean)
   isEvent: boolean;
 
   @ApiProperty({

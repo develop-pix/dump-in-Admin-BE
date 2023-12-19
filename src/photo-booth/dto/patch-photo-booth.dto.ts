@@ -65,6 +65,9 @@ export class UpdateBoothBrandDto extends BrandReqBodyDto {
   @IsOptional()
   hashtags: string[];
 
+  @IsOptional()
+  images: string[];
+
   getUpdateProps(): BrandUpdateProps {
     return {
       name: this.name,
@@ -73,6 +76,7 @@ export class UpdateBoothBrandDto extends BrandReqBodyDto {
       mainThumbnailImageUrl: this.mainThumbnailImageUrl,
       isEvent: this.isEvent,
       hashtags: this.hashtags,
+      images: this.images,
     };
   }
 }

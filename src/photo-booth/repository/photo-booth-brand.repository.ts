@@ -19,36 +19,23 @@ export class PhotoBoothBrandRepository extends Repository<PhotoBoothBrand> {
       baseRepository.queryRunner,
     );
   }
-  async saveBrand(brand: PhotoBoothBrand): Promise<PhotoBoothBrand> {
-    return await this.save(brand);
-  }
 
-  async findBrandByOptionAndCount(
+  findBrandByOptionAndCount(
     brand: PhotoBoothBrand,
     page: PaginationProps,
   ): Promise<[PhotoBoothBrand[], number]> {
     const { take, skip } = page;
     const options = this.findBrandManyOptions(brand);
-    return await this.findAndCount({
+    return this.findAndCount({
       take,
       skip,
       ...options,
     });
   }
 
-  async findOneBrand(brand: PhotoBoothBrand): Promise<PhotoBoothBrand> {
+  findOneBrand(brand: PhotoBoothBrand): Promise<PhotoBoothBrand> {
     const options = this.findBrandManyOptions(brand);
-    return await this.findOne(options);
-  }
-
-  async updateBoothBrand(id: number, brand: PhotoBoothBrand): Promise<boolean> {
-    const result = await this.update({ id }, brand);
-    return result.affected > 0;
-  }
-
-  async isExistBrand(brand: PhotoBoothBrand): Promise<boolean> {
-    const where = this.findBrandOptionsWhere(brand);
-    return await this.exist({ where });
+    return this.findOne(options);
   }
 
   private findBrandManyOptions(

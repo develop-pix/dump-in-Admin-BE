@@ -4,6 +4,7 @@ import {
   GetBoothBrandListDto,
   GetPhotoBoothListDto,
 } from './get-photo-booth-list.dto';
+import { BrandImage } from '../entity/photo-booth-brand-image.entity';
 
 export class GetPhotoBoothDetailDto extends GetPhotoBoothListDto {
   @ApiProperty({
@@ -58,5 +59,13 @@ export class GetBoothBrandDetailDto extends GetBoothBrandListDto {
   @Expose()
   get isEvent(): boolean {
     return this._isEvent;
+  }
+
+  @ApiProperty({
+    description: '포토부스의 업체 이벤트 허용 여부',
+  })
+  @Expose()
+  get images(): BrandImage[] {
+    return this._brandImages;
   }
 }

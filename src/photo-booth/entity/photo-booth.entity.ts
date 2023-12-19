@@ -9,8 +9,6 @@ import {
 } from 'typeorm';
 import { PhotoBoothBrand } from './photo-booth-brand.entity';
 import { FindBoothOptionProps } from '../dto/get-photo-booth-query.dto';
-import { PhotoBoothUpdateProps } from '../dto/patch-photo-booth.dto';
-import { MoveToOpenBoothProps } from '../dto/put-photo-booth.dto';
 import { Review } from '../../review/entity/review.entity';
 
 @Entity('photo_booth')
@@ -76,52 +74,6 @@ export class PhotoBooth extends BaseDateEntity {
 
     photoBooth.location = location;
     photoBooth.name = name;
-    photoBooth.photoBoothBrand = PhotoBoothBrand.byName(brandName);
-
-    return photoBooth;
-  }
-
-  static updateBy({
-    name,
-    location,
-    streetAddress,
-    roadAddress,
-    brandName,
-  }: PhotoBoothUpdateProps): PhotoBooth {
-    const photoBooth = new PhotoBooth();
-
-    photoBooth.name = name;
-    photoBooth.location = location;
-    photoBooth.streetAddress = streetAddress;
-    photoBooth.roadAddress = roadAddress;
-    photoBooth.photoBoothBrand = PhotoBoothBrand.byName(brandName);
-
-    return photoBooth;
-  }
-
-  static to(
-    id: string,
-    {
-      name,
-      location,
-      latitude,
-      longitude,
-      streetAddress,
-      roadAddress,
-      operationTime,
-      brandName,
-    }: MoveToOpenBoothProps,
-  ): PhotoBooth {
-    const photoBooth = new PhotoBooth();
-
-    photoBooth.id = id;
-    photoBooth.name = name;
-    photoBooth.latitude = latitude;
-    photoBooth.location = location;
-    photoBooth.longitude = longitude;
-    photoBooth.roadAddress = roadAddress;
-    photoBooth.operationTime = operationTime;
-    photoBooth.streetAddress = streetAddress;
     photoBooth.photoBoothBrand = PhotoBoothBrand.byName(brandName);
 
     return photoBooth;

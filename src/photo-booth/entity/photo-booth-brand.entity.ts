@@ -1,10 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
 import { PhotoBooth } from './photo-booth.entity';
 import { FindBrandOptionProps } from '../dto/get-photo-booth-query.dto';
-import { BrandCreateProps } from '../dto/post-photo-booth.dto';
-import { BrandUpdateProps } from '../dto/patch-photo-booth.dto';
 import { Events } from '../../event/entity/event.entity';
 import { BrandHashtag } from '../../hashtag/entity/brand-hashtag.entity';
+import { BrandImage } from './photo-booth-brand-image.entity';
 
 @Entity('photo_booth_brand')
 export class PhotoBoothBrand {
@@ -41,37 +40,10 @@ export class PhotoBoothBrand {
   @OneToMany(() => Events, (event: Events) => event.photoBoothBrand)
   events: Events[];
 
-  static create({
-    name,
-    mainThumbnailImageUrl,
-    isEvent,
-  }: BrandCreateProps): PhotoBoothBrand {
-    const brand = new PhotoBoothBrand();
-
-    brand.name = name;
-    brand.mainThumbnailImageUrl = mainThumbnailImageUrl;
-    brand.isEvent = isEvent;
-
-    return brand;
-  }
-
-  static updateBy({
-    name,
-    description,
-    photoBoothUrl,
-    mainThumbnailImageUrl,
-    isEvent,
-  }: BrandUpdateProps): PhotoBoothBrand {
-    const brand = new PhotoBoothBrand();
-
-    brand.name = name;
-    brand.description = description;
-    brand.photoBoothUrl = photoBoothUrl;
-    brand.mainThumbnailImageUrl = mainThumbnailImageUrl;
-    brand.isEvent = isEvent;
-
-    return brand;
-  }
+  @OneToMany(() => BrandImage, (image) => image.photoBoothBrand, {
+    cascade: true,
+  })
+  images: BrandImage[];
 
   static of({ name, isEvent }: FindBrandOptionProps): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
