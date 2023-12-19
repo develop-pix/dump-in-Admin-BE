@@ -23,12 +23,6 @@ export class CreateEventDto extends EventReqBodyDto {
   @IsNotEmpty()
   endDate: Date;
 
-  @IsNotEmpty({ each: true })
-  hashtags: string[];
-
-  @IsNotEmpty({ each: true })
-  images: string[];
-
   getCreateProps(): EventCreateProps {
     return {
       title: this.title,

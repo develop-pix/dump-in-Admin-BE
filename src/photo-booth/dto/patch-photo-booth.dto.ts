@@ -61,10 +61,10 @@ export class UpdateBoothBrandDto extends BrandReqBodyDto {
   @IsOptional()
   mainThumbnailImageUrl: string;
 
-  @IsOptional()
+  @IsOptional({ each: true })
   hashtags: string[];
 
-  @IsOptional()
+  @IsOptional({ each: true })
   images: string[];
 
   getUpdateProps(): BrandUpdateProps {

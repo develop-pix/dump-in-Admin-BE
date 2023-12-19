@@ -15,13 +15,7 @@ export class CreateBoothBrandDto extends BrandReqBodyDto {
   description: string;
 
   @IsNotEmpty()
-  hashtags: string[];
-
-  @IsNotEmpty()
   photoBoothUrl: string;
-
-  @IsNotEmpty()
-  images: string[];
 
   getCreateProps(): BrandCreateProps {
     return {

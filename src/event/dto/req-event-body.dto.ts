@@ -3,7 +3,6 @@ import {
   ArrayMaxSize,
   IsArray,
   IsDate,
-  IsNotEmpty,
   IsString,
   IsUrl,
   MaxLength,
@@ -86,7 +85,6 @@ export class EventReqBodyDto implements EventReqBodyProps {
     description: '포토부스 업체 해시태그 목록 (최대 5개)',
     example: ['캐릭터', '콜라보', '연예인', '스냅', '이달의프레임'],
   })
-  @IsNotEmpty()
   @IsArray()
   @ArrayMaxSize(5, { message: '해시태그는 최대 5개까지 입력 가능합니다.' })
   @IsString({ each: true })
