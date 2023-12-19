@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -216,7 +217,7 @@ export class PhotoBoothService {
     const photoBoothBrand = await this.findOneBrandByName(moveProps.brandName);
 
     if (isPhotoBoothExist) {
-      throw new BadRequestException('이미 포토부스가 존재합니다.');
+      throw new ConflictException('이미 포토부스가 존재합니다.');
     }
 
     await Promise.all([

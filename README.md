@@ -1,9 +1,9 @@
-![Image](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/26fc155b-4a01-433e-9643-cbc1beefeadf)
+![Dump-in](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/26fc155b-4a01-433e-9643-cbc1beefeadf)
 
 ## Dump'in Admin Server
 
-[API 문서 링크](https://admin.dump-in.co.kr/api/swagger)  
-[API 문서 링크2](https://dump-in-admin-server.onrender.com/api/swagger)
+[배포 버전 API 문서 링크](https://admin.dump-in.co.kr/api/swagger)  
+[배포 버전 API 문서 링크2](https://dump-in-admin-server.onrender.com/api/swagger)
 
 <br>
 
@@ -48,9 +48,14 @@
 
 [![GitHub][GitHub]](https://github.com/orgs/develop-pix/projects/1/views/1)
 
+![Project-Calander](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/d7620bae-fcaf-4d2b-87b4-29bb48013649)
+![Project-Kanban](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/1f345570-1ec3-4fc5-b77a-a03a9a730997)
+
 <br/>
 
 <!-- ## 모델링 -->
+
+<!-- ## 아키텍처 -->
 
 ## 구현 과정 및 설명
 
@@ -81,7 +86,7 @@
 
 ## API Endpoint
 
-![API-endpoint-notion](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/3f00682c-1bd0-4d52-b2fb-52ea5910b5bd)
+![API-endpoint-notion](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/961eacf8-4dee-4779-b748-7631e3687e48)
 
 <br/>
 

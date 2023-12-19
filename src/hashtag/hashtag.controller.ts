@@ -33,7 +33,7 @@ export class HashtagController {
   }
 
   @Post()
-  @SwaggerAPI({ name: '해시태그 생성', status: 201 })
+  @SwaggerAPI({ name: '해시태그 생성', success: 201 })
   async createHastags(
     @Body() request: CreateHashtagsDto,
   ): Promise<ResponseEntity<string>> {

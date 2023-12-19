@@ -44,7 +44,7 @@ export class EventController {
   }
 
   @Post()
-  @SwaggerAPI({ name: '이벤트 생성', status: 201 })
+  @SwaggerAPI({ name: '이벤트 생성', success: 201 })
   async createEvent(
     @Body() request: CreateEventDto,
   ): Promise<ResponseEntity<string>> {
