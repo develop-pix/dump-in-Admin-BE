@@ -13,9 +13,11 @@ export class BrandImage extends BaseDateEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => PhotoBoothBrand, (brand) => brand.brandImages, {
-    orphanedRowAction: 'delete',
-  })
+  @ManyToOne(
+    () => PhotoBoothBrand,
+    (brand: PhotoBoothBrand) => brand.brandImages,
+    { orphanedRowAction: 'delete' },
+  )
   @JoinColumn({ name: 'photo_booth_brand_id' })
   photoBoothBrand: PhotoBoothBrand;
 

@@ -46,6 +46,7 @@ export class EventRepository extends Repository<Events> {
       title: true,
       content: true,
       mainThumbnailUrl: true,
+      photoBoothBrand: { name: true },
       startDate: true,
       endDate: true,
       viewCount: true,

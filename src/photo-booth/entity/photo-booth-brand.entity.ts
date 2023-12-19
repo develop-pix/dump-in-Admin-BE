@@ -7,7 +7,7 @@ import { BrandImage } from './photo-booth-brand-image.entity';
 
 @Entity('photo_booth_brand')
 export class PhotoBoothBrand {
-  @PrimaryGeneratedColumn({ name: 'id' })
+  @PrimaryGeneratedColumn()
   id: number;
 
   @Column()
@@ -28,20 +28,28 @@ export class PhotoBoothBrand {
   @OneToMany(
     () => PhotoBooth,
     (photoBooth: PhotoBooth) => photoBooth.photoBoothBrand,
+    { lazy: true },
   )
   photoBooths: PhotoBooth[];
 
   @OneToMany(
     () => BrandHashtag,
     (photoBoothHashtag: BrandHashtag) => photoBoothHashtag.photoBoothBrand,
+    {
+      cascade: true,
+      orphanedRowAction: 'delete',
+    },
   )
   brandHashtags: BrandHashtag[];
 
-  @OneToMany(() => Events, (event: Events) => event.photoBoothBrand)
+  @OneToMany(() => Events, (event: Events) => event.photoBoothBrand, {
+    lazy: true,
+  })
   events: Events[];
 
-  @OneToMany(() => BrandImage, (image) => image.photoBoothBrand, {
+  @OneToMany(() => BrandImage, (image: BrandImage) => image.photoBoothBrand, {
     cascade: true,
+    orphanedRowAction: 'delete',
   })
   brandImages: BrandImage[];
 

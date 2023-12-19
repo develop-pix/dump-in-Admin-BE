@@ -47,7 +47,7 @@ export class Events extends BaseDateEntity {
 
   @OneToMany(() => EventImage, (eventImage: EventImage) => eventImage.event, {
     cascade: true,
-    eager: true,
+    orphanedRowAction: 'delete',
   })
   eventImages: EventImage[];
 
@@ -56,7 +56,7 @@ export class Events extends BaseDateEntity {
     (eventHashtag: EventHashtag) => eventHashtag.event,
     {
       cascade: true,
-      eager: true,
+      orphanedRowAction: 'delete',
     },
   )
   eventHashtags: EventHashtag[];

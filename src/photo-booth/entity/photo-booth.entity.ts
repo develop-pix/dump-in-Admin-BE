@@ -43,7 +43,7 @@ export class PhotoBooth extends BaseDateEntity {
   @Column({ name: 'view_count' })
   viewCount: number;
 
-  @OneToMany(() => Review, (review) => review.photoBooth)
+  @OneToMany(() => Review, (review) => review.photoBooth, { lazy: true })
   reviews: Review[];
 
   @ManyToOne(
