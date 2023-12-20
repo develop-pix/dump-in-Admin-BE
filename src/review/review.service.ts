@@ -62,7 +62,7 @@ export class ReviewService {
     }
 
     await this.reviewRepository.save(
-      plainToInstance(Review, { id, isDelete: true }),
+      plainToInstance(Review, { id, isDeleted: true }),
     );
 
     return true;

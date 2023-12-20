@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -28,7 +27,7 @@ import { HashtagService } from '../hashtag/hashtag.service';
 import { BrandCreateProps } from './dto/post-photo-booth.dto';
 import { plainToInstance } from 'class-transformer';
 import { BrandImage } from './entity/photo-booth-brand-image.entity';
-import { BrandHashtag } from 'src/hashtag/entity/brand-hashtag.entity';
+import { BrandHashtag } from '../hashtag/entity/brand-hashtag.entity';
 
 @Injectable()
 export class PhotoBoothService {
@@ -119,6 +118,7 @@ export class PhotoBoothService {
     }
 
     await this.deleteHiddenBooth(id);
+    await this.photoBoothRepository.remove(boothId);
 
     return true;
   }
@@ -214,11 +214,12 @@ export class PhotoBoothService {
     const isPhotoBoothExist = this.photoBoothRepository.hasId(
       PhotoBooth.byId(id),
     );
-    const photoBoothBrand = await this.findOneBrandByName(moveProps.brandName);
 
     if (isPhotoBoothExist) {
       throw new ConflictException('이미 포토부스가 존재합니다.');
     }
+
+    const photoBoothBrand = await this.findOneBrandByName(moveProps.brandName);
 
     await Promise.all([
       this.photoBoothRepository.save(
@@ -239,8 +240,10 @@ export class PhotoBoothService {
       HiddenPhotoBooth.byId(id),
     );
 
-    if (isHiddenBoothExist) {
-      throw new BadRequestException('이미 포토부스가 존재합니다.');
+    if (!isHiddenBoothExist) {
+      throw new NotFoundException(
+        '공개되지 않은 포토부스 지점을 찾지 못했습니다.',
+      );
     }
 
     await this.hiddenBoothRepository.save(

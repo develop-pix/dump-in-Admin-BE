@@ -10,6 +10,8 @@ class MockReviewRepository {
   findReviewByOptionAndCount = jest.fn();
   findOneReview = jest.fn();
   updateReview = jest.fn();
+  save = jest.fn();
+  hasId = jest.fn();
 }
 
 describe('ReviewService', () => {
@@ -55,12 +57,18 @@ describe('ReviewService', () => {
       });
 
     jest
-      .spyOn(reviewRepository, 'updateReview')
-      .mockImplementation((id: number) => {
-        if (id === 1) {
-          return Promise.resolve(true);
+      .spyOn(reviewRepository, 'save')
+      .mockImplementation((review: Review) => {
+        return Promise.resolve(review);
+      });
+
+    jest
+      .spyOn(reviewRepository, 'hasId')
+      .mockImplementation((review: Review) => {
+        if (review.id === 1) {
+          return true;
         } else {
-          return Promise.resolve(false);
+          return false;
         }
       });
   });
@@ -190,16 +198,13 @@ describe('ReviewService', () => {
       // Given
       const id = 1;
 
-      const reviewInDb = await reviewRepository.updateReview(
-        id,
-        Review.delete(true),
-      );
+      const isExistReview = reviewRepository.hasId(Review.byId(id));
 
       // When
       const result = await reviewService.removeReview(id);
 
       // Then
-      expect(result).toEqual(reviewInDb);
+      expect(result).toEqual(isExistReview);
     });
 
     it('FAILURE: id 값이 존재하지 않을 때 404 에러', async () => {
@@ -209,9 +214,7 @@ describe('ReviewService', () => {
       // When & Then
       expect(async () => {
         await reviewService.removeReview(notReviewId);
-      }).rejects.toThrowError(
-        new NotFoundException('리뷰 삭제가 불가능합니다.'),
-      );
+      }).rejects.toThrowError(new NotFoundException('리뷰를 찾지 못했습니다.'));
     });
   });
 });
