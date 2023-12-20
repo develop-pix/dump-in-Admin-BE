@@ -17,7 +17,7 @@ export class BoothQueryDto extends PaginationDto {
     example: '서울',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   @IsOptional()
   @Type(() => String)
@@ -28,7 +28,7 @@ export class BoothQueryDto extends PaginationDto {
     required: false,
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(32)
   @IsOptional()
   @Type(() => String)
@@ -39,7 +39,7 @@ export class BoothQueryDto extends PaginationDto {
     required: false,
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   @IsOptional()
   @Type(() => String)
@@ -61,7 +61,7 @@ export class BoothBrandQueryDto extends PaginationDto {
     example: '포토그레이',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   @IsOptional()
   @Type(() => String)

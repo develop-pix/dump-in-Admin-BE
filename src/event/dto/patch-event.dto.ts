@@ -23,8 +23,11 @@ export class UpdateEventDto extends EventReqBodyDto {
   @IsOptional()
   endDate: Date;
 
-  @IsOptional()
+  @IsOptional({ each: true })
   hashtags: string[];
+
+  @IsOptional({ each: true })
+  images: string[];
 
   getUpdateProps(): EventUpdateProps {
     return {
@@ -32,10 +35,11 @@ export class UpdateEventDto extends EventReqBodyDto {
       content: this.content,
       mainThumbnailUrl: this.mainThumbnailUrl,
       brandName: this.brandName,
+      isPublic: this.isPublic,
       startDate: this.startDate,
       endDate: this.endDate,
-      isPublic: this.isPublic,
-      hashtags: (this.hashtags || []).filter((tag) => tag.trim() !== ''),
+      hashtags: this.hashtags,
+      images: this.images,
     };
   }
 }

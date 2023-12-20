@@ -41,7 +41,6 @@ export class UpdatePhotoBoothDto extends PickType(PhotoBoothReqBodyDto, [
       roadAddress: this.roadAddress,
       brandName: this.brandName,
       operationTime: this.operationTime,
-      isDelete: false,
     };
   }
 }
@@ -62,8 +61,11 @@ export class UpdateBoothBrandDto extends BrandReqBodyDto {
   @IsOptional()
   mainThumbnailImageUrl: string;
 
-  @IsOptional()
+  @IsOptional({ each: true })
   hashtags: string[];
+
+  @IsOptional({ each: true })
+  images: string[];
 
   getUpdateProps(): BrandUpdateProps {
     return {
@@ -73,12 +75,12 @@ export class UpdateBoothBrandDto extends BrandReqBodyDto {
       mainThumbnailImageUrl: this.mainThumbnailImageUrl,
       isEvent: this.isEvent,
       hashtags: this.hashtags,
+      images: this.images,
     };
   }
 }
 
 export interface BrandUpdateProps extends BrandReqBodyProps {}
 
-export interface PhotoBoothUpdateProps extends Partial<PhotoBoothReqBodyProps> {
-  isDelete: boolean;
-}
+export interface PhotoBoothUpdateProps
+  extends Partial<PhotoBoothReqBodyProps> {}

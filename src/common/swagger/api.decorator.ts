@@ -4,6 +4,7 @@ import {
   ApiNotFoundResponse,
   ApiOperation,
   ApiResponse,
+  ApiTooManyRequestsResponse,
   ApiUnauthorizedResponse,
   getSchemaPath,
 } from '@nestjs/swagger';
@@ -13,7 +14,8 @@ import { createSchema } from './api.schema';
 
 export const SwaggerAPI = ({
   name,
-  status = HttpStatus.OK,
+  success = HttpStatus.OK,
+  fail = HttpStatus.NOT_FOUND,
   model = Object,
   isPagination = false,
 }: OptionsProps): MethodDecorator => {
@@ -29,8 +31,21 @@ export const SwaggerAPI = ({
       schema: {
         allOf: [
           createSchema({
-            status: HttpStatus.NOT_FOUND,
+            status: fail,
             message: `${name} 요청에 실패했습니다.`,
+            success: false,
+          }),
+        ],
+      },
+    }),
+
+    ApiTooManyRequestsResponse({
+      description: '요청 횟수 초과 시 응답입니다. 429 상태코드가 반환됩니다',
+      schema: {
+        allOf: [
+          createSchema({
+            status: HttpStatus.TOO_MANY_REQUESTS,
+            message: '요청 횟수가 너무 많습니다. 잠시 후 다시 시도해주세요.',
             success: false,
           }),
         ],
@@ -52,12 +67,12 @@ export const SwaggerAPI = ({
     }),
 
     ApiResponse({
-      status,
+      status: success,
       description: '성공 시 OK 응답을 반환합니다.',
       schema: {
         allOf: [
           createSchema({
-            status,
+            status: success,
             message: `${name} 했습니다.`,
             success: true,
             data: isPagination
@@ -82,7 +97,8 @@ export const SwaggerAPI = ({
 
 interface OptionsProps {
   name: string;
-  status?: number;
+  success?: number;
+  fail?: number;
   isPagination?: boolean;
   model?: Type<unknown>;
 }

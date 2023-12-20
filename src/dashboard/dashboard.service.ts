@@ -10,6 +10,9 @@ export class DashboardService {
     private readonly reviewRepository: ReviewRepository,
   ) {}
 
+  /**
+   * @desc 날짜별 가입 유저수 조회
+   */
   async countUsersByDate(): Promise<RawCountByDate[]> {
     const results = await this.userRepository.countUsersByDate();
     if (!results.length) {
@@ -20,6 +23,9 @@ export class DashboardService {
     return results;
   }
 
+  /**
+   * @desc 날짜별 리뷰 작성수 조회
+   */
   async countReviewsByDate(): Promise<RawCountByDate[]> {
     const results = await this.reviewRepository.countReviewsByDate();
     if (!results.length) {
@@ -28,6 +34,9 @@ export class DashboardService {
     return results;
   }
 
+  /**
+   * @desc 날짜별 리뷰 작성수와 가입 유저수를 종합한 결과 조회
+   */
   async combineResultsByDate(): Promise<RawCountByDate[]> {
     const [userResults, reviewResults] = await Promise.all([
       this.countUsersByDate(),

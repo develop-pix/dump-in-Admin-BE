@@ -6,6 +6,7 @@ import {
   IsBoolean,
   IsNumber,
   IsString,
+  IsUrl,
   MaxLength,
   MinLength,
 } from 'class-validator';
@@ -27,7 +28,7 @@ export class PhotoBoothReqBodyDto implements PhotoBoothReqBodyProps {
     example: '하루필름 홍대 1호점',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(32)
   @Type(() => String)
   name: string;
@@ -37,7 +38,7 @@ export class PhotoBoothReqBodyDto implements PhotoBoothReqBodyProps {
     example: '서울',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   @Type(() => String)
   location: string;
@@ -62,7 +63,7 @@ export class PhotoBoothReqBodyDto implements PhotoBoothReqBodyProps {
     description: '포토부스의 지번 주소',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   @Type(() => String)
   streetAddress: string;
@@ -71,7 +72,7 @@ export class PhotoBoothReqBodyDto implements PhotoBoothReqBodyProps {
     description: '포토부스의 도로명 주소',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   @Type(() => String)
   roadAddress: string;
@@ -80,7 +81,7 @@ export class PhotoBoothReqBodyDto implements PhotoBoothReqBodyProps {
     description: '포토부스의 운영 시간',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   @Type(() => String)
   operationTime: string;
@@ -89,7 +90,7 @@ export class PhotoBoothReqBodyDto implements PhotoBoothReqBodyProps {
     description: '포토부스 업체명',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   @Type(() => String)
   brandName: string;
@@ -102,6 +103,7 @@ export interface BrandReqBodyProps {
   description: string;
   photoBoothUrl: string;
   mainThumbnailImageUrl: string;
+  images: string[];
 }
 
 export class BrandReqBodyDto implements BrandReqBodyProps {
@@ -111,7 +113,7 @@ export class BrandReqBodyDto implements BrandReqBodyProps {
     example: '포토그레이',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   name: string;
 
@@ -120,7 +122,7 @@ export class BrandReqBodyDto implements BrandReqBodyProps {
     required: true,
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(512)
   mainThumbnailImageUrl: string;
 
@@ -128,7 +130,7 @@ export class BrandReqBodyDto implements BrandReqBodyProps {
     description: '포토부스의 업체 설명',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(128)
   description: string;
 
@@ -136,7 +138,7 @@ export class BrandReqBodyDto implements BrandReqBodyProps {
     description: '포토부스의 업체 관련 홈페이지 주소',
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(128)
   photoBoothUrl: string;
 
@@ -145,6 +147,7 @@ export class BrandReqBodyDto implements BrandReqBodyProps {
     example: true,
   })
   @IsBoolean()
+  @Type(() => Boolean)
   isEvent: boolean;
 
   @ApiProperty({
@@ -155,4 +158,13 @@ export class BrandReqBodyDto implements BrandReqBodyProps {
   @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
   @IsString({ each: true })
   hashtags: string[];
+
+  @ApiProperty({
+    description: '포토부스 업체 이미지 URL (최대 4개)',
+    example: ['url', 'url2', 'url3', 'url4'],
+  })
+  @IsArray()
+  @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
+  @IsUrl({}, { each: true })
+  images: string[];
 }

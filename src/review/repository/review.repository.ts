@@ -21,33 +21,26 @@ export class ReviewRepository extends Repository<Review> {
     );
   }
 
-  async findReviewByOptionAndCount(
+  findReviewByOptionAndCount(
     review: Review,
     page: PaginationProps,
   ): Promise<[Review[], number]> {
     const { take, skip } = page;
     const options = this.findReviewManyOptions(review);
-    return await this.findAndCount({ take, skip, ...options });
+    return this.findAndCount({ take, skip, ...options });
   }
 
-  async findOneReview(review: Review): Promise<Review> {
+  findOneReview(review: Review): Promise<Review> {
     const options = this.findReviewManyOptions(review);
-    return await this.findOne(options);
+    return this.findOne(options);
   }
 
-  async updateReview(id: number, review: Review): Promise<boolean> {
-    const result = await this.update(id, review);
-    return result.affected > 0;
-  }
-
-  async countReviewsByDate(): Promise<RawCountByDate[]> {
-    const queryResult = await this.createQueryBuilder('review')
+  countReviewsByDate(): Promise<RawCountByDate[]> {
+    return this.createQueryBuilder('review')
       .select(['DATE(created_at) as created', 'COUNT(id) as review'])
       .groupBy('created')
       .orderBy('created', 'DESC')
       .getRawMany();
-
-    return queryResult;
   }
 
   private findReviewManyOptions(review: Review): FindManyOptions<Review> {
@@ -64,6 +57,8 @@ export class ReviewRepository extends Repository<Review> {
       date: true,
       viewCount: true,
       likeCount: true,
+      photoBooth: { name: true },
+      user: { nickname: true, username: true },
     };
     return { where, relations, select };
   }

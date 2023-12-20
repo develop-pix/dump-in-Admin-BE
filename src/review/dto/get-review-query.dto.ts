@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsOptional, IsString } from 'class-validator';
+import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
 
 export class ReviewQueryDto extends PaginationDto {
@@ -9,6 +9,8 @@ export class ReviewQueryDto extends PaginationDto {
     required: false,
   })
   @IsString()
+  @MinLength(2)
+  @MaxLength(64)
   @IsOptional()
   @IsString()
   @Type(() => String)
@@ -19,6 +21,8 @@ export class ReviewQueryDto extends PaginationDto {
     required: false,
   })
   @IsString()
+  @MinLength(2)
+  @MaxLength(64)
   @IsOptional()
   @IsString()
   @Type(() => String)

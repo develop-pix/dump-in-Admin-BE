@@ -9,13 +9,10 @@ export class CreateBoothBrandDto extends BrandReqBodyDto {
   mainThumbnailImageUrl: string;
 
   @IsNotEmpty()
-  isEvent: boolean = false;
+  isEvent: boolean;
 
   @IsNotEmpty()
   description: string;
-
-  @IsNotEmpty()
-  hashtags: string[];
 
   @IsNotEmpty()
   photoBoothUrl: string;
@@ -27,7 +24,8 @@ export class CreateBoothBrandDto extends BrandReqBodyDto {
       mainThumbnailImageUrl: this.mainThumbnailImageUrl,
       description: this.description,
       photoBoothUrl: this.photoBoothUrl,
-      hashtags: (this.hashtags || []).filter((tag) => tag.trim() !== ''),
+      hashtags: this.hashtags,
+      images: this.images,
     };
   }
 }

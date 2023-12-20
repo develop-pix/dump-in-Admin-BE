@@ -10,7 +10,7 @@ export class EventQueryDto extends PaginationDto {
     required: false,
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   @IsOptional()
   brandName: string;
@@ -20,7 +20,7 @@ export class EventQueryDto extends PaginationDto {
     required: false,
   })
   @IsString()
-  @MinLength(3)
+  @MinLength(2)
   @MaxLength(64)
   @Type(() => String)
   @IsOptional()

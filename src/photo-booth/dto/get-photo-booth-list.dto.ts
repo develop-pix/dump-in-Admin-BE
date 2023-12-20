@@ -1,9 +1,10 @@
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
 import { BrandHashtag } from '../../hashtag/entity/brand-hashtag.entity';
 import { PhotoBooth } from '../entity/photo-booth.entity';
 import { HiddenPhotoBooth } from '../entity/photo-booth-hidden.entity';
+import { BrandImage } from '../entity/photo-booth-brand-image.entity';
 
 export class GetPhotoBoothListDto {
   @Exclude() readonly _id: string;
@@ -13,14 +14,12 @@ export class GetPhotoBoothListDto {
   @Exclude() readonly _longitude: number;
   @Exclude() readonly _createdAt: Date;
   @Exclude() readonly _updatedAt: Date;
-  @Exclude() readonly _likeCount: number | undefined;
-  @Exclude() readonly _viewCount: number | undefined;
-  @Exclude() readonly _streetAddress?: string | null;
-  @Exclude() readonly _roadAddress?: string | null;
-  @Exclude() readonly _operationTime?: string | null;
-  @Type(() => PhotoBoothBrand)
-  @Exclude()
-  readonly _photoBoothBrand: PhotoBoothBrand | undefined;
+  @Exclude() readonly _likeCount: number;
+  @Exclude() readonly _viewCount: number;
+  @Exclude() readonly _streetAddress: string;
+  @Exclude() readonly _roadAddress: string;
+  @Exclude() readonly _operationTime: string;
+  @Exclude() readonly _photoBoothBrand: PhotoBoothBrand;
 
   constructor(data: PhotoBooth | HiddenPhotoBooth) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
@@ -73,22 +72,20 @@ export class GetPhotoBoothListDto {
     example: '업체명',
   })
   @Expose()
-  @Type(() => PhotoBoothBrand)
-  get brandName(): PhotoBoothBrand {
-    return this._photoBoothBrand;
+  get brandName(): string {
+    return this._photoBoothBrand.name;
   }
 }
 
 export class GetBoothBrandListDto {
   @Exclude() readonly _id: number;
   @Exclude() readonly _name: string;
-  @Exclude() readonly _mainThumbnailImageUrl?: string | null;
-  @Exclude() readonly _description?: string | null;
-  @Exclude() readonly _photoBoothUrl?: string | null;
+  @Exclude() readonly _mainThumbnailImageUrl: string;
+  @Exclude() readonly _description: string;
+  @Exclude() readonly _photoBoothUrl: string;
   @Exclude() readonly _isEvent: boolean;
-  @Exclude()
-  @Type(() => BrandHashtag)
-  readonly _brandHashtags: BrandHashtag[] | null;
+  @Exclude() readonly _brandHashtags: BrandHashtag[];
+  @Exclude() readonly _brandImages: BrandImage[];
 
   constructor(data: PhotoBoothBrand) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));

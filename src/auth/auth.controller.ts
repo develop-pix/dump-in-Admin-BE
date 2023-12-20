@@ -3,7 +3,7 @@ import { ResponseEntity } from '../common/entity/response.entity';
 import { AuthService } from './auth.service';
 import { SwaggerLogIn } from './decorator/swagger/login.decorator';
 import { ApiTags } from '@nestjs/swagger';
-import { LogInDto } from './dto/post-login-req.dto';
+import { LogInDto } from './dto/post-login.dto';
 import { GetAdminSessionDto } from '../user/dto/get-session-admin.dto';
 
 @ApiTags('인증')

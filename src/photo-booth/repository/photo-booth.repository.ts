@@ -20,40 +20,22 @@ export class PhotoBoothRepository extends Repository<PhotoBooth> {
     );
   }
 
-  async findBoothByOptionAndCount(
+  findBoothByOptionAndCount(
     booth: PhotoBooth,
     page: PaginationProps,
   ): Promise<[PhotoBooth[], number]> {
     const { take, skip } = page;
     const options = this.findBoothManyOptions(booth);
-    return await this.findAndCount({
+    return this.findAndCount({
       take,
       skip,
       ...options,
     });
   }
 
-  async findOneBooth(booth: PhotoBooth): Promise<PhotoBooth> {
+  findOneBooth(booth: PhotoBooth): Promise<PhotoBooth> {
     const options = this.findBoothManyOptions(booth);
-    return await this.findOne(options);
-  }
-
-  async saveOpenBooth(booth: PhotoBooth): Promise<PhotoBooth> {
-    return await this.save(booth);
-  }
-
-  async updatePhotoBooth(id: string, booth: PhotoBooth): Promise<boolean> {
-    const result = await this.update({ id }, booth);
-    return result.affected > 0;
-  }
-
-  async deletePhotoBooth(id: string): Promise<boolean> {
-    const result = await this.delete({ id });
-    return result.affected > 0;
-  }
-
-  async photoBoothHasId(booth: PhotoBooth): Promise<boolean> {
-    return this.hasId(booth);
+    return this.findOne(options);
   }
 
   private findBoothManyOptions(booth: PhotoBooth): FindManyOptions<PhotoBooth> {

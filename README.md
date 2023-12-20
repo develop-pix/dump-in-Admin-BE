@@ -1,21 +1,23 @@
-![Image](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/26fc155b-4a01-433e-9643-cbc1beefeadf)
+![Dump-in](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/26fc155b-4a01-433e-9643-cbc1beefeadf)
 
-# Dump-In-Admin-Server
+## Dump'in Admin Server
 
-[배포 링크](https://admin.dump-in.co.kr/api/swagger)
+[배포 버전 API 문서 링크](https://admin.dump-in.co.kr/api/swagger)  
+[배포 버전 API 문서 링크2](https://dump-in-admin-server.onrender.com/api/swagger)
 
 <br>
 
 ## 목차 :clipboard:
 
-- [Dump-In-Admin-Server](#dump-in-admin-server)
-  - [목차 :clipboard:](#목차-clipboard)
-  - [개요](#개요)
-  - [사용 기술](#사용-기술)
-  - [프로젝트 진행 및 이슈 관리](#프로젝트-진행-및-이슈-관리)
-  - [구현 과정 및 설명](#구현-과정-및-설명)
-  - [API Endpoint](#api-endpoint)
-  - [API Reference](#api-reference)
+- [Dump'in Admin Server](#dumpin-admin-server)
+- [목차 :clipboard:](#목차-clipboard)
+- [개요](#개요)
+- [사용 기술](#사용-기술)
+- [프로젝트 진행 및 이슈 관리](#프로젝트-진행-및-이슈-관리)
+- [구현 과정 및 설명](#구현-과정-및-설명)
+- [Did You Know](#did-you-know)
+- [API Endpoint](#api-endpoint)
+- [API Reference](#api-reference)
 
 <br/>
 
@@ -38,7 +40,7 @@
 
 ![NestJS][NestJS] ![TypeScript][TypeScript] ![TypeORM][TypeORM]
 ![PostgreSQL][PostgreSQL] ![Swagger][Swagger]
-![GitHubActions][GitHubActions]
+![GitHubActions][GitHubActions] ![EC2][AWS-EC2] ![Route53][AWS-Route53]
 
 <br/>
 
@@ -46,19 +48,22 @@
 
 [![GitHub][GitHub]](https://github.com/orgs/develop-pix/projects/1/views/1)
 
+![Project-Calander](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/d7620bae-fcaf-4d2b-87b4-29bb48013649)
+![Project-Kanban](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/1f345570-1ec3-4fc5-b77a-a03a9a730997)
+
 <br/>
 
 <!-- ## 모델링 -->
+
+<!-- ## 아키텍처 -->
 
 ## 구현 과정 및 설명
 
 - **세션 인증 및 인가**
 
-- **Rate Limit**
+- **API 요청 횟수 제한하기**
 
-- **로깅**
-
-- **대시보드 기능 (통계)**
+- **대시보드 기능**
 
 - **포토부스 관리 기능**
 
@@ -68,15 +73,20 @@
 
 - **유저 관리 기능**
 
-- **알림 관리 기능**
+- **로깅**
 
-<!-- ## Did You Know -->
+<!-- - **알림 관리 기능** -->
+<br/>
+
+## Did You Know
+
+[API 요청 시도 횟수 제한하기](https://zamoca.space/js-ts/nest-js/rate-limit.html)
+
+<br/>
 
 ## API Endpoint
 
-[![Notion][Notion]](https://secret-leech-e86.notion.site/6b8d9782457c4ae3859e18e308b1bad8?v=0addcbd8c185449f9cee2ab5922366e9&pvs=4)
-
-![API-endpoint](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/74d5aa54-d37e-4f64-b224-0934388f1817)
+![API-endpoint-notion](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/961eacf8-4dee-4779-b748-7631e3687e48)
 
 <br/>
 
@@ -102,4 +112,5 @@
 [Swagger]: https://img.shields.io/badge/swagger-%23Clojure.svg?style=for-the-badge&logo=swagger&logoColor=white
 [GitHubActions]: https://img.shields.io/badge/GitHub%20Actions-%232088ff.svg?style=for-the-badge&logo=githubactions&logoColor=white
 [GitHub]: https://img.shields.io/badge/GitHub%20Project-%23181717.svg?style=for-the-badge&logo=github&logoColor=white
-[Notion]: https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white
+[AWS-EC2]: https://img.shields.io/badge/AWS%20EC2-%23FF9900.svg?style=for-the-badge&logo=amazonec2&logoColor=white
+[AWS-Route53]: https://img.shields.io/badge/AWS%20Route53-%238C4FFF.svg?style=for-the-badge&logo=amazonroute53&logoColor=white

@@ -57,8 +57,16 @@ export class GetEventListDto {
     description: '이벤트와 관련된 포토부스 업체명',
   })
   @Expose()
-  @Type(() => PhotoBoothBrand)
-  get brandName(): PhotoBoothBrand {
-    return this._photoBoothBrand;
+  get brandName(): string {
+    return this._photoBoothBrand.name;
+  }
+
+  @ApiProperty({
+    description: '이벤트와 관련된 해시태그',
+  })
+  @Expose()
+  @Type(() => EventHashtag)
+  get hashtags(): EventHashtag[] {
+    return this._eventHashtags;
   }
 }

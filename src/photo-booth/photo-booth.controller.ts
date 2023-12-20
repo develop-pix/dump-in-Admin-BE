@@ -81,7 +81,7 @@ export class PhotoBoothController {
   }
 
   @Post('brand')
-  @SwaggerAPI({ name: '포토부스 업체 생성', status: 201 })
+  @SwaggerAPI({ name: '포토부스 업체 생성', success: 201 })
   async createBrand(
     @Body() request: CreateBoothBrandDto,
   ): Promise<ResponseEntity<string>> {
@@ -174,7 +174,7 @@ export class PhotoBoothController {
   }
 
   @Put('raw/:id')
-  @SwaggerAPI({ name: '비공개 포토부스를 앱에 노출', status: 201 })
+  @SwaggerAPI({ name: '비공개 포토부스를 앱에 노출', success: 201, fail: 409 })
   async moveHiddenToOpenBooth(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() request: MoveHiddenToOpenBoothDto,

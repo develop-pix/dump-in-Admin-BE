@@ -9,8 +9,6 @@ import {
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
 import { EventImage } from './event-image.entity';
-import { EventCreateProps } from '../dto/post-event.dto';
-import { EventUpdateProps } from '../dto/patch-event.dto';
 import { FindEventOptionProps } from '../dto/get-event-query.dto';
 import { EventHashtag } from '../../hashtag/entity/event-hashtag.entity';
 
@@ -47,12 +45,19 @@ export class Events extends BaseDateEntity {
   @JoinColumn({ name: 'photo_booth_brand_id' })
   photoBoothBrand: PhotoBoothBrand;
 
-  @OneToMany(() => EventImage, (eventImage: EventImage) => eventImage.event)
+  @OneToMany(() => EventImage, (eventImage: EventImage) => eventImage.event, {
+    cascade: true,
+    orphanedRowAction: 'delete',
+  })
   eventImages: EventImage[];
 
   @OneToMany(
     () => EventHashtag,
     (eventHashtag: EventHashtag) => eventHashtag.event,
+    {
+      cascade: true,
+      orphanedRowAction: 'delete',
+    },
   )
   eventHashtags: EventHashtag[];
 
@@ -64,63 +69,11 @@ export class Events extends BaseDateEntity {
     return event;
   }
 
-  static byTitle(title: string): Events {
-    const event = new Events();
-
-    event.title = title;
-
-    return event;
-  }
-
   static of({ title, brandName }: FindEventOptionProps): Events {
     const event = new Events();
 
     event.title = title;
     event.photoBoothBrand = PhotoBoothBrand.byName(brandName);
-
-    return event;
-  }
-
-  static create({
-    title,
-    content,
-    isPublic,
-    mainThumbnailUrl,
-    startDate,
-    endDate,
-    brandName,
-  }: EventCreateProps): Events {
-    const event = new Events();
-
-    event.title = title;
-    event.content = content;
-    event.mainThumbnailUrl = mainThumbnailUrl;
-    event.photoBoothBrand = PhotoBoothBrand.byName(brandName);
-    event.isPublic = isPublic;
-    event.startDate = startDate;
-    event.endDate = endDate;
-
-    return event;
-  }
-
-  static updateBy({
-    title,
-    content,
-    isPublic,
-    mainThumbnailUrl,
-    startDate,
-    endDate,
-    brandName,
-  }: EventUpdateProps): Events {
-    const event = new Events();
-
-    event.title = title;
-    event.content = content;
-    event.mainThumbnailUrl = mainThumbnailUrl;
-    event.photoBoothBrand = PhotoBoothBrand.byName(brandName);
-    event.isPublic = isPublic;
-    event.startDate = startDate;
-    event.endDate = endDate;
 
     return event;
   }

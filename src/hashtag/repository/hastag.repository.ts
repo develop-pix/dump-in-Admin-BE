@@ -13,18 +13,15 @@ export class HashtagRepository extends Repository<Hashtag> {
       baseRepository.queryRunner,
     );
   }
-  async saveHashtags(tags: Hashtag[]): Promise<Hashtag[]> {
-    return await this.save(tags);
-  }
 
-  async findAll(page: PaginationProps): Promise<[Hashtag[], number]> {
+  findAll(page: PaginationProps): Promise<[Hashtag[], number]> {
     const { take, skip } = page;
-    return await this.findAndCount({ take, skip });
+    return this.findAndCount({ take, skip });
   }
 
-  async findManyHashtagByOption(tags: Hashtag[]): Promise<Hashtag[]> {
+  findManyHashtagByOption(tags: Hashtag[]): Promise<Hashtag[]> {
     const where = this.findManyHashtagOptionsWhere(tags);
-    return await this.find({ where });
+    return this.find({ where });
   }
 
   private findManyHashtagOptionsWhere(
