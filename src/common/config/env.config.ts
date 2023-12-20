@@ -41,6 +41,9 @@ class EnvironmentVariables {
 
   @IsString()
   SET_COOKIE_SECRET: string;
+
+  @IsString()
+  TZ: string;
 }
 
 function validate(config: Record<string, unknown>): EnvironmentVariables {
