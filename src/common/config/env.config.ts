@@ -44,6 +44,12 @@ class EnvironmentVariables {
 
   @IsString()
   TZ: string;
+
+  @IsString()
+  SENTRY_DSN: string;
+
+  @IsString()
+  RATE_LIMITER: string;
 }
 
 function validate(config: Record<string, unknown>): EnvironmentVariables {
@@ -55,6 +61,7 @@ function validate(config: Record<string, unknown>): EnvironmentVariables {
   });
 
   if (errors.length > 0) {
+    this.logger.error(errors);
     throw new Error(errors.toString());
   }
   return validatedConfig;
