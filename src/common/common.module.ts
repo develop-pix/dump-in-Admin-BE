@@ -1,5 +1,5 @@
 // common/common.module.ts
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
 import {
@@ -8,7 +8,6 @@ import {
   infoLogFileTransport,
 } from './config/winston.config';
 import { envConfigOptions } from './config/env.config';
-import { Logger } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './filter/http-exception.filter';
 

@@ -4,6 +4,7 @@ import { Request } from 'express';
 import { createLog } from './log-helper.config';
 import { HttpStatus, Logger } from '@nestjs/common';
 import { ResponseEntity } from '../entity/response.entity';
+import * as Sentry from '@sentry/node';
 
 declare module 'express-session' {
   interface SessionData {
@@ -12,18 +13,20 @@ declare module 'express-session' {
 }
 
 const logger: Logger = new Logger();
-const maxRequests = process.env.NODE_ENV === 'production' ? 3 : 15;
+const max = +process.env.RATE_LIMITER;
 const minute = 60 * 1000;
 function createRateLimiter(windowMs: number) {
   return rateLimit({
     windowMs,
-    max: maxRequests,
+    max,
     message: (req: Request) => {
       const response = ResponseEntity.EXCEPTION(
         '요청 횟수가 너무 많습니다. 잠시 후 다시 시도해주세요.',
         HttpStatus.TOO_MANY_REQUESTS,
       );
-      logger.error(createLog({ req, response }));
+
+      logger.log(createLog({ req, response }));
+      Sentry.captureException(response);
       return response;
     },
     skip: (req: Request) => req.session?.user !== undefined,

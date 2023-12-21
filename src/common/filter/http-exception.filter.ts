@@ -9,6 +9,7 @@ import {
 import { Request, Response } from 'express';
 import { createLog } from '../config/log-helper.config';
 import { ResponseEntity } from '../entity/response.entity';
+import * as Sentry from '@sentry/node';
 
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
@@ -22,6 +23,7 @@ export class HttpExceptionFilter implements ExceptionFilter {
 
     if (!(exception instanceof HttpException)) {
       exception = new InternalServerErrorException();
+      this.logger.error(createLog({ req, stack }));
     }
 
     const statusCode = (exception as HttpException).getStatus();
@@ -30,8 +32,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
       getResponse['message'] || 'Internal Server Error',
       statusCode,
     );
-
-    this.logger.error(createLog({ req, stack, response }));
+    this.logger.log(createLog({ req, stack, response }));
+    Sentry.captureException(exception);
 
     res.status(statusCode).json(response);
   }

@@ -17,13 +17,15 @@ import { corsOptions } from './common/config/cors.config';
 import { pipeOptions } from './common/config/pipe.config';
 import { limiter, loginLimiter } from './common/config/limiter.config';
 import { swaggerConfig } from './common/config/swagger.config';
+import { sentryOptions } from './common/config/sentry.config';
+import * as Sentry from '@sentry/node';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
   });
   const sessionRepo = app.get(DataSource).getRepository(Session);
-
+  Sentry.init(sentryOptions);
   const document = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('/api/swagger', app, document);
 
@@ -38,7 +40,6 @@ async function bootstrap(): Promise<void> {
   app.use(limiter);
   app.use('/api/auth/login', loginLimiter);
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-
   await app.listen(+process.env.APP_SERVER_PORT);
 }
 bootstrap();

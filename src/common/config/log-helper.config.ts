@@ -9,7 +9,7 @@ interface createLogProps {
 
 export const createLog = ({ req, response, stack }: createLogProps) => ({
   ip: req.ip,
-  date: new Date().toISOString(),
+  date: new Date().toLocaleString('ko-KR', { timeZone: process.env.TZ }),
   url: req.url,
   response: response,
   stack: process.env.NODE_ENV === 'production' ? undefined : stack,

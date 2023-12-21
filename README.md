@@ -2,8 +2,7 @@
 
 ## Dump'in Admin Server
 
-[배포 버전 API 문서 링크](https://admin.dump-in.co.kr/api/swagger)  
-[배포 버전 API 문서 링크2](https://dump-in-admin-server.onrender.com/api/swagger)
+[배포 버전 API 문서 링크](https://admin.dump-in.co.kr/api/swagger)
 
 <br>
 
@@ -14,9 +13,16 @@
 - [개요](#개요)
 - [사용 기술](#사용-기술)
 - [프로젝트 진행 및 이슈 관리](#프로젝트-진행-및-이슈-관리)
+- [ERD](#erd)
+- [아키텍처](#아키텍처)
 - [구현 과정 및 설명](#구현-과정-및-설명)
 - [Did You Know](#did-you-know)
 - [API Endpoint](#api-endpoint)
+- [테스트 케이스](#테스트-케이스)
+  - [이벤트](#이벤트)
+  - [포토부스](#포토부스)
+  - [리뷰](#리뷰)
+  - [해시태그](#해시태그)
 - [API Reference](#api-reference)
 
 <br/>
@@ -53,9 +59,13 @@
 
 <br/>
 
-<!-- ## 모델링 -->
+## ERD
 
-<!-- ## 아키텍처 -->
+![modeling](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/7f7d0eda-468e-44f8-819a-5df3006280c8)
+
+## 아키텍처
+
+![architecture](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/30708675-0741-49be-a526-2aa21abc9efd)
 
 ## 구현 과정 및 설명
 
@@ -89,6 +99,24 @@
 ![API-endpoint-notion](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/961eacf8-4dee-4779-b748-7631e3687e48)
 
 <br/>
+
+## 테스트 케이스
+
+### 이벤트
+
+![test-event](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/f61692a4-cfde-431e-b8e5-b39cde17d00b)
+
+### 포토부스
+
+![test-photobooth](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/b6f74c5e-8406-4207-b621-ec8c1125e522)
+
+### 리뷰
+
+![test-review](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/0b152ed3-1226-4d12-ab41-11eef0792c32)
+
+### 해시태그
+
+![test-hashtag](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/42a59297-dc87-4baa-89eb-646ff894886c)
 
 ## API Reference
 
