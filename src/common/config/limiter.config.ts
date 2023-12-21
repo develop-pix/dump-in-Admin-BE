@@ -26,7 +26,8 @@ function createRateLimiter(windowMs: number) {
       );
 
       logger.log(createLog({ req, response }));
-      Sentry.captureException(response);
+      Sentry.captureEvent({ message: response.message, level: 'info' });
+
       return response;
     },
     skip: (req: Request) => req.session?.user !== undefined,
