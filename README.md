@@ -13,7 +13,7 @@
 - [개요](#개요)
 - [사용 기술](#사용-기술)
 - [프로젝트 진행 및 이슈 관리](#프로젝트-진행-및-이슈-관리)
-- [모델링](#모델링)
+- [ERD](#erd)
 - [아키텍처](#아키텍처)
 - [구현 과정 및 설명](#구현-과정-및-설명)
 - [Did You Know](#did-you-know)
@@ -59,13 +59,13 @@
 
 <br/>
 
-## 모델링
+## ERD
 
 ![modeling](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/7f7d0eda-468e-44f8-819a-5df3006280c8)
 
 ## 아키텍처
 
-![architecture](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/1f6c87a0-dba8-4982-bbaa-c0264bbc2b88)
+![architecture](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/30708675-0741-49be-a526-2aa21abc9efd)
 
 ## 구현 과정 및 설명
 
