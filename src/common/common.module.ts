@@ -1,5 +1,5 @@
 // common/common.module.ts
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
 import {
@@ -8,12 +8,13 @@ import {
   infoLogFileTransport,
 } from './config/winston.config';
 import { envConfigOptions } from './config/env.config';
-import { APP_FILTER } from '@nestjs/core';
-import { HttpExceptionFilter } from './filter/http-exception.filter';
+import { SentryModule } from './sentry/sentry.module';
+import { sentryOptions } from './config/sentry.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot(envConfigOptions),
+    SentryModule.forRoot(sentryOptions),
     WinstonModule.forRoot({
       transports: [
         consoleTransport,
@@ -22,13 +23,6 @@ import { HttpExceptionFilter } from './filter/http-exception.filter';
       ],
     }),
   ],
-  providers: [
-    Logger,
-    {
-      provide: APP_FILTER,
-      useClass: HttpExceptionFilter,
-    },
-  ],
-  exports: [ConfigModule, WinstonModule, Logger],
+  exports: [ConfigModule, WinstonModule],
 })
 export class CommonModule {}
