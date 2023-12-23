@@ -9,8 +9,11 @@ import { DashboardModule } from './dashboard/dashboard.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { CommonModule } from './common/common.module';
 import { typeOrmConfig } from './common/config/typeorm.config';
+import { HealthController } from './health.controller';
+import { TerminusModule } from '@nestjs/terminus';
 
 @Module({
+  controllers: [HealthController],
   imports: [
     CommonModule,
     TypeOrmModule.forRoot(typeOrmConfig),
@@ -21,6 +24,7 @@ import { typeOrmConfig } from './common/config/typeorm.config';
     HashtagModule,
     ReviewModule,
     DashboardModule,
+    TerminusModule,
   ],
 })
 export class AppModule {}
