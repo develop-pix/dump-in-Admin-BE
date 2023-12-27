@@ -4,7 +4,6 @@ import { Request } from 'express';
 import { createLog } from './log-helper.config';
 import { HttpStatus, Logger } from '@nestjs/common';
 import { ResponseEntity } from '../entity/response.entity';
-import * as Sentry from '@sentry/node';
 
 declare module 'express-session' {
   interface SessionData {
@@ -26,8 +25,6 @@ function createRateLimiter(windowMs: number) {
       );
 
       logger.log(createLog({ req, response }));
-      Sentry.captureEvent({ message: response.message, level: 'info' });
-
       return response;
     },
     skip: (req: Request) => req.session?.user !== undefined,
