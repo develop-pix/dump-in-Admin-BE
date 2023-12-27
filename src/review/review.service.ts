@@ -4,7 +4,6 @@ import { FindReviewOptionsProps } from './dto/get-review-query.dto';
 import { GetReviewListDto } from './dto/get-review-list.dto';
 import { ReviewRepository } from './repository/review.repository';
 import { Review } from './entity/review.entity';
-import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class ReviewService {
@@ -61,9 +60,7 @@ export class ReviewService {
       throw new NotFoundException('리뷰를 찾지 못했습니다.');
     }
 
-    await this.reviewRepository.save(
-      plainToInstance(Review, { id, isDeleted: true }),
-    );
+    await this.reviewRepository.save({ id, isDeleted: true });
 
     return true;
   }

@@ -18,22 +18,19 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();
-    const stack = exception.stack;
-    if (!(exception instanceof HttpException)) {
-      exception = new InternalServerErrorException();
-    }
-
     const statusCode = (exception as HttpException).getStatus();
     const getResponse = (exception as HttpException).getResponse();
     const response = ResponseEntity.EXCEPTION(
       getResponse['message'] || 'Internal Server Error',
       statusCode,
     );
+    const stack = exception.stack;
     const log = createLog({ req, stack, response });
-    Sentry.withScope(function (scope) {
-      scope.setLevel(statusCode === 500 ? 'error' : 'info');
+
+    if (!(exception instanceof HttpException)) {
+      exception = new InternalServerErrorException();
       Sentry.captureException(exception);
-    });
+    }
 
     this.logger.log(log);
     res.status(statusCode).json(response);
