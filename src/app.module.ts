@@ -11,12 +11,14 @@ import { CommonModule } from './common/common.module';
 import { typeOrmConfig } from './common/config/typeorm.config';
 import { HealthController } from './health.controller';
 import { TerminusModule } from '@nestjs/terminus';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   controllers: [HealthController],
   imports: [
     CommonModule,
     TypeOrmModule.forRoot(typeOrmConfig),
+    ScheduleModule.forRoot(),
     PhotoBoothModule,
     EventModule,
     UserModule,
