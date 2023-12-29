@@ -8,7 +8,6 @@ import { Events } from './entity/event.entity';
 import { PhotoBoothService } from '../photo-booth/photo-booth.service';
 import { EventCreateProps } from './dto/post-event.dto';
 import { EventUpdateProps } from './dto/patch-event.dto';
-import { plainToInstance } from 'class-transformer';
 import { EventImage } from './entity/event-image.entity';
 import { EventHashtag } from '../hashtag/entity/event-hashtag.entity';
 import { PhotoBoothBrand } from '../photo-booth/entity/photo-booth-brand.entity';
@@ -76,14 +75,12 @@ export class EventService {
     const [photoBoothBrand, eventImages, eventHashtags] =
       await this.prepareEventAttributes(createProps);
 
-    await this.eventRepository.save(
-      plainToInstance(Events, {
-        photoBoothBrand,
-        eventImages,
-        eventHashtags,
-        ...createProps,
-      }),
-    );
+    await this.eventRepository.save({
+      photoBoothBrand,
+      eventImages,
+      eventHashtags,
+      ...createProps,
+    });
 
     return true;
   }
@@ -109,17 +106,13 @@ export class EventService {
     const [photoBoothBrand, eventImages, eventHashtags] =
       await this.prepareEventAttributes(updateProps);
 
-    await this.hashtagService.removeEventHashtags(eventId);
-
-    await this.eventRepository.save(
-      plainToInstance(Events, {
-        id,
-        eventImages,
-        eventHashtags,
-        photoBoothBrand,
-        ...updateProps,
-      }),
-    );
+    await this.eventRepository.save({
+      id,
+      eventImages,
+      eventHashtags,
+      photoBoothBrand,
+      ...updateProps,
+    });
 
     return true;
   }
@@ -133,16 +126,14 @@ export class EventService {
   private async prepareEventAttributes(
     props: EventCreateProps | EventUpdateProps,
   ): Promise<[PhotoBoothBrand, EventImage[], EventHashtag[]]> {
-    const [photoBoothBrand, eventImages, hashtags] = await Promise.all([
+    const hashtags = await this.hashtagService.createHashtags(props.hashtags);
+
+    return Promise.all([
       this.photoBoothService.findOneBrandByName(props.brandName),
       props.images?.map((image) => EventImage.create(image)),
-      this.hashtagService.createHashtags(props.hashtags),
+      hashtags.length !== 0
+        ? hashtags.map((hashtag) => EventHashtag.create(hashtag))
+        : undefined,
     ]);
-
-    return [
-      photoBoothBrand,
-      eventImages,
-      hashtags.map((hashtag) => EventHashtag.create(hashtag)),
-    ];
   }
 }

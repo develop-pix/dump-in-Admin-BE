@@ -1,14 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Hashtag } from './entity/hashtag.entity';
 import { HashtagRepository } from './repository/hastag.repository';
-import { BrandHashtag } from './entity/brand-hashtag.entity';
-import { PhotoBoothBrand } from '../photo-booth/entity/photo-booth-brand.entity';
 import { BrandHashtagRepository } from './repository/brand-hashtag.repository';
 import { PaginationProps } from '../common/dto/get-pagination-query.dto';
 import { GetHashtagListDto } from './dto/get-hastag-list.dto';
 import { EventHashtagRepository } from './repository/event-hashtag.repository';
-import { Events } from '../event/entity/event.entity';
-import { EventHashtag } from './entity/event-hashtag.entity';
 
 @Injectable()
 export class HashtagService {
@@ -81,29 +77,5 @@ export class HashtagService {
     return this.hashtagRepo.save(
       newHashtagNames.map((name) => Hashtag.create(name)),
     );
-  }
-
-  /**
-   * @param entity - 이벤트 엔티티
-   * @desc - 연결된 모든 해시태그 가져오기
-   *       - 엔티티와 관련된 해시태그 모두 삭제
-   */
-  async removeEventHashtags(entity: Events): Promise<void> {
-    const allHashtags = await this.eventHashtagRepo.findManyHashtags(
-      EventHashtag.of(entity),
-    );
-    this.eventHashtagRepo.remove(allHashtags);
-  }
-
-  /**
-   * @param entity - 브랜드 엔티티
-   * @desc - 연결된 모든 해시태그 가져오기
-   *       - 엔티티와 관련된 해시태그 모두 삭제
-   */
-  async removeBrandHashtags(entity: PhotoBoothBrand): Promise<void> {
-    const allHashtags = await this.brandHashtagRepo.findManyHashtags(
-      BrandHashtag.of(entity),
-    );
-    this.brandHashtagRepo.remove(allHashtags);
   }
 }
