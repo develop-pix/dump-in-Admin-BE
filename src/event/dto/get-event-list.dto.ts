@@ -66,7 +66,7 @@ export class GetEventListDto {
   })
   @Expose()
   @Type(() => EventHashtag)
-  get hashtags(): EventHashtag[] {
-    return this._eventHashtags;
+  get hashtags(): string[] {
+    return this._eventHashtags.map((hashtags) => hashtags.hashtag.name);
   }
 }

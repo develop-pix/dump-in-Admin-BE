@@ -106,8 +106,6 @@ export class EventService {
     const [photoBoothBrand, eventImages, eventHashtags] =
       await this.prepareEventAttributes(updateProps);
 
-    await this.hashtagService.removeEventHashtags(eventId);
-
     await this.eventRepository.save({
       id,
       eventImages,
@@ -128,16 +126,14 @@ export class EventService {
   private async prepareEventAttributes(
     props: EventCreateProps | EventUpdateProps,
   ): Promise<[PhotoBoothBrand, EventImage[], EventHashtag[]]> {
-    const [photoBoothBrand, eventImages, hashtags] = await Promise.all([
+    const hashtags = await this.hashtagService.createHashtags(props.hashtags);
+
+    return Promise.all([
       this.photoBoothService.findOneBrandByName(props.brandName),
       props.images?.map((image) => EventImage.create(image)),
-      this.hashtagService.createHashtags(props.hashtags),
+      hashtags.length !== 0
+        ? hashtags.map((hashtag) => EventHashtag.create(hashtag))
+        : undefined,
     ]);
-
-    return [
-      photoBoothBrand,
-      eventImages,
-      hashtags.map((hashtag) => EventHashtag.create(hashtag)),
-    ];
   }
 }

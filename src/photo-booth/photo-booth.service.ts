@@ -254,7 +254,6 @@ export class PhotoBoothService {
    * @desc - 쿼리 파라미터에 맞는 포토부스 업체 반환
    *       - 쿼리 옵션이 없으면 전체 포토부스 업체 반환
    */
-
   async findBrandByQueryParam(
     pageProps: PaginationProps,
     query: FindBrandOptionProps,
@@ -354,7 +353,6 @@ export class PhotoBoothService {
     const [brandHashtags, brandImages] =
       await this.prepareBrandAttributes(updateProps);
 
-    await this.hashtagService.removeBrandHashtags(brandId);
     await this.photoBoothBrandRepository.save({
       id,
       brandImages,
@@ -373,15 +371,14 @@ export class PhotoBoothService {
    */
   private async prepareBrandAttributes(
     props: BrandCreateProps | BrandUpdateProps,
-  ): Promise<[BrandHashtag[], BrandImage[]]> {
-    const [hashtags, brandImages] = await Promise.all([
-      this.hashtagService.createHashtags(props.hashtags),
-      props.images?.map((image) => BrandImage.create(image)),
-    ]);
+  ): Promise<[BrandImage[], BrandHashtag[]]> {
+    const hashtags = await this.hashtagService.createHashtags(props.hashtags);
 
-    return [
-      hashtags.map((hashtag) => BrandHashtag.create(hashtag)),
-      brandImages,
-    ];
+    return Promise.all([
+      props.images?.map((image) => BrandImage.create(image)),
+      hashtags.length !== 0
+        ? hashtags.map((hashtag) => BrandHashtag.create(hashtag))
+        : undefined,
+    ]);
   }
 }
