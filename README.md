@@ -65,32 +65,73 @@
 
 ## 아키텍처
 
-![architecture](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/30708675-0741-49be-a526-2aa21abc9efd)
+![app-architecture](https://github.com/develop-pix/dump-in-Admin-BE/assets/96982072/302d5157-1e8c-4eb6-a50a-ef106c7fe897)
 
 ## 구현 과정 및 설명
 
 - **세션 인증 및 인가**
 
-- **API 요청 횟수 제한하기**
+  - express-session을 이용해서 서버 메모리가 아닌 postgresql로 세션 스토어 사용
+  - 쿠키 세션 적용
+  - Guard로 인가 기능 적용
+  - Rate Limiting으로 무작위 대입 방지
 
 - **대시보드 기능**
 
+  - 날짜별 가입자수, 리뷰수 보기 적용
+  - TypeORM 쿼리빌더에서 groupBy를 이용
+
+    ```typescript
+      countUsersByDate(): Promise<RawCountByDate[]> {
+      return this.createQueryBuilder('user')
+        .select(['DATE(created_at) as created', 'COUNT(id) as user'])
+        .where('deleted_at IS NULL')
+        .groupBy('created')
+        .orderBy('created', 'DESC')
+        .getRawMany();
+    }
+    ```
+
 - **포토부스 관리 기능**
+
+  - 포토부스 업체를 생성, 수정할 수 있는 기능 적용
+  - 어플리케이션 내의 지도에 표시 지역별 포토부스 지점관리 기능 적용
 
 - **이벤트 관리 기능**
 
+  - 어플리케이션에서 포토부스 업체별 시행하고있는 이벤트나 한정 기간동안 프레임을 볼 수 있는 이벤트 생성 기능
+  - 이벤트를 수정하면서 관련 이미지, 해시태그를 테이블로 정규화해서 관리
+
 - **리뷰 관리 기능**
+
+  - 유저가 작성한 리뷰를 확인하고 부적절한 내용은 삭제할 수 있게 조회 및 삭제기능 적용
 
 - **유저 관리 기능**
 
-- **로깅**
+  - 가입한 유저의 정보를 확인 (수정 불가)
 
-<!-- - **알림 관리 기능** -->
+- **로그 모니터링**
+
+  - Sentry, Winston을 이용해 로그 레벨에 따라 알림
+    - info 레벨: 이미 예외처리를 작성한 내용은 Winston으로 파일로 만들어서 관리
+    - error 레벨: 내부 서버 에러나 예상치 못한 에러는 Sentry로 보내 이메일로 알림
+  - Sentry의 Cron 모니터링과 NestJS 스케쥴링으로 주기적으로 서버 상태 모니터링
+
 <br/>
 
 ## Did You Know
 
-[API 요청 시도 횟수 제한하기](https://zamoca.space/js-ts/nest-js/rate-limit.html)
+:pushpin: [API 요청 시도 횟수 제한하기](https://zamoca.space/js-ts/nest-js/rate-limit.html)
+
+:pushpin: [트랜잭션 롤백 해결하기](https://zamoca.space/db/transaction-rollback.html)
+
+:pushpin: [sh: 1: nest: not found 해결](https://zamoca.space/js-ts/nest-js/error-cli-not-found.html)
+
+:pushpin: [응답 객체 직렬화하기](https://zamoca.space/js-ts/nest-js/class-transformer.html)
+
+:pushpin: [요청 객체 역직렬화하기](https://zamoca.space/js-ts/nest-js/class-validator.html)
+
+<!-- 로그 모니터링 추가, 테스트 추가 -->
 
 <br/>
 
