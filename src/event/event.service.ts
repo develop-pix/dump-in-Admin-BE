@@ -8,6 +8,7 @@ import { Events } from './entity/event.entity';
 import { PhotoBoothService } from '../photo-booth/photo-booth.service';
 import { EventCreateProps } from './dto/post-event.dto';
 import { EventUpdateProps } from './dto/patch-event.dto';
+import { plainToInstance } from 'class-transformer';
 import { EventImage } from './entity/event-image.entity';
 import { EventHashtag } from '../hashtag/entity/event-hashtag.entity';
 import { PhotoBoothBrand } from '../photo-booth/entity/photo-booth-brand.entity';
@@ -75,12 +76,14 @@ export class EventService {
     const [photoBoothBrand, eventImages, eventHashtags] =
       await this.prepareEventAttributes(createProps);
 
-    await this.eventRepository.save({
-      photoBoothBrand,
-      eventImages,
-      eventHashtags,
-      ...createProps,
-    });
+    await this.eventRepository.save(
+      plainToInstance(Events, {
+        photoBoothBrand,
+        eventImages,
+        eventHashtags,
+        ...createProps,
+      }),
+    );
 
     return true;
   }
@@ -108,13 +111,15 @@ export class EventService {
 
     await this.hashtagService.removeEventHashtags(eventId);
 
-    await this.eventRepository.save({
-      id,
-      eventImages,
-      eventHashtags,
-      photoBoothBrand,
-      ...updateProps,
-    });
+    await this.eventRepository.save(
+      plainToInstance(Events, {
+        id,
+        eventImages,
+        eventHashtags,
+        photoBoothBrand,
+        ...updateProps,
+      }),
+    );
 
     return true;
   }

@@ -25,6 +25,7 @@ import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 import { MoveToOpenBoothProps } from './dto/put-photo-booth.dto';
 import { HashtagService } from '../hashtag/hashtag.service';
 import { BrandCreateProps } from './dto/post-photo-booth.dto';
+import { plainToInstance } from 'class-transformer';
 import { BrandImage } from './entity/photo-booth-brand-image.entity';
 import { BrandHashtag } from '../hashtag/entity/brand-hashtag.entity';
 
@@ -97,11 +98,9 @@ export class PhotoBoothService {
       throw new NotFoundException('포토부스를 찾지 못했습니다.');
     }
 
-    await this.photoBoothRepository.save({
-      id,
-      photoBoothBrand,
-      ...updateProps,
-    });
+    await this.photoBoothRepository.save(
+      plainToInstance(PhotoBooth, { id, photoBoothBrand, ...updateProps }),
+    );
 
     return true;
   }
@@ -191,10 +190,12 @@ export class PhotoBoothService {
       );
     }
 
-    await this.hiddenBoothRepository.save({
-      id,
-      ...updateProps,
-    });
+    await this.hiddenBoothRepository.save(
+      plainToInstance(HiddenPhotoBooth, {
+        id,
+        ...updateProps,
+      }),
+    );
 
     return true;
   }
@@ -221,7 +222,9 @@ export class PhotoBoothService {
     const photoBoothBrand = await this.findOneBrandByName(moveProps.brandName);
 
     await Promise.all([
-      this.photoBoothRepository.save({ id, photoBoothBrand, ...moveProps }),
+      this.photoBoothRepository.save(
+        plainToInstance(PhotoBooth, { id, photoBoothBrand, ...moveProps }),
+      ),
       this.deleteHiddenBooth(id),
     ]);
 
@@ -243,7 +246,9 @@ export class PhotoBoothService {
       );
     }
 
-    await this.hiddenBoothRepository.save({ id, preprocessedAt: new Date() });
+    await this.hiddenBoothRepository.save(
+      plainToInstance(HiddenPhotoBooth, { id, preprocessedAt: new Date() }),
+    );
 
     return true;
   }
@@ -324,11 +329,13 @@ export class PhotoBoothService {
     const [brandHashtags, brandImages] =
       await this.prepareBrandAttributes(createProps);
 
-    await this.photoBoothBrandRepository.save({
-      brandImages,
-      brandHashtags,
-      ...createProps,
-    });
+    await this.photoBoothBrandRepository.save(
+      plainToInstance(PhotoBoothBrand, {
+        brandImages,
+        brandHashtags,
+        ...createProps,
+      }),
+    );
 
     return true;
   }
@@ -355,12 +362,14 @@ export class PhotoBoothService {
       await this.prepareBrandAttributes(updateProps);
 
     await this.hashtagService.removeBrandHashtags(brandId);
-    await this.photoBoothBrandRepository.save({
-      id,
-      brandImages,
-      brandHashtags,
-      ...updateProps,
-    });
+    await this.photoBoothBrandRepository.save(
+      plainToInstance(PhotoBoothBrand, {
+        id,
+        brandImages,
+        brandHashtags,
+        ...updateProps,
+      }),
+    );
 
     return true;
   }
