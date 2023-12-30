@@ -92,6 +92,9 @@
     }
     ```
 
+  - 통합 대시보드 보기
+    - 날짜별 가입자수, 리뷰수 쿼리 결과를 [대시보드 서비스 로직][dashboard]에서 통합
+
 - **포토부스 관리 기능**
 
   - 포토부스 업체를 생성, 수정할 수 있는 기능 적용
@@ -131,7 +134,9 @@
 
 :pushpin: [요청 객체 역직렬화하기](https://zamoca.space/js-ts/nest-js/class-validator.html)
 
-<!-- 로그 모니터링 추가, 테스트 추가 -->
+:pushpin: [서버 상태 모니터링하기](https://zamoca.space/js-ts/nest-js/server-monitoring.html)
+
+:pushpin: [외부 로거로 효율적으로 모니터링하기](https://zamoca.space/js-ts/nest-js/external-logger.html)
 
 <br/>
 
@@ -183,3 +188,4 @@
 [GitHub]: https://img.shields.io/badge/GitHub%20Project-%23181717.svg?style=for-the-badge&logo=github&logoColor=white
 [AWS-EC2]: https://img.shields.io/badge/AWS%20EC2-%23FF9900.svg?style=for-the-badge&logo=amazonec2&logoColor=white
 [AWS-Route53]: https://img.shields.io/badge/AWS%20Route53-%238C4FFF.svg?style=for-the-badge&logo=amazonroute53&logoColor=white
+[dashboard]: https://github.com/develop-pix/dump-in-Admin-BE/blob/main/src/dashboard/dashboard.service.ts
