@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { User } from '../entity/user.entity';
+import { User } from '../../user/entity/user.entity';
 
 export class GetAdminSessionDto {
   @ApiProperty({
