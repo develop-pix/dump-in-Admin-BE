@@ -1,7 +1,5 @@
 import { IsOptional } from 'class-validator';
-import { EventReqBodyDto, EventReqBodyProps } from './req-event-body.dto';
-import { Hashtag } from '../../hashtag/entity/hashtag.entity';
-import { EventImage } from '../entity/event-image.entity';
+import { EventReqBodyDto, ToEntityProps } from './req-event-body.dto';
 
 export class UpdateEventDto extends EventReqBodyDto {
   @IsOptional()
@@ -25,25 +23,9 @@ export class UpdateEventDto extends EventReqBodyDto {
   @IsOptional()
   endDate: Date;
 
-  getUpdateProps(): EventUpdateProps {
-    const arrayProps = this.getArrayProps();
-    return {
-      title: this.title,
-      content: this.content,
-      mainThumbnailUrl: this.mainThumbnailUrl,
-      brandName: this.brandName,
-      isPublic: this.isPublic,
-      startDate: this.startDate,
-      endDate: this.endDate,
-      // hashtags: this.hashtags,
-      // images: this.images,
-      ...arrayProps,
-    };
+  toUpdateEntity(): EventUpdateProps {
+    return this.toEntity();
   }
 }
 
-export interface EventUpdateProps
-  extends Omit<EventReqBodyProps, 'hashtags' | 'images'> {
-  hashtags: Hashtag[];
-  images: EventImage[];
-}
+export interface EventUpdateProps extends ToEntityProps {}

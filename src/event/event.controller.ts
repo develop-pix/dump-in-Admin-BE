@@ -53,7 +53,7 @@ export class EventController {
   async createEvent(
     @Body() request: CreateEventDto,
   ): Promise<ResponseEntity<string>> {
-    await this.eventService.createEventWithHastags(request.getCreateProps());
+    await this.eventService.createEventWithHastags(request.toCreateEntity());
     return ResponseEntity.CREATED('이벤트를 생성 했습니다.');
   }
 
@@ -80,7 +80,7 @@ export class EventController {
   ): Promise<ResponseEntity<string>> {
     await this.eventService.updateEventWithHastags(
       id,
-      request.getUpdateProps(),
+      request.toUpdateEntity(),
     );
     return ResponseEntity.OK('이벤트를 업데이트 했습니다.');
   }

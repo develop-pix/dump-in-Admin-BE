@@ -24,21 +24,11 @@ export class CreateEventDto extends EventReqBodyDto {
   @IsNotEmpty()
   endDate: Date;
 
-  getCreateProps(): EventCreateProps {
-    const arrayProps = this.getArrayProps();
+  toCreateEntity(): EventCreateProps {
     return {
-      title: this.title,
-      content: this.content,
-      mainThumbnailUrl: this.mainThumbnailUrl,
-      brandName: this.brandName,
-      isPublic: this.isPublic,
-      startDate: this.startDate,
-      endDate: this.endDate,
-      // hashtags: this.hashtags,
-      // images: this.images,
       createdAt: new Date(),
       updatedAt: new Date(),
-      ...arrayProps,
+      ...this.toEntity(),
     };
   }
 }

@@ -35,4 +35,4 @@ export class EventQueryDto extends PaginationDto {
 }
 
 export interface FindEventOptionProps
-  extends Pick<Partial<EventReqBodyProps>, 'brandName' | 'title'> {}
+  extends Pick<EventReqBodyProps, 'brandName' | 'title'> {}

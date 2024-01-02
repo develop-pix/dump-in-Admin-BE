@@ -12,18 +12,6 @@ import { Type } from 'class-transformer';
 import { EventImage } from '../entity/event-image.entity';
 import { Hashtag } from '../../hashtag/entity/hashtag.entity';
 
-export interface EventReqBodyProps {
-  title: string;
-  content: string;
-  mainThumbnailUrl: string;
-  brandName: string;
-  isPublic: boolean;
-  startDate: Date;
-  endDate: Date;
-  hashtags: string[];
-  images: string[];
-}
-
 export class EventReqBodyDto implements EventReqBodyProps {
   @ApiProperty({
     description: '이벤트의 제목',
@@ -101,10 +89,35 @@ export class EventReqBodyDto implements EventReqBodyProps {
   @IsUrl({}, { each: true })
   images: string[];
 
-  getArrayProps(): { images: EventImage[]; hashtags: Hashtag[] } {
+  toEntity(): ToEntityProps {
     return {
+      title: this.title,
+      content: this.content,
+      mainThumbnailUrl: this.mainThumbnailUrl,
+      brandName: this.brandName,
+      isPublic: this.isPublic,
+      startDate: this.startDate,
+      endDate: this.endDate,
       images: this.images.map((image) => EventImage.create(image)),
       hashtags: [...new Set(this.hashtags)].map((name) => Hashtag.byName(name)),
     };
   }
+}
+
+export interface ToEntityProps
+  extends Omit<EventReqBodyProps, 'hashtags' | 'images'> {
+  hashtags: Hashtag[];
+  images: EventImage[];
+}
+
+export interface EventReqBodyProps {
+  title: string;
+  content: string;
+  mainThumbnailUrl: string;
+  brandName: string;
+  isPublic: boolean;
+  startDate: Date;
+  endDate: Date;
+  hashtags: string[];
+  images: string[];
 }
