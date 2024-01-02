@@ -1,9 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventRepository } from './repository/event.repository';
 import { HashtagService } from '../hashtag/hashtag.service';
 import { PaginationProps } from '../common/dto/get-pagination-query.dto';
 import { FindEventOptionProps } from './dto/get-event-query.dto';
-import { GetEventListDto } from './dto/get-event-list.dto';
 import { Events } from './entity/event.entity';
 import { PhotoBoothService } from '../photo-booth/photo-booth.service';
 import { EventCreateProps } from './dto/post-event.dto';
@@ -28,23 +27,16 @@ export class EventService {
   async findEventByQueryParam(
     pageProps: PaginationProps,
     query: FindEventOptionProps,
-  ): Promise<[GetEventListDto[], number]> {
-    const [results, count] =
-      await this.eventRepository.findEventByOptionAndCount(
-        Events.of(query),
-        pageProps,
-      );
-    return [
-      results.map((result: Events) => new GetEventListDto(result)),
-      count,
-    ];
+  ): Promise<[Events[], number]> {
+    return this.eventRepository.findEventByOptionAndCount(
+      Events.of(query),
+      pageProps,
+    );
   }
 
   /**
-   * @param pageProps - Pagination (항목수, 페이지)
-   * @param query - Request Query (업체명, 제목)
-   * @desc - 쿼리 파라미터에 맞는 이벤트 목록 조회
-   *       - 쿼리 옵션이 없으면 전체 이벤트 조회
+   * @param id - 이벤트 id
+   * @desc - 이벤트 id에 맞는 이벤트 조회
    */
   async findOneEventById(id: number): Promise<Events> {
     return this.eventRepository.findOneEvent(Events.byId(id));
@@ -83,12 +75,7 @@ export class EventService {
     id: number,
     updateProps: EventUpdateProps,
   ): Promise<boolean> {
-    const eventId = Events.byId(id);
-    const isExistEvent = this.eventRepository.hasId(eventId);
-
-    if (!isExistEvent) {
-      throw new NotFoundException('업데이트할 이벤트가 없습니다.');
-    }
+    await this.findOneEventById(id);
 
     const [photoBoothBrand, eventHashtags] =
       await this.prepareEventAttributes(updateProps);
@@ -115,7 +102,7 @@ export class EventService {
     const hashtags = await this.hashtagService.createHashtags(props.hashtags);
 
     return Promise.all([
-      this.photoBoothService.findOneBrandBy({ name: props.brandName }),
+      this.photoBoothService.findOneBrandByName(props.brandName),
       hashtags.map((hashtag) => EventHashtag.create(hashtag)),
     ]);
   }

@@ -18,6 +18,7 @@ import { GetEventDetailDto } from './dto/get-event-detail.dto';
 import { CreateEventDto } from './dto/post-event.dto';
 import { UpdateEventDto } from './dto/patch-event.dto';
 import { ApiTags } from '@nestjs/swagger';
+import { Events } from './entity/event.entity';
 
 @ApiTags('이벤트')
 @Controller('event')
@@ -39,7 +40,11 @@ export class EventController {
     );
     return ResponseEntity.OK_WITH<PageEntity<GetEventListDto>>(
       '이벤트 목록을 조회합니다.',
-      PageEntity.create(request.getPageProps(), count, response),
+      PageEntity.create(
+        request.getPageProps(),
+        count,
+        response.map((result: Events) => new GetEventListDto(result)),
+      ),
     );
   }
 
