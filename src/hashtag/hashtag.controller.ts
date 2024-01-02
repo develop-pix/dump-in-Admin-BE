@@ -41,7 +41,7 @@ export class HashtagController {
   async createHastags(
     @Body() request: CreateHashtagsDto,
   ): Promise<ResponseEntity<string>> {
-    await this.hashtagService.createHashtags(request.getCreateProps());
+    await this.hashtagService.createHashtags(request.toCreateEntity());
     return ResponseEntity.CREATED('해시태그를 생성했습니다.');
   }
 }

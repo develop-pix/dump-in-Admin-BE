@@ -13,7 +13,7 @@ export class CreateHashtagsDto {
   @IsString({ each: true })
   hashtags: string[];
 
-  getCreateProps(): Hashtag[] {
+  toCreateEntity(): Hashtag[] {
     return [...new Set(this.hashtags)].map((name) => Hashtag.byName(name));
   }
 }
