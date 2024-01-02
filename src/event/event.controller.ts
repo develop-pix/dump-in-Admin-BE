@@ -12,7 +12,7 @@ import { EventService } from './event.service';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
 import { ResponseEntity } from '../common/entity/response.entity';
 import { EventQueryDto } from './dto/get-event-query.dto';
-import { Page } from '../common/dto/get-pagination-list.dto';
+import { PageEntity } from '../common/dto/get-pagination-list.dto';
 import { GetEventListDto } from './dto/get-event-list.dto';
 import { GetEventDetailDto } from './dto/get-event-detail.dto';
 import { CreateEventDto } from './dto/post-event.dto';
@@ -32,14 +32,14 @@ export class EventController {
   })
   async findEventByQueryParam(
     @Query() request: EventQueryDto,
-  ): Promise<ResponseEntity<Page<GetEventListDto>>> {
+  ): Promise<ResponseEntity<PageEntity<GetEventListDto>>> {
     const [response, count] = await this.eventService.findEventByQueryParam(
       request.getPageProps(),
       request.getQueryProps(),
     );
-    return ResponseEntity.OK_WITH<Page<GetEventListDto>>(
+    return ResponseEntity.OK_WITH<PageEntity<GetEventListDto>>(
       '이벤트 목록을 조회합니다.',
-      Page.create(request.getPageProps(), count, response),
+      PageEntity.create(request.getPageProps(), count, response),
     );
   }
 

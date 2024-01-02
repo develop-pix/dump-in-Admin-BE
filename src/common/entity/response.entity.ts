@@ -62,10 +62,14 @@ export class ResponseEntity<T> {
     return new ResponseEntity(code, message, false, '');
   }
 
-  static validate<T>(message: string, data: T, props: string | number): T {
+  static async validate<T>(
+    message: string,
+    data: T,
+    props: string | number,
+  ): Promise<T> {
     if (!data) {
       throw new NotFoundException(
-        `${message}을(를) 찾지 못했습니다. input: ${props}`,
+        `${message} 를 찾지 못했습니다. matching: ${props}`,
       );
     }
     return data;

@@ -1,5 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
-import { EventReqBodyDto, EventReqBodyProps } from './req-event-body.dto';
+import { EventReqBodyDto } from './req-event-body.dto';
+import { EventUpdateProps } from './patch-event.dto';
 
 export class CreateEventDto extends EventReqBodyDto {
   @IsNotEmpty()
@@ -24,6 +25,7 @@ export class CreateEventDto extends EventReqBodyDto {
   endDate: Date;
 
   getCreateProps(): EventCreateProps {
+    const arrayProps = this.getArrayProps();
     return {
       title: this.title,
       content: this.content,
@@ -32,15 +34,16 @@ export class CreateEventDto extends EventReqBodyDto {
       isPublic: this.isPublic,
       startDate: this.startDate,
       endDate: this.endDate,
-      hashtags: this.hashtags,
-      images: this.images,
+      // hashtags: this.hashtags,
+      // images: this.images,
       createdAt: new Date(),
       updatedAt: new Date(),
+      ...arrayProps,
     };
   }
 }
 
-export interface EventCreateProps extends EventReqBodyProps {
+export interface EventCreateProps extends EventUpdateProps {
   createdAt: Date;
   updatedAt: Date;
 }

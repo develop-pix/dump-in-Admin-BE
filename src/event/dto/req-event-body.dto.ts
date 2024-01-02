@@ -9,6 +9,8 @@ import {
   MinLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { EventImage } from '../entity/event-image.entity';
+import { Hashtag } from '../../hashtag/entity/hashtag.entity';
 
 export interface EventReqBodyProps {
   title: string;
@@ -98,4 +100,11 @@ export class EventReqBodyDto implements EventReqBodyProps {
   @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
   @IsUrl({}, { each: true })
   images: string[];
+
+  getArrayProps(): { images: EventImage[]; hashtags: Hashtag[] } {
+    return {
+      images: this.images.map((image) => EventImage.create(image)),
+      hashtags: [...new Set(this.hashtags)].map((name) => Hashtag.byName(name)),
+    };
+  }
 }

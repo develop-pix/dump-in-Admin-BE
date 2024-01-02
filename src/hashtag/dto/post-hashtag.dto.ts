@@ -1,5 +1,6 @@
 import { ArrayMaxSize, IsArray, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Hashtag } from '../entity/hashtag.entity';
 
 export class CreateHashtagsDto {
   @ApiProperty({
@@ -12,7 +13,7 @@ export class CreateHashtagsDto {
   @IsString({ each: true })
   hashtags: string[];
 
-  getCreateProps(): string[] {
-    return (this.hashtags || []).filter((tag) => tag.trim() !== '');
+  getCreateProps(): Hashtag[] {
+    return [...new Set(this.hashtags)].map((name) => Hashtag.byName(name));
   }
 }

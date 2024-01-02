@@ -6,6 +6,8 @@ import {
   PhotoBoothReqBodyDto,
   PhotoBoothReqBodyProps,
 } from './req-photo-booth-body.dto';
+import { BrandImage } from '../entity/photo-booth-brand-image.entity';
+import { Hashtag } from '../../hashtag/entity/hashtag.entity';
 
 export class UpdatePhotoBoothDto extends PickType(PhotoBoothReqBodyDto, [
   'name',
@@ -61,26 +63,26 @@ export class UpdateBoothBrandDto extends BrandReqBodyDto {
   @IsOptional()
   mainThumbnailImageUrl: string;
 
-  @IsOptional({ each: true })
-  hashtags: string[];
-
-  @IsOptional({ each: true })
-  images: string[];
-
   getUpdateProps(): BrandUpdateProps {
+    const arrayProps = this.getArrayProps();
     return {
       name: this.name,
       description: this.description,
       photoBoothUrl: this.photoBoothUrl,
       mainThumbnailImageUrl: this.mainThumbnailImageUrl,
       isEvent: this.isEvent,
-      hashtags: this.hashtags,
-      images: this.images,
+      // hashtags: this.hashtags,
+      // images: this.images,
+      ...arrayProps,
     };
   }
 }
 
-export interface BrandUpdateProps extends BrandReqBodyProps {}
+export interface BrandUpdateProps
+  extends Omit<BrandReqBodyProps, 'hashtags' | 'images'> {
+  hashtags: Hashtag[];
+  images: BrandImage[];
+}
 
 export interface PhotoBoothUpdateProps
   extends Partial<PhotoBoothReqBodyProps> {}

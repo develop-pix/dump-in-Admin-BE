@@ -22,7 +22,7 @@ import {
   BoothQueryDto,
   BoothBrandQueryDto,
 } from './dto/get-photo-booth-query.dto';
-import { Page } from '../common/dto/get-pagination-list.dto';
+import { PageEntity } from '../common/dto/get-pagination-list.dto';
 import {
   GetBoothBrandDetailDto,
   GetPhotoBoothDetailDto,
@@ -34,6 +34,9 @@ import {
 import { CreateBoothBrandDto } from './dto/post-photo-booth.dto';
 import { MoveHiddenToOpenBoothDto } from './dto/put-photo-booth.dto';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
+import { PhotoBooth } from './entity/photo-booth.entity';
+import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
+import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 
 @ApiTags('포토부스')
 @Controller('photo-booth')
@@ -48,15 +51,19 @@ export class PhotoBoothController {
   })
   async findOpenBoothByQueryParam(
     @Query() request: BoothQueryDto,
-  ): Promise<ResponseEntity<Page<GetPhotoBoothListDto>>> {
+  ): Promise<ResponseEntity<PageEntity<GetPhotoBoothListDto>>> {
     const [response, count] =
       await this.photoBoothService.findOpenBoothByQueryParam(
         request.getPageProps(),
         request.getQueryProps(),
       );
-    return ResponseEntity.OK_WITH<Page<GetPhotoBoothListDto>>(
+    return ResponseEntity.OK_WITH<PageEntity<GetPhotoBoothListDto>>(
       '공개된 포토부스 목록을 반환합니다.',
-      Page.create(request.getPageProps(), count, response),
+      PageEntity.create(
+        request.getPageProps(),
+        count,
+        response.map((result: PhotoBooth) => new GetPhotoBoothListDto(result)),
+      ),
     );
   }
 
@@ -68,15 +75,21 @@ export class PhotoBoothController {
   })
   async findBrandByQueryParam(
     @Query() request: BoothBrandQueryDto,
-  ): Promise<ResponseEntity<Page<GetBoothBrandListDto>>> {
+  ): Promise<ResponseEntity<PageEntity<GetBoothBrandListDto>>> {
     const [response, count] =
       await this.photoBoothService.findBrandByQueryParam(
         request.getPageProps(),
         request.getQueryProps(),
       );
-    return ResponseEntity.OK_WITH<Page<GetBoothBrandListDto>>(
+    return ResponseEntity.OK_WITH<PageEntity<GetBoothBrandListDto>>(
       '포토부스 업체 목록을 반환합니다.',
-      Page.create(request.getPageProps(), count, response),
+      PageEntity.create(
+        request.getPageProps(),
+        count,
+        response.map(
+          (entity: PhotoBoothBrand) => new GetBoothBrandListDto(entity),
+        ),
+      ),
     );
   }
 
@@ -99,15 +112,21 @@ export class PhotoBoothController {
   })
   async findHiddenBoothByQueryParam(
     @Query() request: BoothQueryDto,
-  ): Promise<ResponseEntity<Page<GetPhotoBoothListDto>>> {
+  ): Promise<ResponseEntity<PageEntity<GetPhotoBoothListDto>>> {
     const [response, count] =
       await this.photoBoothService.findHiddenBoothByQueryParam(
         request.getPageProps(),
         request.getQueryProps(),
       );
-    return ResponseEntity.OK_WITH<Page<GetPhotoBoothListDto>>(
+    return ResponseEntity.OK_WITH<PageEntity<GetPhotoBoothListDto>>(
       '비공개 포토부스 목록을 반환합니다.',
-      Page.create(request.getPageProps(), count, response),
+      PageEntity.create(
+        request.getPageProps(),
+        count,
+        response.map(
+          (result: HiddenPhotoBooth) => new GetPhotoBoothListDto(result),
+        ),
+      ),
     );
   }
 
@@ -203,7 +222,7 @@ export class PhotoBoothController {
   async findOneBrand(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<ResponseEntity<GetBoothBrandDetailDto>> {
-    const response = await this.photoBoothService.findOneBrandById(id);
+    const response = await this.photoBoothService.findOneBrandBy({ id });
     return ResponseEntity.OK_WITH<GetBoothBrandDetailDto>(
       '요청한 포토부스 업체를 반환합니다.',
       new GetBoothBrandDetailDto(response),

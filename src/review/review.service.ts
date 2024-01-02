@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PaginationProps } from '../common/dto/get-pagination-query.dto';
 import { FindReviewOptionsProps } from './dto/get-review-query.dto';
-import { GetReviewListDto } from './dto/get-review-list.dto';
 import { ReviewRepository } from './repository/review.repository';
 import { Review } from './entity/review.entity';
 import { plainToInstance } from 'class-transformer';
@@ -16,24 +15,14 @@ export class ReviewService {
    * @desc - 쿼리 파라미터에 맞는 리뷰 목록 조회
    *       - 쿼리 옵션이 없으면 전체 리뷰 조회
    */
-  async findReviewByQueryParam(
+  findReviewByQueryParam(
     pageProps: PaginationProps,
     query: FindReviewOptionsProps,
-  ): Promise<[GetReviewListDto[], number]> {
-    const [results, count] =
-      await this.reviewRepository.findReviewByOptionAndCount(
-        Review.of(query),
-        pageProps,
-      );
-
-    if (count === 0) {
-      throw new NotFoundException('리뷰를 찾지 못했습니다');
-    }
-
-    return [
-      results.map((result: Review) => new GetReviewListDto(result)),
-      count,
-    ];
+  ): Promise<[Review[], number]> {
+    return this.reviewRepository.findReviewByOptionAndCount(
+      Review.of(query),
+      pageProps,
+    );
   }
 
   /**

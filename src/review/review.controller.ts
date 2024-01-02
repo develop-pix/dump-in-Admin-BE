@@ -11,9 +11,10 @@ import { ApiTags } from '@nestjs/swagger';
 import { ReviewQueryDto } from './dto/get-review-query.dto';
 import { ResponseEntity } from '../common/entity/response.entity';
 import { GetReviewListDto } from './dto/get-review-list.dto';
-import { Page } from '../common/dto/get-pagination-list.dto';
+import { PageEntity } from '../common/dto/get-pagination-list.dto';
 import { GetReviewDetailDto } from './dto/get-review-detail.dto';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
+import { Review } from './entity/review.entity';
 
 @ApiTags('리뷰')
 @Controller('review')
@@ -28,14 +29,18 @@ export class ReviewController {
   })
   async findReviewByQueryParam(
     @Query() request: ReviewQueryDto,
-  ): Promise<ResponseEntity<Page<GetReviewListDto>>> {
+  ): Promise<ResponseEntity<PageEntity<GetReviewListDto>>> {
     const [response, count] = await this.reviewService.findReviewByQueryParam(
       request.getPageProps(),
       request.getQueryProps(),
     );
-    return ResponseEntity.OK_WITH<Page<GetReviewListDto>>(
+    return ResponseEntity.OK_WITH<PageEntity<GetReviewListDto>>(
       '리뷰 목록을 조회합니다.',
-      Page.create(request.getPageProps(), count, response),
+      PageEntity.create(
+        request.getPageProps(),
+        count,
+        response.map((result: Review) => new GetReviewListDto(result)),
+      ),
     );
   }
 

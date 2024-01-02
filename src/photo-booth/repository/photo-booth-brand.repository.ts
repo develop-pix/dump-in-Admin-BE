@@ -35,7 +35,7 @@ export class PhotoBoothBrandRepository extends Repository<PhotoBoothBrand> {
 
   findOneBrand(brand: PhotoBoothBrand): Promise<PhotoBoothBrand> {
     const options = this.findBrandManyOptions(brand);
-    return this.findOne(options);
+    return this.findOneOrFail(options);
   }
 
   private findBrandManyOptions(

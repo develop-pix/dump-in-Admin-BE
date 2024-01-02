@@ -40,7 +40,6 @@ describe('AuthService', () => {
           savedUser.username = 'admin';
           savedUser.email = 'admin@example.com';
           savedUser.password = 'admin hashed 12';
-          savedUser.isAdmin = true;
           return Promise.resolve(savedUser);
         } else {
           return Promise.reject(
@@ -60,23 +59,19 @@ describe('AuthService', () => {
   });
 
   describe('validateAdminForLogIn()', () => {
-    const mockSession = {};
     const getLogInProps = { username: 'admin', password: 'admin' };
 
     it('SUCCESS: 어드민 역할을 가진 유저일 때 로그인', async () => {
-      const result = await authService.validateAdminForLogIn(
-        getLogInProps,
-        mockSession,
-      );
+      const result = await authService.validateAdminForLogIn(getLogInProps);
 
-      expect(result.isAdmin).toEqual(true);
+      expect(result).toEqual(true);
     });
 
-    it('FAILURE: 어드민 역할이 아닐 때, 404 예외 throw', async () => {
-      getLogInProps.username = 'user';
+    it('FAILURE: 비밀번호가 맞지 않을 때, 404 예외 throw', async () => {
+      getLogInProps.password = 'user';
 
       await expect(async () => {
-        await authService.validateAdminForLogIn(getLogInProps, mockSession);
+        await authService.validateAdminForLogIn(getLogInProps);
       }).rejects.toThrowError(
         new NotFoundException('관리자 정보를 찾지 못했습니다'),
       );
@@ -86,7 +81,7 @@ describe('AuthService', () => {
       getLogInProps.username = 'anonymous';
 
       await expect(async () => {
-        await authService.validateAdminForLogIn(getLogInProps, mockSession);
+        await authService.validateAdminForLogIn(getLogInProps);
       }).rejects.toThrowError(
         new NotFoundException('관리자 정보를 찾지 못했습니다'),
       );

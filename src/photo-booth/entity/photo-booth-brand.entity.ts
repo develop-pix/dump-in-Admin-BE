@@ -53,19 +53,12 @@ export class PhotoBoothBrand {
   })
   brandImages: BrandImage[];
 
-  static of({ name, isEvent }: FindBrandOptionProps): PhotoBoothBrand {
-    const brand = new PhotoBoothBrand();
-
-    brand.name = name;
-    brand.isEvent = isEvent;
-
-    return brand;
-  }
-
-  static byId(id: number): PhotoBoothBrand {
+  static of({ id, name, isEvent }: FindBrandOptionProps): PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.id = id;
+    brand.name = name;
+    brand.isEvent = isEvent;
 
     return brand;
   }

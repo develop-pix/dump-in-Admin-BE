@@ -5,7 +5,7 @@ import {
   BadRequestException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { GetAdminSessionDto } from '../../user/dto/get-session-admin.dto';
+import { GetAdminSessionDto } from '../dto/get-admin-session.dto';
 
 @Injectable()
 export class LoggedCheckGuard implements CanActivate {

@@ -85,8 +85,9 @@ export class BoothBrandQueryDto extends PaginationDto {
 }
 
 export interface FindBrandOptionProps {
-  name: string;
-  isEvent: boolean;
+  id?: number;
+  name?: string;
+  isEvent?: boolean;
 }
 
 export interface FindBoothOptionProps extends Partial<PhotoBoothReqBodyProps> {}

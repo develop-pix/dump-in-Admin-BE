@@ -10,6 +10,8 @@ import {
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { Hashtag } from '../../hashtag/entity/hashtag.entity';
+import { BrandImage } from '../entity/photo-booth-brand-image.entity';
 
 export interface PhotoBoothReqBodyProps {
   name: string;
@@ -167,4 +169,11 @@ export class BrandReqBodyDto implements BrandReqBodyProps {
   @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
   @IsUrl({}, { each: true })
   images: string[];
+
+  getArrayProps(): { images: BrandImage[]; hashtags: Hashtag[] } {
+    return {
+      images: this.images.map((image) => BrandImage.create(image)),
+      hashtags: [...new Set(this.hashtags)].map((name) => Hashtag.byName(name)),
+    };
+  }
 }

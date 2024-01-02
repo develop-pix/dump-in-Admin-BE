@@ -8,7 +8,6 @@ import { Events } from './entity/event.entity';
 import { PhotoBoothService } from '../photo-booth/photo-booth.service';
 import { EventCreateProps } from './dto/post-event.dto';
 import { EventUpdateProps } from './dto/patch-event.dto';
-import { EventImage } from './entity/event-image.entity';
 import { EventHashtag } from '../hashtag/entity/event-hashtag.entity';
 import { PhotoBoothBrand } from '../photo-booth/entity/photo-booth-brand.entity';
 
@@ -35,11 +34,6 @@ export class EventService {
         Events.of(query),
         pageProps,
       );
-
-    if (count === 0) {
-      throw new NotFoundException('이벤트를 찾지 못했습니다');
-    }
-
     return [
       results.map((result: Events) => new GetEventListDto(result)),
       count,
@@ -53,13 +47,7 @@ export class EventService {
    *       - 쿼리 옵션이 없으면 전체 이벤트 조회
    */
   async findOneEventById(id: number): Promise<Events> {
-    const event = await this.eventRepository.findOneEvent(Events.byId(id));
-
-    if (!event) {
-      throw new NotFoundException('이벤트를 찾지 못했습니다.');
-    }
-
-    return event;
+    return this.eventRepository.findOneEvent(Events.byId(id));
   }
 
   /**
@@ -72,12 +60,11 @@ export class EventService {
   async createEventWithHastags(
     createProps: EventCreateProps,
   ): Promise<boolean> {
-    const [photoBoothBrand, eventImages, eventHashtags] =
+    const [photoBoothBrand, eventHashtags] =
       await this.prepareEventAttributes(createProps);
 
     await this.eventRepository.save({
       photoBoothBrand,
-      eventImages,
       eventHashtags,
       ...createProps,
     });
@@ -103,12 +90,11 @@ export class EventService {
       throw new NotFoundException('업데이트할 이벤트가 없습니다.');
     }
 
-    const [photoBoothBrand, eventImages, eventHashtags] =
+    const [photoBoothBrand, eventHashtags] =
       await this.prepareEventAttributes(updateProps);
 
     await this.eventRepository.save({
       id,
-      eventImages,
       eventHashtags,
       photoBoothBrand,
       ...updateProps,
@@ -125,15 +111,12 @@ export class EventService {
    */
   private async prepareEventAttributes(
     props: EventCreateProps | EventUpdateProps,
-  ): Promise<[PhotoBoothBrand, EventImage[], EventHashtag[]]> {
+  ): Promise<[PhotoBoothBrand, EventHashtag[]]> {
     const hashtags = await this.hashtagService.createHashtags(props.hashtags);
 
     return Promise.all([
-      this.photoBoothService.findOneBrandByName(props.brandName),
-      props.images?.map((image) => EventImage.create(image)),
-      hashtags.length !== 0
-        ? hashtags.map((hashtag) => EventHashtag.create(hashtag))
-        : undefined,
+      this.photoBoothService.findOneBrandBy({ name: props.brandName }),
+      hashtags.map((hashtag) => EventHashtag.create(hashtag)),
     ]);
   }
 }

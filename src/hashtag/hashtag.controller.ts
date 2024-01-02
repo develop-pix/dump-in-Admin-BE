@@ -6,7 +6,7 @@ import { ResponseEntity } from '../common/entity/response.entity';
 import { CreateHashtagsDto } from './dto/post-hashtag.dto';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
 import { PaginationDto } from 'src/common/dto/get-pagination-query.dto';
-import { Page } from '../common/dto/get-pagination-list.dto';
+import { PageEntity } from '../common/dto/get-pagination-list.dto';
 
 @ApiTags('해시태그')
 @Controller('hashtag')
@@ -21,14 +21,18 @@ export class HashtagController {
   })
   async findAllHashtags(
     @Query() request: PaginationDto,
-  ): Promise<ResponseEntity<Page<GetHashtagListDto>>> {
+  ): Promise<ResponseEntity<PageEntity<GetHashtagListDto>>> {
     const [response, count] = await this.hashtagService.findAllHashtags(
       request.getPageProps(),
     );
 
-    return ResponseEntity.OK_WITH<Page<GetHashtagListDto>>(
+    return ResponseEntity.OK_WITH<PageEntity<GetHashtagListDto>>(
       '해시태그 목록입니다.',
-      Page.create(request.getPageProps(), count, response),
+      PageEntity.create(
+        request.getPageProps(),
+        count,
+        response.map((hashtag) => new GetHashtagListDto(hashtag)),
+      ),
     );
   }
 
