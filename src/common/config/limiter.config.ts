@@ -1,5 +1,5 @@
 import { rateLimit } from 'express-rate-limit';
-import { GetAdminSessionDto } from '../../user/dto/get-session-admin.dto';
+import { GetAdminSessionDto } from '../../auth/dto/get-admin-session.dto';
 import { Request } from 'express';
 import { createLog } from './log-helper.config';
 import { HttpStatus, Logger } from '@nestjs/common';
