@@ -15,7 +15,7 @@ import { ResponseEntity } from '../entity/response.entity';
  * @see also @https://gist.github.com/gsusmonzon/ecd7842495f07594761e40c2758617d0
  * @see also @https://docs.nestjs.com/exception-filters
  */
-@Catch(EntityNotFoundError, Error)
+@Catch(EntityNotFoundError)
 export class EntityNotFoundExceptionFilter implements ExceptionFilter {
   constructor(private readonly logger: Logger) {}
 

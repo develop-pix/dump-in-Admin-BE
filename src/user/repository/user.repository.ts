@@ -22,7 +22,7 @@ export class UserRepository extends Repository<User> {
   }
 
   findUserByOptionAndCount(page: PaginationProps): Promise<[User[], number]> {
-    const options = this.findUserManyOptions();
+    const options = this.findUserManyOptions(new User());
     const { take, skip } = page;
     return this.findAndCount({ take, skip, ...options });
   }
@@ -41,11 +41,12 @@ export class UserRepository extends Repository<User> {
       .getRawMany();
   }
 
-  private findUserManyOptions(user?: User): FindManyOptions<User> {
+  private findUserManyOptions(user: User): FindManyOptions<User> {
     const where = this.findUserOptionsWhere(user);
     const relations = { reviews: true };
     const select: FindOptionsSelect<User> = {
       id: true,
+      password: true,
       username: true,
       nickname: true,
       reviews: { id: true },

@@ -18,7 +18,9 @@ import { PhotoBoothBrand } from './entity/brand.entity';
 import { GetBoothBrandDetailDto } from './dto/get-brand-detail.dto';
 import { GetBoothBrandListDto } from './dto/get-brand-list.dto';
 import { BoothBrandQueryDto } from './dto/get-brand-query.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('포토부스 업체')
 @Controller('photo-booth/brand')
 export class BrandController {
   constructor(private readonly brandService: BrandService) {}
