@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import * as bcrypt from 'bcrypt';
 import { User } from '../user/entity/user.entity';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 
 class MockUserService {
@@ -40,6 +40,7 @@ describe('AuthService', () => {
           savedUser.username = 'admin';
           savedUser.email = 'admin@example.com';
           savedUser.password = 'admin hashed 12';
+          savedUser.isAdmin = true;
           return Promise.resolve(savedUser);
         } else {
           return Promise.reject(
@@ -62,18 +63,18 @@ describe('AuthService', () => {
     const getLogInProps = { username: 'admin', password: 'admin' };
 
     it('SUCCESS: 어드민 역할을 가진 유저일 때 로그인', async () => {
-      const result = await authService.validateAdminForLogIn(getLogInProps);
+      const result = await authService.validateAdminForLogin(getLogInProps);
 
-      expect(result).toEqual(true);
+      expect(result.isAdmin).toEqual(true);
     });
 
     it('FAILURE: 비밀번호가 맞지 않을 때, 404 예외 throw', async () => {
-      getLogInProps.password = 'user';
+      getLogInProps.password = 'wrong password';
 
       await expect(async () => {
-        await authService.validateAdminForLogIn(getLogInProps);
+        await authService.validateAdminForLogin(getLogInProps);
       }).rejects.toThrowError(
-        new NotFoundException('관리자 정보를 찾지 못했습니다'),
+        new UnauthorizedException('비밀번호가 일치하지 않습니다.'),
       );
     });
 
@@ -81,7 +82,7 @@ describe('AuthService', () => {
       getLogInProps.username = 'anonymous';
 
       await expect(async () => {
-        await authService.validateAdminForLogIn(getLogInProps);
+        await authService.validateAdminForLogin(getLogInProps);
       }).rejects.toThrowError(
         new NotFoundException('관리자 정보를 찾지 못했습니다'),
       );

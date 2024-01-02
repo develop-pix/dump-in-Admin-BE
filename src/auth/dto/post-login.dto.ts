@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
 import * as crypto from 'crypto';
 
-export class LogInDto {
+export class LoginDto {
   @ApiProperty({
     description: '어드민이 로그인에 사용할 아이디 필드입니다.',
     required: true,

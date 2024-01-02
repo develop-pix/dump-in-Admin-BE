@@ -13,7 +13,7 @@ export class AuthService {
    * @desc - 유저 검증 로직
    *       - props에서 전달받은 비밀번호를 DB에 저장된 정보와 비교
    */
-  async validateAdminForLogIn(props: AdminLogInProps): Promise<User> {
+  async validateAdminForLogin(props: AdminLogInProps): Promise<User> {
     const admin = await this.userService.findOneAdminBy(props);
     await this.comparePassword(props.password, admin.password);
     return admin;
