@@ -1,9 +1,9 @@
 import { Entity, Column, PrimaryGeneratedColumn, OneToMany } from 'typeorm';
-import { PhotoBooth } from './photo-booth.entity';
-import { FindBrandOptionProps } from '../dto/get-photo-booth-query.dto';
+import { PhotoBooth } from '../../photo-booth/entity/photo-booth.entity';
 import { Events } from '../../event/entity/event.entity';
 import { BrandHashtag } from '../../hashtag/entity/brand-hashtag.entity';
-import { BrandImage } from './photo-booth-brand-image.entity';
+import { BrandImage } from './brand-image.entity';
+import { FindBrandOptionProps } from '../dto/get-brand-query.dto';
 
 @Entity('photo_booth_brand')
 export class PhotoBoothBrand {
@@ -67,6 +67,14 @@ export class PhotoBoothBrand {
     const brand = new PhotoBoothBrand();
 
     brand.name = name;
+
+    return brand;
+  }
+
+  static byId(id: number): PhotoBoothBrand {
+    const brand = new PhotoBoothBrand();
+
+    brand.id = id;
 
     return brand;
   }

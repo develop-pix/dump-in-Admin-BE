@@ -11,7 +11,7 @@ import {
   MinLength,
 } from 'class-validator';
 import { Hashtag } from '../../hashtag/entity/hashtag.entity';
-import { BrandImage } from '../entity/photo-booth-brand-image.entity';
+import { BrandImage } from '../../brand/entity/brand-image.entity';
 
 export interface PhotoBoothReqBodyProps {
   name: string;

@@ -7,7 +7,7 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
-import { PhotoBoothBrand } from './photo-booth-brand.entity';
+import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
 import { FindBoothOptionProps } from '../dto/get-photo-booth-query.dto';
 import { Review } from '../../review/entity/review.entity';
 

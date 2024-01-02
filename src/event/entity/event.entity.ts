@@ -7,7 +7,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
-import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
+import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
 import { EventImage } from './event-image.entity';
 import { FindEventOptionProps } from '../dto/get-event-query.dto';
 import { EventHashtag } from '../../hashtag/entity/event-hashtag.entity';

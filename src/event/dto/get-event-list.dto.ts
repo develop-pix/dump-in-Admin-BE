@@ -1,6 +1,6 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
+import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
 import { Events } from '../entity/event.entity';
 import { EventImage } from '../entity/event-image.entity';
 import { EventHashtag } from '../../hashtag/entity/event-hashtag.entity';

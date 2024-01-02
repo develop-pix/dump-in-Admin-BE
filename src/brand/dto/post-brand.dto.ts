@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
-import { BrandReqBodyDto } from './req-photo-booth-body.dto';
-import { BrandUpdateProps } from './patch-photo-booth.dto';
+import { BrandReqBodyDto } from '../../photo-booth/dto/req-photo-booth-body.dto';
+import { BrandUpdateProps } from '../../photo-booth/dto/patch-photo-booth.dto';
 
 export class CreateBoothBrandDto extends BrandReqBodyDto {
   @IsNotEmpty()

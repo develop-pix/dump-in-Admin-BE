@@ -5,38 +5,22 @@ import {
   Param,
   Delete,
   Query,
-  Post,
   Put,
   ParseUUIDPipe,
   Body,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { PhotoBoothService } from './photo-booth.service';
 import { ApiTags } from '@nestjs/swagger';
-import {
-  GetBoothBrandListDto,
-  GetPhotoBoothListDto,
-} from './dto/get-photo-booth-list.dto';
+import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
 import { ResponseEntity } from 'src/common/entity/response.entity';
-import {
-  BoothQueryDto,
-  BoothBrandQueryDto,
-} from './dto/get-photo-booth-query.dto';
+import { BoothQueryDto } from './dto/get-photo-booth-query.dto';
 import { PageEntity } from '../common/dto/get-pagination-list.dto';
-import {
-  GetBoothBrandDetailDto,
-  GetPhotoBoothDetailDto,
-} from './dto/get-photo-booth-detail.dto';
-import {
-  UpdateBoothBrandDto,
-  UpdatePhotoBoothDto,
-} from './dto/patch-photo-booth.dto';
-import { CreateBoothBrandDto } from './dto/post-photo-booth.dto';
+import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
+import { UpdatePhotoBoothDto } from './dto/patch-photo-booth.dto';
 import { MoveHiddenToOpenBoothDto } from './dto/put-photo-booth.dto';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
 import { PhotoBooth } from './entity/photo-booth.entity';
 import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
-import { PhotoBoothBrand } from './entity/photo-booth-brand.entity';
 
 @ApiTags('포토부스')
 @Controller('photo-booth')
@@ -65,43 +49,6 @@ export class PhotoBoothController {
         response.map((result: PhotoBooth) => new GetPhotoBoothListDto(result)),
       ),
     );
-  }
-
-  @Get('brand')
-  @SwaggerAPI({
-    name: '포토부스 업체 목록 조회',
-    model: GetBoothBrandListDto,
-    isPagination: true,
-  })
-  async findBrandByQueryParam(
-    @Query() request: BoothBrandQueryDto,
-  ): Promise<ResponseEntity<PageEntity<GetBoothBrandListDto>>> {
-    const [response, count] =
-      await this.photoBoothService.findBrandByQueryParam(
-        request.getPageProps(),
-        request.getQueryProps(),
-      );
-    return ResponseEntity.OK_WITH<PageEntity<GetBoothBrandListDto>>(
-      '포토부스 업체 목록을 반환합니다.',
-      PageEntity.create(
-        request.getPageProps(),
-        count,
-        response.map(
-          (entity: PhotoBoothBrand) => new GetBoothBrandListDto(entity),
-        ),
-      ),
-    );
-  }
-
-  @Post('brand')
-  @SwaggerAPI({ name: '포토부스 업체 생성', success: 201 })
-  async createBrand(
-    @Body() request: CreateBoothBrandDto,
-  ): Promise<ResponseEntity<string>> {
-    await this.photoBoothService.createBrandWithHastags(
-      request.getCreateProps(),
-    );
-    return ResponseEntity.CREATED('포토부스 업체를 생성 했습니다.');
   }
 
   @Get('raw')
@@ -212,33 +159,5 @@ export class PhotoBoothController {
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.deleteHiddenBooth(id);
     return ResponseEntity.OK('비공개 포토부스를 삭제 했습니다.');
-  }
-
-  @Get('brand/:id')
-  @SwaggerAPI({
-    name: '포토부스 업체 조회',
-    model: GetBoothBrandDetailDto,
-  })
-  async findOneBrand(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<ResponseEntity<GetBoothBrandDetailDto>> {
-    const response = await this.photoBoothService.findOneBrandBy({ id });
-    return ResponseEntity.OK_WITH<GetBoothBrandDetailDto>(
-      '요청한 포토부스 업체를 반환합니다.',
-      new GetBoothBrandDetailDto(response),
-    );
-  }
-
-  @Patch('brand/:id')
-  @SwaggerAPI({ name: '포토부스 업체 수정' })
-  async updateBrand(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() request: UpdateBoothBrandDto,
-  ): Promise<ResponseEntity<string>> {
-    await this.photoBoothService.updateBrandWithHastags(
-      id,
-      request.getUpdateProps(),
-    );
-    return ResponseEntity.OK('포토부스 업체를 업데이트 했습니다.');
   }
 }

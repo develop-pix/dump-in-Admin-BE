@@ -6,7 +6,7 @@ import {
   PhotoBoothReqBodyDto,
   PhotoBoothReqBodyProps,
 } from './req-photo-booth-body.dto';
-import { BrandImage } from '../entity/photo-booth-brand-image.entity';
+import { BrandImage } from '../../brand/entity/brand-image.entity';
 import { Hashtag } from '../../hashtag/entity/hashtag.entity';
 
 export class UpdatePhotoBoothDto extends PickType(PhotoBoothReqBodyDto, [

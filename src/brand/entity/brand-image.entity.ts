@@ -5,7 +5,7 @@ import {
   PrimaryGeneratedColumn,
   JoinColumn,
 } from 'typeorm';
-import { PhotoBoothBrand } from './photo-booth-brand.entity';
+import { PhotoBoothBrand } from './brand.entity';
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 
 @Entity('photo_booth_brand_image')

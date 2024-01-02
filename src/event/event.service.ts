@@ -4,18 +4,18 @@ import { HashtagService } from '../hashtag/hashtag.service';
 import { PaginationProps } from '../common/dto/get-pagination-query.dto';
 import { FindEventOptionProps } from './dto/get-event-query.dto';
 import { Events } from './entity/event.entity';
-import { PhotoBoothService } from '../photo-booth/photo-booth.service';
 import { EventCreateProps } from './dto/post-event.dto';
 import { EventUpdateProps } from './dto/patch-event.dto';
 import { EventHashtag } from '../hashtag/entity/event-hashtag.entity';
-import { PhotoBoothBrand } from '../photo-booth/entity/photo-booth-brand.entity';
+import { PhotoBoothBrand } from '../brand/entity/brand.entity';
+import { BrandService } from '../brand/brand.service';
 
 @Injectable()
 export class EventService {
   constructor(
     private readonly hashtagService: HashtagService,
     private readonly eventRepository: EventRepository,
-    private readonly photoBoothService: PhotoBoothService,
+    private readonly brandService: BrandService,
   ) {}
 
   /**
@@ -102,7 +102,7 @@ export class EventService {
     const hashtags = await this.hashtagService.createHashtags(props.hashtags);
 
     return Promise.all([
-      this.photoBoothService.findOneBrandByName(props.brandName),
+      this.brandService.findOneBrandByName(props.brandName),
       hashtags.map((hashtag) => EventHashtag.create(hashtag)),
     ]);
   }
