@@ -20,6 +20,6 @@ export class UserService {
    * @desc 관리자에 대한 데이터 반환
    */
   async findOneAdminBy(props: AdminSignInProps): Promise<User> {
-    return this.userRepository.findOneUserBy(User.adminOf(props));
+    return this.userRepository.findOneUser(User.adminOf(props));
   }
 }
