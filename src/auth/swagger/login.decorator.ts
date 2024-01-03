@@ -6,7 +6,7 @@ import {
   ApiOperation,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { createSchema } from '../../../common/swagger/api.schema';
+import { createSchema } from '../../common/swagger/api.schema';
 
 export const SwaggerLogIn = (): MethodDecorator =>
   applyDecorators(

@@ -1,7 +1,7 @@
 import { Controller, Post, Body, Session, HttpCode } from '@nestjs/common';
 import { ResponseEntity } from '../common/entity/response.entity';
 import { AuthService } from './auth.service';
-import { SwaggerLogIn } from './decorator/swagger/login.decorator';
+import { SwaggerLogIn } from './swagger/login.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { LoginAdmin } from './dto/post-login.dto';
 import { GetAdminSession } from './dto/get-admin-session.dto';
