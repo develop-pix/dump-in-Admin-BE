@@ -12,7 +12,7 @@ export class AuthService {
    * @desc - 유저 검증 로직
    *       - props에서 전달받은 비밀번호를 DB에 저장된 정보와 비교
    */
-  async login(request: LoginAdmin): Promise<User> {
+  login(request: LoginAdmin): Promise<User> {
     return this.userService.findOneAdminBy(request.username);
   }
 
@@ -22,8 +22,7 @@ export class AuthService {
    * @desc - 관리자 검증 로직
    *       - credentials에서 전달받은 비밀번호를 DB에 저장된 정보와 비교
    */
-  async verifyCredentials(request: LoginAdmin, admin: User): Promise<boolean> {
-    if (!admin) return false;
+  verifyCredentials(request: LoginAdmin, admin: User): Promise<boolean> {
     return User.comparePassword(request.password, admin.password);
   }
 }

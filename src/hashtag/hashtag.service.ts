@@ -12,10 +12,8 @@ export class HashtagService {
   /**
    * @desc - 전체 해시태그 목록 조회
    */
-  async findAllHashtags(
-    pageProps: PaginationProps,
-  ): Promise<[Hashtag[], number]> {
-    return await this.hashtagRepo.findAll(pageProps);
+  findAllHashtags(pageProps: PaginationProps): Promise<[Hashtag[], number]> {
+    return this.hashtagRepo.findAll(pageProps);
   }
 
   /**

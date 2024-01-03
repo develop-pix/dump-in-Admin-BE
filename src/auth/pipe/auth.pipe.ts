@@ -26,8 +26,12 @@ export class AuthPipe
       admin,
     );
 
+    if (!admin) {
+      throw new UnauthorizedException(`관리자 정보가 존재하지 않습니다.`);
+    }
+
     if (!isSamePassword) {
-      throw new UnauthorizedException(`아이디나 비밀번호가 일치하지 않습니다.`);
+      throw new UnauthorizedException(`비밀번호가 일치하지 않습니다.`);
     }
 
     return new GetAdminSession(admin);

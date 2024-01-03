@@ -28,7 +28,7 @@ export class ReviewService {
    * @param id - 리뷰 id
    * @desc 해당 리뷰 데이터 조회
    */
-  async findOneReviewById(id: number): Promise<Review> {
+  findOneReviewById(id: number): Promise<Review> {
     return this.reviewRepository.findOneReview(Review.byId(id));
   }
 

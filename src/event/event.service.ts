@@ -26,7 +26,7 @@ export class EventService {
    * @desc - 쿼리 파라미터에 맞는 이벤트 목록 조회
    *       - 쿼리 옵션이 없으면 전체 이벤트 조회
    */
-  async findEventByQueryParam(
+  findEventByQueryParam(
     pageProps: PaginationProps,
     query: FindEventOptionProps,
   ): Promise<[Events[], number]> {
@@ -40,7 +40,7 @@ export class EventService {
    * @param id - 이벤트 id
    * @desc - 이벤트 id에 맞는 이벤트 조회
    */
-  async findOneEventById(id: number): Promise<Events> {
+  findOneEventById(id: number): Promise<Events> {
     return this.eventRepository.findOneEvent(Events.byId(id));
   }
 

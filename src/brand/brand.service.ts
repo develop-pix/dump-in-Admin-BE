@@ -18,7 +18,7 @@ export class BrandService {
    * @desc - 쿼리 파라미터에 맞는 포토부스 업체 반환
    *       - 쿼리 옵션이 없으면 전체 포토부스 업체 반환
    */
-  async findBrandByQueryParam(
+  findBrandByQueryParam(
     pageProps: PaginationProps,
     query: FindBrandOptionProps,
   ): Promise<[PhotoBoothBrand[], number]> {
