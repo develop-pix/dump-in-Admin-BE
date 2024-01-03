@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { SwaggerLogIn } from './decorator/swagger/login.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { LoginAdmin } from './dto/post-login.dto';
-import { GetAdminSessionDto } from './dto/get-admin-session.dto';
+import { GetAdminSession } from './dto/get-admin-session.dto';
 
 @ApiTags('인증')
 @Controller('auth')
@@ -16,10 +16,10 @@ export class AuthController {
   @HttpCode(200)
   async login(
     @Body() request: LoginAdmin,
-    @Session() session: Record<string, GetAdminSessionDto>,
+    @Session() session: Record<string, GetAdminSession>,
   ) {
     const admin = await this.authService.login(request);
-    session.user = new GetAdminSessionDto(admin);
+    session.user = new GetAdminSession(admin);
     return ResponseEntity.OK(`${request.username}님이 로그인 했습니다.`);
   }
 }

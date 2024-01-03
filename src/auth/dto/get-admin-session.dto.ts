@@ -2,7 +2,7 @@ import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../../user/entity/user.entity';
 
-export class GetAdminSessionDto {
+export class GetAdminSession {
   @ApiProperty({
     description: '유저의 email 입니다',
     example: 'feed-me-admin1@naver.com',
