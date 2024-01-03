@@ -12,7 +12,7 @@ import { Type } from 'class-transformer';
 import { EventImage } from '../entity/event-image.entity';
 import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
 import { EventReqBodyProps, ToEventProps } from '../event.interface';
-import { CreateHashtagsDto } from 'src/hashtag/dto/post-hashtag.dto';
+import { Hashtag } from '../../hashtag/entity/hashtag.entity';
 
 export class EventReqBodyDto implements EventReqBodyProps {
   @ApiProperty({
@@ -92,7 +92,7 @@ export class EventReqBodyDto implements EventReqBodyProps {
   images: string[];
 
   toEntity(): ToEventProps {
-    const hashtags = CreateHashtagsDto.toHashtagEntity(this.hashtags);
+    const hashtags = Hashtag.unique(this.hashtags);
     return {
       title: this.title,
       content: this.content,

@@ -11,7 +11,7 @@ import {
 } from 'class-validator';
 import { BrandImage } from '../../brand/entity/brand-image.entity';
 import { BrandReqBodyProps, ToBrandProps } from '../brand.interface';
-import { CreateHashtagsDto } from '../../hashtag/dto/post-hashtag.dto';
+import { Hashtag } from '../../hashtag/entity/hashtag.entity';
 
 export class BrandReqBody implements BrandReqBodyProps {
   @ApiProperty({
@@ -76,7 +76,7 @@ export class BrandReqBody implements BrandReqBodyProps {
   images: string[];
 
   toEntity(): ToBrandProps {
-    const hashtags = CreateHashtagsDto.toHashtagEntity(this.hashtags);
+    const hashtags = Hashtag.unique(this.hashtags);
     return {
       name: this.name,
       isEvent: this.isEvent,

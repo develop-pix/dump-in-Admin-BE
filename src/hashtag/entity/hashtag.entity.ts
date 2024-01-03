@@ -40,4 +40,8 @@ export class Hashtag {
 
     return hashtag;
   }
+
+  static unique(hashtags: string[]): Hashtag[] {
+    return [...new Set(hashtags)].map((name) => Hashtag.byName(name));
+  }
 }
