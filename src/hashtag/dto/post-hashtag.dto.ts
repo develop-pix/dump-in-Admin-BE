@@ -14,6 +14,10 @@ export class CreateHashtagsDto {
   hashtags: string[];
 
   toCreateEntity(): Hashtag[] {
-    return [...new Set(this.hashtags)].map((name) => Hashtag.byName(name));
+    return CreateHashtagsDto.toHashtagEntity(this.hashtags);
+  }
+
+  static toHashtagEntity(hashtags: string[]): Hashtag[] {
+    return [...new Set(hashtags)].map((name) => Hashtag.byName(name));
   }
 }

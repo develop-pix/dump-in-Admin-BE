@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Hashtag } from './entity/hashtag.entity';
 import { HashtagRepository } from './repository/hastag.repository';
 import { PaginationProps } from '../common/dto/get-pagination-query.dto';
+import { BrandHashtag } from './entity/brand-hashtag.entity';
+import { EventHashtag } from './entity/event-hashtag.entity';
 
 @Injectable()
 export class HashtagService {
@@ -33,6 +35,24 @@ export class HashtagService {
     );
 
     return [...existingHashtags, ...newHashtags];
+  }
+
+  /**
+   * @param hashtags - 포토부스 업체의 생성 및 수정에 필요한 해시태그 엔티티
+   * @desc  - 포토부스 업체관련 해시태그 가져오기
+   */
+  async brandHashtags(hashtags: Hashtag[]): Promise<BrandHashtag[]> {
+    const createdHashtags = await this.createHashtags(hashtags);
+    return createdHashtags.map((hashtag) => BrandHashtag.create(hashtag));
+  }
+
+  /**
+   * @param hashtags - 이벤트 생성 및 수정에 필요한 해시태그 엔티티
+   * @desc  - 포토부스 업체관련 해시태그 가져오기
+   */
+  async eventHashtags(hashtags: Hashtag[]): Promise<EventHashtag[]> {
+    const createdHashtags = await this.createHashtags(hashtags);
+    return createdHashtags.map((hashtag) => EventHashtag.create(hashtag));
   }
 
   /**
