@@ -3,7 +3,7 @@ import { PhotoBooth } from '../../photo-booth/entity/photo-booth.entity';
 import { Events } from '../../event/entity/event.entity';
 import { BrandHashtag } from '../../hashtag/entity/brand-hashtag.entity';
 import { BrandImage } from './brand-image.entity';
-import { FindBrandOptionProps } from '../dto/get-brand-query.dto';
+import { FindBrandOptionProps } from '../brand.interface';
 
 @Entity('photo_booth_brand')
 export class PhotoBoothBrand {

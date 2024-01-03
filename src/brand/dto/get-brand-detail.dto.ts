@@ -1,9 +1,8 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { BrandImage } from '../../brand/entity/brand-image.entity';
-import { GetBoothBrandListDto } from './get-brand-list.dto';
+import { GetBoothBrandList } from './get-brand-list.dto';
 
-export class GetBoothBrandDetailDto extends GetBoothBrandListDto {
+export class GetBoothBrandDetail extends GetBoothBrandList {
   @ApiProperty({
     description: '포토부스의 업체 설명',
   })
@@ -33,7 +32,7 @@ export class GetBoothBrandDetailDto extends GetBoothBrandListDto {
     description: '포토부스의 업체 이벤트 허용 여부',
   })
   @Expose()
-  get images(): BrandImage[] {
-    return this._brandImages;
+  get images(): string[] {
+    return this._brandImages.map((images) => images.brandImageUrl);
   }
 }

@@ -8,8 +8,9 @@ import {
   MinLength,
 } from 'class-validator';
 import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
+import { FindBrandOptionProps } from '../brand.interface';
 
-export class BoothBrandQueryDto extends PaginationDto {
+export class BoothBrandQuery extends PaginationDto {
   @ApiProperty({
     description: '포토부스 업체명',
     required: false,
@@ -37,10 +38,4 @@ export class BoothBrandQueryDto extends PaginationDto {
       isEvent: this.isEvent,
     };
   }
-}
-
-export interface FindBrandOptionProps {
-  id?: number;
-  name?: string;
-  isEvent?: boolean;
 }

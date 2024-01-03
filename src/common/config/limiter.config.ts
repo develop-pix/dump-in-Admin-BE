@@ -1,5 +1,5 @@
 import { rateLimit } from 'express-rate-limit';
-import { GetAdminSessionDto } from '../../auth/dto/get-admin-session.dto';
+import { GetAdminSession } from '../../auth/dto/get-admin-session.dto';
 import { Request } from 'express';
 import { createLog } from './log-helper.config';
 import { HttpStatus, Logger } from '@nestjs/common';
@@ -7,7 +7,7 @@ import { ResponseEntity } from '../entity/response.entity';
 
 declare module 'express-session' {
   interface SessionData {
-    user?: GetAdminSessionDto;
+    user?: GetAdminSession;
   }
 }
 

@@ -4,7 +4,7 @@ import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
 import { BrandHashtag } from '../../hashtag/entity/brand-hashtag.entity';
 import { BrandImage } from '../../brand/entity/brand-image.entity';
 
-export class GetBoothBrandListDto {
+export class GetBoothBrandList {
   @Exclude() readonly _id: number;
   @Exclude() readonly _name: string;
   @Exclude() readonly _mainThumbnailImageUrl: string;
@@ -54,7 +54,7 @@ export class GetBoothBrandListDto {
     description: '포토부스의 해시태그',
   })
   @Expose()
-  get hashtags(): BrandHashtag[] {
-    return this._brandHashtags;
+  get hashtags(): string[] {
+    return this._brandHashtags.map((hashtags) => hashtags.hashtag.name);
   }
 }

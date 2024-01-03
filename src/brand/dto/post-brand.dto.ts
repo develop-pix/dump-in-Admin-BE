@@ -1,8 +1,8 @@
 import { IsNotEmpty } from 'class-validator';
-import { BrandReqBodyDto } from '../../photo-booth/dto/req-photo-booth-body.dto';
-import { BrandUpdateProps } from '../../photo-booth/dto/patch-photo-booth.dto';
+import { BrandReqBody } from './req-brand-body.dto';
+import { ToBrandProps } from '../brand.interface';
 
-export class CreateBoothBrandDto extends BrandReqBodyDto {
+export class CreateBoothBrand extends BrandReqBody {
   @IsNotEmpty()
   name: string;
 
@@ -18,19 +18,7 @@ export class CreateBoothBrandDto extends BrandReqBodyDto {
   @IsNotEmpty()
   photoBoothUrl: string;
 
-  getCreateProps(): BrandCreateProps {
-    const arrayProps = this.getArrayProps();
-    return {
-      name: this.name,
-      isEvent: this.isEvent,
-      mainThumbnailImageUrl: this.mainThumbnailImageUrl,
-      description: this.description,
-      photoBoothUrl: this.photoBoothUrl,
-      // hashtags: this.hashtags,
-      // images: this.images,
-      ...arrayProps,
-    };
+  toCreateEntity(): ToBrandProps {
+    return this.toEntity();
   }
 }
-
-export interface BrandCreateProps extends BrandUpdateProps {}

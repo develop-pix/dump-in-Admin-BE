@@ -17,7 +17,7 @@ export class AuthController {
   async login(
     @Body() request: LoginAdmin,
     @Session() session: Record<string, GetAdminSession>,
-  ) {
+  ): Promise<ResponseEntity<string>> {
     const admin = await this.authService.login(request);
     session.user = new GetAdminSession(admin);
     return ResponseEntity.OK(`${request.username}님이 로그인 했습니다.`);
