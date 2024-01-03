@@ -26,7 +26,7 @@ export class GetPhotoBoothDetailDto extends GetPhotoBoothListDto {
     example: '운영 시간',
   })
   @Expose()
-  get operationTime(): string | null {
+  get operationTime(): string {
     return this._operationTime;
   }
 }

@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { PhotoBoothService } from './photo-booth.service';
 import { PhotoBoothRepository } from './repository/photo-booth.repository';
 import { HiddenBoothRepository } from './repository/photo-booth-hidden.repository';
-import { PhotoBoothBrandRepository } from '../brand/repository/brand.repository';
 import { PhotoBooth } from './entity/photo-booth.entity';
 import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
 import { ConflictException, NotFoundException } from '@nestjs/common';

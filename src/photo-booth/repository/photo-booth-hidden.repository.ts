@@ -32,7 +32,7 @@ export class HiddenBoothRepository extends Repository<HiddenPhotoBooth> {
 
   findOneHiddenBooth(booth: HiddenPhotoBooth): Promise<HiddenPhotoBooth> {
     const options = this.findHiddenBoothManyOptions(booth);
-    return this.findOne(options);
+    return this.findOneOrFail(options);
   }
 
   private findHiddenBoothManyOptions(

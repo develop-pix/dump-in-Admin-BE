@@ -21,6 +21,7 @@ import { MoveHiddenToOpenBoothDto } from './dto/put-photo-booth.dto';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
 import { PhotoBooth } from './entity/photo-booth.entity';
 import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
+import { PhotoBoothPipe } from './pipe/photo-booth.pipe';
 
 @ApiTags('포토부스')
 @Controller('photo-booth')
@@ -77,40 +78,6 @@ export class PhotoBoothController {
     );
   }
 
-  @Get(':id')
-  @SwaggerAPI({
-    name: '앱에 공개된 포토부스 상세 조회',
-    model: GetPhotoBoothDetailDto,
-  })
-  async findOneOpenBooth(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<ResponseEntity<GetPhotoBoothDetailDto>> {
-    const response = await this.photoBoothService.findOneOpenBooth(id);
-    return ResponseEntity.OK_WITH<GetPhotoBoothDetailDto>(
-      '공개된 포토부스 지점을 상세 조회합니다.',
-      new GetPhotoBoothDetailDto(response),
-    );
-  }
-
-  @Patch(':id')
-  @SwaggerAPI({ name: '앱에 공개된 포토부스 수정' })
-  async updateOpenBooth(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() request: UpdatePhotoBoothDto,
-  ): Promise<ResponseEntity<string>> {
-    await this.photoBoothService.updateOpenBooth(id, request.getUpdateProps());
-    return ResponseEntity.OK('공개된 포토부스 지점을 업데이트 했습니다.');
-  }
-
-  @Delete(':id')
-  @SwaggerAPI({ name: '앱에 공개된 포토부스 삭제' })
-  async deleteOpenBooth(
-    @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<ResponseEntity<string>> {
-    await this.photoBoothService.deleteOpenBooth(id);
-    return ResponseEntity.OK('공개된 포토부스 지점을 삭제 했습니다.');
-  }
-
   @Get('raw/:id')
   @SwaggerAPI({
     name: '비공개 포토부스 조회',
@@ -134,7 +101,7 @@ export class PhotoBoothController {
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.updateHiddenBooth(
       id,
-      request.getUpdateProps(),
+      request.toUpdateEntity(),
     );
     return ResponseEntity.OK('비공개 포토부스를 업데이트 했습니다.');
   }
@@ -147,7 +114,7 @@ export class PhotoBoothController {
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.moveHiddenToOpenBooth(
       id,
-      request.getUpdateProps(),
+      request.toMoveEntity(),
     );
     return ResponseEntity.CREATED('비공개 포토부스를 공개 했습니다.');
   }
@@ -159,5 +126,39 @@ export class PhotoBoothController {
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.deleteHiddenBooth(id);
     return ResponseEntity.OK('비공개 포토부스를 삭제 했습니다.');
+  }
+
+  @Get(':id')
+  @SwaggerAPI({
+    name: '앱에 공개된 포토부스 상세 조회',
+    model: GetPhotoBoothDetailDto,
+  })
+  async findOneOpenBooth(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<ResponseEntity<GetPhotoBoothDetailDto>> {
+    const response = await this.photoBoothService.findOneOpenBooth(id);
+    return ResponseEntity.OK_WITH<GetPhotoBoothDetailDto>(
+      '공개된 포토부스 지점을 상세 조회합니다.',
+      new GetPhotoBoothDetailDto(response),
+    );
+  }
+
+  @Patch(':id')
+  @SwaggerAPI({ name: '앱에 공개된 포토부스 수정' })
+  async updateOpenBooth(
+    @Param('id', ParseUUIDPipe, PhotoBoothPipe) id: string,
+    @Body() request: UpdatePhotoBoothDto,
+  ): Promise<ResponseEntity<string>> {
+    await this.photoBoothService.updateOpenBooth(id, request.toUpdateEntity());
+    return ResponseEntity.OK('공개된 포토부스 지점을 업데이트 했습니다.');
+  }
+
+  @Delete(':id')
+  @SwaggerAPI({ name: '앱에 공개된 포토부스 삭제' })
+  async deleteOpenBooth(
+    @Param('id', ParseUUIDPipe) id: string,
+  ): Promise<ResponseEntity<string>> {
+    await this.photoBoothService.deleteOpenBooth(id);
+    return ResponseEntity.OK('공개된 포토부스 지점을 삭제 했습니다.');
   }
 }

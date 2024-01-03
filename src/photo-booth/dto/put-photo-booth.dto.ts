@@ -1,8 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
-import {
-  PhotoBoothReqBodyDto,
-  PhotoBoothReqBodyProps,
-} from './req-photo-booth-body.dto';
+import { PhotoBoothReqBodyDto } from './req-photo-booth-body.dto';
+import { ToBoothProps } from '../photo-booth.interface';
 
 export class MoveHiddenToOpenBoothDto extends PhotoBoothReqBodyDto {
   @IsNotEmpty()
@@ -29,18 +27,7 @@ export class MoveHiddenToOpenBoothDto extends PhotoBoothReqBodyDto {
   @IsNotEmpty()
   brandName: string;
 
-  getUpdateProps(): MoveToOpenBoothProps {
-    return {
-      name: this.name,
-      location: this.location,
-      latitude: this.latitude,
-      longitude: this.longitude,
-      brandName: this.brandName,
-      roadAddress: this.roadAddress,
-      streetAddress: this.streetAddress,
-      operationTime: this.operationTime,
-    };
+  toMoveEntity(): ToBoothProps {
+    return this.toEntity();
   }
 }
-
-export interface MoveToOpenBoothProps extends PhotoBoothReqBodyProps {}

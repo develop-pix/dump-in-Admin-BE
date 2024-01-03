@@ -35,7 +35,7 @@ export class PhotoBoothRepository extends Repository<PhotoBooth> {
 
   findOneBooth(booth: PhotoBooth): Promise<PhotoBooth> {
     const options = this.findBoothManyOptions(booth);
-    return this.findOne(options);
+    return this.findOneOrFail(options);
   }
 
   private findBoothManyOptions(booth: PhotoBooth): FindManyOptions<PhotoBooth> {

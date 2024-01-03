@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
-import { PhotoBoothReqBodyProps } from './req-photo-booth-body.dto';
+import { FindBoothOptionProps } from '../photo-booth.interface';
 
 export class BoothQueryDto extends PaginationDto {
   @ApiProperty({
@@ -47,5 +47,3 @@ export class BoothQueryDto extends PaginationDto {
     };
   }
 }
-
-export interface FindBoothOptionProps extends Partial<PhotoBoothReqBodyProps> {}

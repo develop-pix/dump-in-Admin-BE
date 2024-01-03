@@ -1,14 +1,12 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PhotoBoothRepository } from './repository/photo-booth.repository';
 import { HiddenBoothRepository } from './repository/photo-booth-hidden.repository';
 import { PhotoBooth } from './entity/photo-booth.entity';
 import { PaginationProps } from '../common/dto/get-pagination-query.dto';
-import { FindBoothOptionProps } from './dto/get-photo-booth-query.dto';
 import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
-import { PhotoBoothUpdateProps } from './dto/patch-photo-booth.dto';
-import { MoveToOpenBoothProps } from './dto/put-photo-booth.dto';
-import { ResponseEntity } from '../common/entity/response.entity';
 import { BrandService } from '../brand/brand.service';
+import { FindBoothOptionProps, ToBoothProps } from './photo-booth.interface';
+import { PhotoBoothBrand } from '../brand/entity/brand.entity';
 
 @Injectable()
 export class PhotoBoothService {
@@ -38,11 +36,20 @@ export class PhotoBoothService {
    * @param id - 공개 포토부스의 uuid값
    * @desc 포토부스 지점에 대한 상세 데이터 반환
    */
-  async findOneOpenBooth(id: string): Promise<PhotoBooth> {
-    const photoBooth = await this.photoBoothRepository.findOneBooth(
-      PhotoBooth.byId(id),
+  findOneOpenBooth(id: string): Promise<PhotoBooth> {
+    return this.photoBoothRepository.findOneBooth(PhotoBooth.byId(id));
+  }
+
+  /**
+   * @param id - 공개 포토부스의 uuid값
+   * @param props - 저장할 필요한 데이터 일부 (지역, 지점명, 주소 등)
+   * @desc 포토부스 지점에 대한 데이터 저장
+   */
+  async saveOpenBooth(props: ToBoothProps, id?: string): Promise<PhotoBooth> {
+    const photoBoothBrand = await this.brandService.findOneBrandBy(
+      PhotoBoothBrand.byName(props.brandName),
     );
-    return ResponseEntity.validate('포토부스', photoBooth, id);
+    return this.photoBoothRepository.save({ id, photoBoothBrand, ...props });
   }
 
   /**
@@ -52,20 +59,10 @@ export class PhotoBoothService {
    */
   async updateOpenBooth(
     id: string,
-    updateProps: PhotoBoothUpdateProps,
-  ): Promise<boolean> {
+    updateProps: ToBoothProps,
+  ): Promise<PhotoBooth> {
     await this.findOneOpenBooth(id);
-    const photoBoothBrand = await this.brandService.findOneBrandByName(
-      updateProps.brandName,
-    );
-
-    await this.photoBoothRepository.save({
-      id,
-      photoBoothBrand,
-      ...updateProps,
-    });
-
-    return true;
+    return this.saveOpenBooth(updateProps, id);
   }
 
   /**
@@ -101,11 +98,10 @@ export class PhotoBoothService {
    * @param id - 비공개 포토부스의 uuid
    * @desc 공개되지 않은 포토부스에 대한 디테일 데이터 반환
    */
-  async findOneHiddenBooth(id: string): Promise<HiddenPhotoBooth> {
-    const hiddenBooth = await this.hiddenBoothRepository.findOneHiddenBooth(
+  findOneHiddenBooth(id: string): Promise<HiddenPhotoBooth> {
+    return this.hiddenBoothRepository.findOneHiddenBooth(
       HiddenPhotoBooth.byId(id),
     );
-    return ResponseEntity.validate('비공개 포토부스', hiddenBooth, id);
   }
 
   /**
@@ -115,43 +111,25 @@ export class PhotoBoothService {
    */
   async updateHiddenBooth(
     id: string,
-    updateProps: PhotoBoothUpdateProps,
-  ): Promise<boolean> {
-    await this.findOneHiddenBooth(id);
-    await this.hiddenBoothRepository.save({
-      id,
-      ...updateProps,
-    });
-
-    return true;
+    updateProps: ToBoothProps,
+  ): Promise<HiddenPhotoBooth> {
+    const booth = await this.findOneHiddenBooth(id);
+    const updatedBooth = this.hiddenBoothRepository.merge(booth, updateProps);
+    return this.hiddenBoothRepository.save(updatedBooth);
   }
 
   /**
    * @param id - 비공개 포토부스의 uuid
    * @param moveProps - 비공개 포토부스에서 공개 포토부스로 이동 시킬때 필요한 속성
-   * @desc - 공개 포토부스에 id가 존재하면 예외처리
-   *       - 브랜드 엔티티에서 업체명이 있으면 해당 업체명으로 업데이트
-   *       - 공개 포토부스로 최종 이동
+   * @desc - 브랜드 엔티티에서 업체명이 있으면 해당 업체명으로 업데이트
+   *       - 공개 포토부스로 이동
    */
   async moveHiddenToOpenBooth(
     id: string,
-    moveProps: MoveToOpenBoothProps,
-  ): Promise<boolean> {
-    const isPhotoBoothExist = this.photoBoothRepository.hasId(
-      PhotoBooth.byId(id),
-    );
-
-    if (isPhotoBoothExist) {
-      throw new ConflictException('이미 포토부스가 존재합니다.');
-    }
-
-    const photoBoothBrand = await this.brandService.findOneBrandByName(
-      moveProps.brandName,
-    );
+    moveProps: ToBoothProps,
+  ): Promise<PhotoBooth> {
     await this.deleteHiddenBooth(id);
-    await this.photoBoothRepository.save({ id, photoBoothBrand, ...moveProps });
-
-    return true;
+    return this.saveOpenBooth(moveProps, id);
   }
 
   /**

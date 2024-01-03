@@ -17,7 +17,7 @@ export class GetPhotoBoothListDto {
   @Exclude() readonly _streetAddress: string;
   @Exclude() readonly _roadAddress: string;
   @Exclude() readonly _operationTime: string;
-  @Exclude() readonly _photoBoothBrand: PhotoBoothBrand;
+  @Exclude() readonly _photoBoothBrand: PhotoBoothBrand | null;
 
   constructor(data: PhotoBooth | HiddenPhotoBooth) {
     Object.keys(data).forEach((key) => (this[`_${key}`] = data[key]));
@@ -52,7 +52,7 @@ export class GetPhotoBoothListDto {
     example: '지번 주소',
   })
   @Expose()
-  get streetAddress(): string | null {
+  get streetAddress(): string {
     return this._streetAddress;
   }
 
@@ -61,7 +61,7 @@ export class GetPhotoBoothListDto {
     example: '도로명 주소',
   })
   @Expose()
-  get roadAddress(): string | null {
+  get roadAddress(): string {
     return this._roadAddress;
   }
 
@@ -71,6 +71,6 @@ export class GetPhotoBoothListDto {
   })
   @Expose()
   get brandName(): string {
-    return this._photoBoothBrand.name;
+    return this._photoBoothBrand?.name;
   }
 }

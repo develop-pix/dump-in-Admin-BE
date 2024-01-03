@@ -1,24 +1,16 @@
-import { PickType } from '@nestjs/swagger';
 import { IsOptional } from 'class-validator';
-import {
-  BrandReqBodyDto,
-  BrandReqBodyProps,
-  PhotoBoothReqBodyDto,
-  PhotoBoothReqBodyProps,
-} from './req-photo-booth-body.dto';
-import { BrandImage } from '../../brand/entity/brand-image.entity';
-import { Hashtag } from '../../hashtag/entity/hashtag.entity';
+import { PhotoBoothReqBodyDto } from './req-photo-booth-body.dto';
+import { ToBoothProps } from '../photo-booth.interface';
 
-export class UpdatePhotoBoothDto extends PickType(PhotoBoothReqBodyDto, [
-  'name',
-  'location',
-  'streetAddress',
-  'roadAddress',
-  'brandName',
-  'operationTime',
-]) {
+export class UpdatePhotoBoothDto extends PhotoBoothReqBodyDto {
   @IsOptional()
   name: string;
+
+  @IsOptional()
+  longitude: number;
+
+  @IsOptional()
+  latitude: number;
 
   @IsOptional()
   location: string;
@@ -35,54 +27,7 @@ export class UpdatePhotoBoothDto extends PickType(PhotoBoothReqBodyDto, [
   @IsOptional()
   operationTime: string;
 
-  getUpdateProps(): PhotoBoothUpdateProps {
-    return {
-      name: this.name,
-      location: this.location,
-      streetAddress: this.streetAddress,
-      roadAddress: this.roadAddress,
-      brandName: this.brandName,
-      operationTime: this.operationTime,
-    };
+  toUpdateEntity(): ToBoothProps {
+    return this.toEntity();
   }
 }
-
-export class UpdateBoothBrandDto extends BrandReqBodyDto {
-  @IsOptional()
-  name: string;
-
-  @IsOptional()
-  description: string;
-
-  @IsOptional()
-  photoBoothUrl: string;
-
-  @IsOptional()
-  isEvent: boolean;
-
-  @IsOptional()
-  mainThumbnailImageUrl: string;
-
-  getUpdateProps(): BrandUpdateProps {
-    const arrayProps = this.getArrayProps();
-    return {
-      name: this.name,
-      description: this.description,
-      photoBoothUrl: this.photoBoothUrl,
-      mainThumbnailImageUrl: this.mainThumbnailImageUrl,
-      isEvent: this.isEvent,
-      // hashtags: this.hashtags,
-      // images: this.images,
-      ...arrayProps,
-    };
-  }
-}
-
-export interface BrandUpdateProps
-  extends Omit<BrandReqBodyProps, 'hashtags' | 'images'> {
-  hashtags: Hashtag[];
-  images: BrandImage[];
-}
-
-export interface PhotoBoothUpdateProps
-  extends Partial<PhotoBoothReqBodyProps> {}
