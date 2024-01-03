@@ -32,22 +32,20 @@ describe('AuthService', () => {
       );
 
     // UserService Stub
-    jest
-      .spyOn(userService, 'findOneAdminBy')
-      .mockImplementation(({ username }) => {
-        if (username === 'admin') {
-          const savedUser = new User();
-          savedUser.username = 'admin';
-          savedUser.email = 'admin@example.com';
-          savedUser.password = 'admin hashed 12';
-          savedUser.isAdmin = true;
-          return Promise.resolve(savedUser);
-        } else {
-          return Promise.reject(
-            new NotFoundException('관리자 정보를 찾지 못했습니다'),
-          );
-        }
-      });
+    jest.spyOn(userService, 'findOneAdminBy').mockImplementation((username) => {
+      if (username === 'admin') {
+        const savedUser = new User();
+        savedUser.username = 'admin';
+        savedUser.email = 'admin@example.com';
+        savedUser.password = 'admin hashed 12';
+        savedUser.isAdmin = true;
+        return Promise.resolve(savedUser);
+      } else {
+        return Promise.reject(
+          new NotFoundException('관리자 정보를 찾지 못했습니다'),
+        );
+      }
+    });
   });
 
   afterEach(() => {
@@ -63,8 +61,9 @@ describe('AuthService', () => {
     const getLogInProps = { username: 'admin', password: 'admin' };
 
     it('SUCCESS: 어드민 역할을 가진 유저일 때 로그인', async () => {
-      const result = await authService.validateAdminForLogin(getLogInProps);
+      const result = await authService.login(getLogInProps);
 
+      expect(result).toBeInstanceOf(User);
       expect(result.isAdmin).toEqual(true);
     });
 
@@ -72,7 +71,7 @@ describe('AuthService', () => {
       getLogInProps.password = 'wrong password';
 
       await expect(async () => {
-        await authService.validateAdminForLogin(getLogInProps);
+        await authService.login(getLogInProps);
       }).rejects.toThrowError(
         new UnauthorizedException('비밀번호가 일치하지 않습니다.'),
       );
@@ -82,7 +81,7 @@ describe('AuthService', () => {
       getLogInProps.username = 'anonymous';
 
       await expect(async () => {
-        await authService.validateAdminForLogin(getLogInProps);
+        await authService.login(getLogInProps);
       }).rejects.toThrowError(
         new NotFoundException('관리자 정보를 찾지 못했습니다'),
       );
