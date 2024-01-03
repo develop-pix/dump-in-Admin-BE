@@ -10,7 +10,9 @@ import {
 } from 'class-validator';
 import { Type } from 'class-transformer';
 import { EventImage } from '../entity/event-image.entity';
-import { Hashtag } from '../../hashtag/entity/hashtag.entity';
+import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
+import { EventReqBodyProps, ToEventProps } from '../event.interface';
+import { CreateHashtagsDto } from 'src/hashtag/dto/post-hashtag.dto';
 
 export class EventReqBodyDto implements EventReqBodyProps {
   @ApiProperty({
@@ -89,35 +91,18 @@ export class EventReqBodyDto implements EventReqBodyProps {
   @IsUrl({}, { each: true })
   images: string[];
 
-  toEntity(): ToEntityProps {
+  toEntity(): ToEventProps {
+    const hashtags = CreateHashtagsDto.toHashtagEntity(this.hashtags);
     return {
       title: this.title,
       content: this.content,
       mainThumbnailUrl: this.mainThumbnailUrl,
-      brandName: this.brandName,
+      brandName: PhotoBoothBrand.byName(this.brandName),
       isPublic: this.isPublic,
       startDate: this.startDate,
       endDate: this.endDate,
       images: this.images.map((image) => EventImage.create(image)),
-      hashtags: [...new Set(this.hashtags)].map((name) => Hashtag.byName(name)),
+      hashtags,
     };
   }
-}
-
-export interface ToEntityProps
-  extends Omit<EventReqBodyProps, 'hashtags' | 'images'> {
-  hashtags: Hashtag[];
-  images: EventImage[];
-}
-
-export interface EventReqBodyProps {
-  title: string;
-  content: string;
-  mainThumbnailUrl: string;
-  brandName: string;
-  isPublic: boolean;
-  startDate: Date;
-  endDate: Date;
-  hashtags: string[];
-  images: string[];
 }

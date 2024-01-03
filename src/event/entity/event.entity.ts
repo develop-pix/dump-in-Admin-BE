@@ -9,8 +9,8 @@ import {
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
 import { EventImage } from './event-image.entity';
-import { FindEventOptionProps } from '../dto/get-event-query.dto';
 import { EventHashtag } from '../../hashtag/entity/event-hashtag.entity';
+import { FindEventOptionProps } from '../event.interface';
 
 @Entity('event')
 export class Events extends BaseDateEntity {
@@ -41,7 +41,7 @@ export class Events extends BaseDateEntity {
   @Column({ name: 'is_public' })
   isPublic: boolean;
 
-  @ManyToOne(() => PhotoBoothBrand, (photoBooth) => photoBooth.events)
+  @ManyToOne(() => PhotoBoothBrand, (brand: PhotoBoothBrand) => brand.events)
   @JoinColumn({ name: 'photo_booth_brand_id' })
   photoBoothBrand: PhotoBoothBrand;
 

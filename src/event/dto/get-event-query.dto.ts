@@ -1,8 +1,8 @@
 import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { EventReqBodyProps } from './req-event-body.dto';
 import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import { FindEventOptionProps } from '../event.interface';
 
 export class EventQueryDto extends PaginationDto {
   @ApiProperty({
@@ -33,6 +33,3 @@ export class EventQueryDto extends PaginationDto {
     };
   }
 }
-
-export interface FindEventOptionProps
-  extends Pick<EventReqBodyProps, 'brandName' | 'title'> {}

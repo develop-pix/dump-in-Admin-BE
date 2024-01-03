@@ -1,6 +1,6 @@
 import { IsNotEmpty } from 'class-validator';
 import { EventReqBodyDto } from './req-event-body.dto';
-import { EventUpdateProps } from './patch-event.dto';
+import { EventCreateProps } from '../event.interface';
 
 export class CreateEventDto extends EventReqBodyDto {
   @IsNotEmpty()
@@ -31,9 +31,4 @@ export class CreateEventDto extends EventReqBodyDto {
       ...this.toEntity(),
     };
   }
-}
-
-export interface EventCreateProps extends EventUpdateProps {
-  createdAt: Date;
-  updatedAt: Date;
 }

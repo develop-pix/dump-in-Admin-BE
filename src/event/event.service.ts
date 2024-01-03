@@ -2,13 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { EventRepository } from './repository/event.repository';
 import { HashtagService } from '../hashtag/hashtag.service';
 import { PaginationProps } from '../common/dto/get-pagination-query.dto';
-import { FindEventOptionProps } from './dto/get-event-query.dto';
 import { Events } from './entity/event.entity';
-import { EventCreateProps } from './dto/post-event.dto';
-import { EventUpdateProps } from './dto/patch-event.dto';
 import { EventHashtag } from '../hashtag/entity/event-hashtag.entity';
 import { PhotoBoothBrand } from '../brand/entity/brand.entity';
 import { BrandService } from '../brand/brand.service';
+import {
+  EventCreateProps,
+  EventUpdateProps,
+  FindEventOptionProps,
+} from './event.interface';
 
 @Injectable()
 export class EventService {
@@ -49,19 +51,14 @@ export class EventService {
    *       - 이벤트 생성
    *       - 해시태그와 이벤트 연결
    */
-  async createEventWithHastags(
-    createProps: EventCreateProps,
-  ): Promise<boolean> {
+  async createEventWithHastags(createProps: EventCreateProps): Promise<Events> {
     const [photoBoothBrand, eventHashtags] =
       await this.prepareEventAttributes(createProps);
-
-    await this.eventRepository.save({
+    return this.eventRepository.save({
       photoBoothBrand,
       eventHashtags,
       ...createProps,
     });
-
-    return true;
   }
 
   /**
@@ -74,20 +71,16 @@ export class EventService {
   async updateEventWithHastags(
     id: number,
     updateProps: EventUpdateProps,
-  ): Promise<boolean> {
+  ): Promise<Events> {
     await this.findOneEventById(id);
-
     const [photoBoothBrand, eventHashtags] =
       await this.prepareEventAttributes(updateProps);
-
-    await this.eventRepository.save({
+    return this.eventRepository.save({
       id,
       eventHashtags,
       photoBoothBrand,
       ...updateProps,
     });
-
-    return true;
   }
 
   /**
@@ -96,14 +89,12 @@ export class EventService {
    *        - 이벤트 관련 해시태그 가져오기
    *        - 이벤트 이미지 엔티티에 이벤트 이미지를 삽입
    */
-  private async prepareEventAttributes(
+  private prepareEventAttributes(
     props: EventCreateProps | EventUpdateProps,
   ): Promise<[PhotoBoothBrand, EventHashtag[]]> {
-    const hashtags = await this.hashtagService.createHashtags(props.hashtags);
-
     return Promise.all([
-      this.brandService.findOneBrandByName(props.brandName),
-      hashtags.map((hashtag) => EventHashtag.create(hashtag)),
+      this.brandService.findOneBrandBy(props.brandName),
+      this.hashtagService.eventHashtags(props.hashtags),
     ]);
   }
 }
