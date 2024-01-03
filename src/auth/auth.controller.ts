@@ -4,7 +4,7 @@ import { AuthService } from './auth.service';
 import { SwaggerLogIn } from './swagger/login.decorator';
 import { ApiTags } from '@nestjs/swagger';
 import { LoginAdmin } from './dto/post-login.dto';
-import { GetAdminSession } from './dto/get-admin-session.dto';
+import { AuthPipe } from './pipe/auth.pipe';
 
 @ApiTags('인증')
 @Controller('auth')
@@ -15,11 +15,10 @@ export class AuthController {
   @Post('login')
   @HttpCode(200)
   async login(
-    @Body() request: LoginAdmin,
-    @Session() session: Record<string, GetAdminSession>,
+    @Body(AuthPipe) request: LoginAdmin,
+    @Session() session: Record<string, unknown>,
   ): Promise<ResponseEntity<string>> {
-    const admin = await this.authService.login(request);
-    session.user = new GetAdminSession(admin);
+    session.user = request;
     return ResponseEntity.OK(`${request.username}님이 로그인 했습니다.`);
   }
 }

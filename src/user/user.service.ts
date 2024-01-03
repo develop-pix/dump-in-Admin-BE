@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AdminSignInProps, User } from './entity/user.entity';
+import { User } from './entity/user.entity';
 import { UserRepository } from './repository/user.repository';
 import { PaginationProps } from '../common/dto/get-pagination-query.dto';
 
@@ -16,10 +16,10 @@ export class UserService {
   }
 
   /**
-   * @param props - 유저아이디와 역할이 admin인 정보를 찾기
+   * @param username - 유저아이디와 역할이 admin인 정보를 찾기
    * @desc 관리자에 대한 데이터 반환
    */
-  async findOneAdminBy(props: AdminSignInProps): Promise<User> {
-    return this.userRepository.findOneUser(User.adminOf(props));
+  async findOneAdminBy(username: string): Promise<User> {
+    return this.userRepository.findOneUser(User.adminOf(username));
   }
 }

@@ -29,7 +29,10 @@ export class UserRepository extends Repository<User> {
 
   findOneUser(user: User): Promise<User> {
     const options = this.findUserManyOptions(user);
-    return this.findOneOrFail(options);
+    return this.findOne({
+      where: options.where,
+      select: options.select,
+    });
   }
 
   countUsersByDate(): Promise<RawCountByDate[]> {
@@ -46,6 +49,7 @@ export class UserRepository extends Repository<User> {
     const relations = { reviews: true };
     const select: FindOptionsSelect<User> = {
       id: true,
+      isAdmin: true,
       password: true,
       username: true,
       nickname: true,

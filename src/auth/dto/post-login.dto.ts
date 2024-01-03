@@ -1,6 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
-import { ValidateCredential } from '../validator/validate-credential.validator';
 
 export class LoginAdmin {
   @ApiProperty({
@@ -11,7 +10,6 @@ export class LoginAdmin {
   @IsString()
   @IsNotEmpty()
   @MaxLength(32)
-  @ValidateCredential()
   username: string;
 
   @ApiProperty({
@@ -23,6 +21,5 @@ export class LoginAdmin {
   @IsNotEmpty()
   @MinLength(4)
   @MaxLength(32)
-  @ValidateCredential()
   password: string;
 }
