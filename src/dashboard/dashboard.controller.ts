@@ -1,7 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
 import { ResponseEntity } from 'src/common/entity/response.entity';
-import { GetStatisticsDto } from './dto/get-statistics.dto';
+import { Statistics } from './dto/get-statistics.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
 
@@ -13,39 +13,39 @@ export class DashboardController {
   @Get()
   @SwaggerAPI({
     name: '날짜별 리뷰수, 가입자수 조회',
-    model: GetStatisticsDto,
+    model: Statistics,
   })
-  async combineResultsByDate(): Promise<ResponseEntity<GetStatisticsDto[]>> {
+  async combineResultsByDate(): Promise<ResponseEntity<Statistics[]>> {
     const response = await this.dashboardService.combineResultsByDate();
     return ResponseEntity.OK_WITH(
       '날짜별 리뷰수, 가입자수 입니다.',
-      response.map((result) => new GetStatisticsDto(result)),
+      Statistics.results(response),
     );
   }
 
   @Get('user')
   @SwaggerAPI({
     name: '날짜별 가입 유저수 조회',
-    model: GetStatisticsDto,
+    model: Statistics,
   })
-  async countUsersByDate(): Promise<ResponseEntity<GetStatisticsDto[]>> {
+  async countUsersByDate(): Promise<ResponseEntity<Statistics[]>> {
     const response = await this.dashboardService.countUsersByDate();
     return ResponseEntity.OK_WITH(
       '날짜별 유저수 입니다.',
-      response.map((result) => new GetStatisticsDto(result)),
+      Statistics.results(response),
     );
   }
 
   @Get('review')
   @SwaggerAPI({
     name: '날짜별 생성 리뷰수 조회',
-    model: GetStatisticsDto,
+    model: Statistics,
   })
-  async countReviewsByDate(): Promise<ResponseEntity<GetStatisticsDto[]>> {
+  async countReviewsByDate(): Promise<ResponseEntity<Statistics[]>> {
     const response = await this.dashboardService.countReviewsByDate();
     return ResponseEntity.OK_WITH(
       '날짜별 리뷰수 입니다.',
-      response.map((result) => new GetStatisticsDto(result)),
+      Statistics.results(response),
     );
   }
 }

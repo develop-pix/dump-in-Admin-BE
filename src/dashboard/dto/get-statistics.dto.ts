@@ -1,7 +1,7 @@
 import { Exclude, Expose, Type } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class GetStatisticsDto {
+export class Statistics {
   @Exclude() readonly _created: Date;
   @Exclude() readonly _review: number;
   @Exclude() readonly _user: number;
@@ -33,6 +33,36 @@ export class GetStatisticsDto {
   @Type(() => Number)
   get review(): number {
     return this._review;
+  }
+
+  static compare(a: RawCountByDate, b: RawCountByDate): number {
+    return b.created.getTime() - a.created.getTime();
+  }
+
+  static mergeResults(results: RawCountByDate[]): RawCountByDate[] {
+    const mergedResults: { [date: string]: RawCountByDate } = {};
+
+    const mergeResult = (result: RawCountByDate): void => {
+      const date = result.created.toISOString();
+      const existingResult = mergedResults[date] || {
+        created: new Date(date),
+        user: 0,
+        review: 0,
+      };
+
+      existingResult.review += result.review || 0;
+      existingResult.user += result.user || 0;
+
+      mergedResults[date] = existingResult;
+    };
+
+    results.forEach(mergeResult);
+
+    return Object.values(mergedResults);
+  }
+
+  static results(response: RawCountByDate[]): Statistics[] {
+    return response.map((result) => new Statistics(result));
   }
 }
 
