@@ -2,6 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
+import { FindReviewOptionsProps } from '../reivew.interface';
 
 export class ReviewQueryDto extends PaginationDto {
   @ApiProperty({
@@ -34,9 +35,4 @@ export class ReviewQueryDto extends PaginationDto {
       nickname: this.decodeString(this.nickname),
     };
   }
-}
-
-export interface FindReviewOptionsProps {
-  boothName: string;
-  nickname: string;
 }

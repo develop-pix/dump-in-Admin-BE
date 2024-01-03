@@ -1,9 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PaginationProps } from '../common/dto/get-pagination-query.dto';
-import { FindReviewOptionsProps } from './dto/get-review-query.dto';
 import { ReviewRepository } from './repository/review.repository';
 import { Review } from './entity/review.entity';
-import { plainToInstance } from 'class-transformer';
+import { FindReviewOptionsProps } from './reivew.interface';
 
 @Injectable()
 export class ReviewService {
@@ -30,30 +29,15 @@ export class ReviewService {
    * @desc 해당 리뷰 데이터 조회
    */
   async findOneReviewById(id: number): Promise<Review> {
-    const review = await this.reviewRepository.findOneReview(Review.byId(id));
-
-    if (!review) {
-      throw new NotFoundException('리뷰를 찾지 못했습니다.');
-    }
-
-    return review;
+    return this.reviewRepository.findOneReview(Review.byId(id));
   }
 
   /**
    * @param id - 삭제할 리뷰 id
    * @desc 해당 리뷰의 is_deleted 컬럼을 true로 수정 (soft)
    */
-  async removeReview(id: number): Promise<boolean> {
-    const isExistReview = this.reviewRepository.hasId(Review.byId(id));
-
-    if (!isExistReview) {
-      throw new NotFoundException('리뷰를 찾지 못했습니다.');
-    }
-
-    await this.reviewRepository.save(
-      plainToInstance(Review, { id, isDeleted: true }),
-    );
-
-    return true;
+  async removeReview(id: number): Promise<Review> {
+    await this.findOneReviewById(id);
+    return this.reviewRepository.save({ id, isDeleted: true });
   }
 }
