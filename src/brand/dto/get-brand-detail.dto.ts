@@ -1,8 +1,8 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { GetBoothBrandList } from './get-brand-list.dto';
+import { GetBrandList } from './get-brand-list.dto';
 
-export class GetBoothBrandDetail extends GetBoothBrandList {
+export class GetBrandDetail extends GetBrandList {
   @ApiProperty({
     description: '포토부스의 업체 설명',
   })

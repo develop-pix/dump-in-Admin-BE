@@ -14,7 +14,7 @@ import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
 import { EventReqBodyProps, ToEventProps } from '../event.interface';
 import { Hashtag } from '../../hashtag/entity/hashtag.entity';
 
-export class EventReqBodyDto implements EventReqBodyProps {
+export class EventReqBody implements EventReqBodyProps {
   @ApiProperty({
     description: '이벤트의 제목',
   })

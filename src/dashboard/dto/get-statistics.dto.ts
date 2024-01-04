@@ -61,8 +61,8 @@ export class Statistics {
     return Object.values(mergedResults);
   }
 
-  static results(response: RawCountByDate[]): Statistics[] {
-    return response.map((result) => new Statistics(result));
+  static list(response: RawCountByDate[]): Statistics[] {
+    return response.map((item) => new this(item));
   }
 }
 

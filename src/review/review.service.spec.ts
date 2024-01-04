@@ -3,8 +3,8 @@ import { ReviewService } from './review.service';
 import { ReviewRepository } from './repository/review.repository';
 import { NotFoundException } from '@nestjs/common';
 import { Review } from './entity/review.entity';
-import { GetReviewListDto } from './dto/get-review-list.dto';
-import { FindReviewOptionsProps } from './dto/get-review-query.dto';
+import { GetReviewList } from './dto/get-review-list.dto';
+import { FindReviewOptionsProps } from './dto/req-review-query.dto';
 
 class MockReviewRepository {
   findReviewByOptionAndCount = jest.fn();
@@ -99,7 +99,7 @@ describe('ReviewService', () => {
         );
 
       const expectedResult = reviewInDb.map(
-        (result) => new GetReviewListDto(result),
+        (result) => new GetReviewList(result),
       );
 
       // When
@@ -127,7 +127,7 @@ describe('ReviewService', () => {
         );
 
       const expectedResult = reviewInDb.map(
-        (result) => new GetReviewListDto(result),
+        (result) => new GetReviewList(result),
       );
 
       // When

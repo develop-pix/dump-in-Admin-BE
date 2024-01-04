@@ -1,8 +1,8 @@
 import { IsNotEmpty } from 'class-validator';
-import { EventReqBodyDto } from './req-event-body.dto';
+import { EventReqBody } from './req-event-body.dto';
 import { EventCreateProps } from '../event.interface';
 
-export class CreateEventDto extends EventReqBodyDto {
+export class CreateEvent extends EventReqBody {
   @IsNotEmpty()
   title: string;
 

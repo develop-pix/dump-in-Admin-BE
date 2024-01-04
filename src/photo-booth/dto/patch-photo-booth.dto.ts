@@ -1,8 +1,8 @@
 import { IsOptional } from 'class-validator';
-import { PhotoBoothReqBodyDto } from './req-photo-booth-body.dto';
+import { PhotoBoothReqBody } from './req-photo-booth-body.dto';
 import { ToBoothProps } from '../photo-booth.interface';
 
-export class UpdatePhotoBoothDto extends PhotoBoothReqBodyDto {
+export class UpdatePhotoBooth extends PhotoBoothReqBody {
   @IsOptional()
   name: string;
 

@@ -11,13 +11,13 @@ import {
 } from '@nestjs/common';
 import { PhotoBoothService } from './photo-booth.service';
 import { ApiTags } from '@nestjs/swagger';
-import { GetPhotoBoothListDto } from './dto/get-photo-booth-list.dto';
+import { GetPhotoBoothList } from './dto/get-photo-booth-list.dto';
 import { ResponseEntity } from 'src/common/entity/response.entity';
-import { BoothQueryDto } from './dto/get-photo-booth-query.dto';
+import { BoothQueryParam } from './dto/req-photo-booth-query.dto';
 import { PageEntity } from '../common/dto/get-pagination-list.dto';
-import { GetPhotoBoothDetailDto } from './dto/get-photo-booth-detail.dto';
-import { UpdatePhotoBoothDto } from './dto/patch-photo-booth.dto';
-import { MoveHiddenToOpenBoothDto } from './dto/put-photo-booth.dto';
+import { GetPhotoBoothDetail } from './dto/get-photo-booth-detail.dto';
+import { UpdatePhotoBooth } from './dto/patch-photo-booth.dto';
+import { MoveHiddenToOpenBooth } from './dto/put-photo-booth.dto';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
 import { PhotoBooth } from './entity/photo-booth.entity';
 import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
@@ -31,23 +31,23 @@ export class PhotoBoothController {
   @Get()
   @SwaggerAPI({
     name: '앱에 공개된 포토부스 목록 조회',
-    model: GetPhotoBoothListDto,
+    model: GetPhotoBoothList,
     isPagination: true,
   })
   async findOpenBoothByQueryParam(
-    @Query() request: BoothQueryDto,
-  ): Promise<ResponseEntity<PageEntity<GetPhotoBoothListDto>>> {
+    @Query() request: BoothQueryParam,
+  ): Promise<ResponseEntity<PageEntity<GetPhotoBoothList>>> {
     const [response, count] =
       await this.photoBoothService.findOpenBoothByQueryParam(
         request.getPageProps(),
         request.getQueryProps(),
       );
-    return ResponseEntity.OK_WITH<PageEntity<GetPhotoBoothListDto>>(
+    return ResponseEntity.OK_WITH<PageEntity<GetPhotoBoothList>>(
       '공개된 포토부스 목록을 반환합니다.',
       PageEntity.create(
         request.getPageProps(),
         count,
-        response.map((result: PhotoBooth) => new GetPhotoBoothListDto(result)),
+        response.map((result: PhotoBooth) => new GetPhotoBoothList(result)),
       ),
     );
   }
@@ -55,24 +55,24 @@ export class PhotoBoothController {
   @Get('raw')
   @SwaggerAPI({
     name: '비공개 포토부스 목록 조회',
-    model: GetPhotoBoothListDto,
+    model: GetPhotoBoothList,
     isPagination: true,
   })
   async findHiddenBoothByQueryParam(
-    @Query() request: BoothQueryDto,
-  ): Promise<ResponseEntity<PageEntity<GetPhotoBoothListDto>>> {
+    @Query() request: BoothQueryParam,
+  ): Promise<ResponseEntity<PageEntity<GetPhotoBoothList>>> {
     const [response, count] =
       await this.photoBoothService.findHiddenBoothByQueryParam(
         request.getPageProps(),
         request.getQueryProps(),
       );
-    return ResponseEntity.OK_WITH<PageEntity<GetPhotoBoothListDto>>(
+    return ResponseEntity.OK_WITH<PageEntity<GetPhotoBoothList>>(
       '비공개 포토부스 목록을 반환합니다.',
       PageEntity.create(
         request.getPageProps(),
         count,
         response.map(
-          (result: HiddenPhotoBooth) => new GetPhotoBoothListDto(result),
+          (result: HiddenPhotoBooth) => new GetPhotoBoothList(result),
         ),
       ),
     );
@@ -81,15 +81,15 @@ export class PhotoBoothController {
   @Get('raw/:id')
   @SwaggerAPI({
     name: '비공개 포토부스 조회',
-    model: GetPhotoBoothDetailDto,
+    model: GetPhotoBoothDetail,
   })
   async findOneHiddenBooth(
     @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<ResponseEntity<GetPhotoBoothDetailDto>> {
+  ): Promise<ResponseEntity<GetPhotoBoothDetail>> {
     const response = await this.photoBoothService.findOneHiddenBooth(id);
-    return ResponseEntity.OK_WITH<GetPhotoBoothDetailDto>(
+    return ResponseEntity.OK_WITH<GetPhotoBoothDetail>(
       '비공개 포토부스 목록을 반환합니다.',
-      new GetPhotoBoothDetailDto(response),
+      new GetPhotoBoothDetail(response),
     );
   }
 
@@ -97,7 +97,7 @@ export class PhotoBoothController {
   @SwaggerAPI({ name: '비공개 포토부스 수정' })
   async updateHiddenBooth(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() request: UpdatePhotoBoothDto,
+    @Body() request: UpdatePhotoBooth,
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.updateHiddenBooth(
       id,
@@ -110,7 +110,7 @@ export class PhotoBoothController {
   @SwaggerAPI({ name: '비공개 포토부스를 앱에 노출', success: 201, fail: 409 })
   async moveHiddenToOpenBooth(
     @Param('id', ParseUUIDPipe) id: string,
-    @Body() request: MoveHiddenToOpenBoothDto,
+    @Body() request: MoveHiddenToOpenBooth,
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.moveHiddenToOpenBooth(
       id,
@@ -131,15 +131,15 @@ export class PhotoBoothController {
   @Get(':id')
   @SwaggerAPI({
     name: '앱에 공개된 포토부스 상세 조회',
-    model: GetPhotoBoothDetailDto,
+    model: GetPhotoBoothDetail,
   })
   async findOneOpenBooth(
     @Param('id', ParseUUIDPipe) id: string,
-  ): Promise<ResponseEntity<GetPhotoBoothDetailDto>> {
+  ): Promise<ResponseEntity<GetPhotoBoothDetail>> {
     const response = await this.photoBoothService.findOneOpenBooth(id);
-    return ResponseEntity.OK_WITH<GetPhotoBoothDetailDto>(
+    return ResponseEntity.OK_WITH<GetPhotoBoothDetail>(
       '공개된 포토부스 지점을 상세 조회합니다.',
-      new GetPhotoBoothDetailDto(response),
+      new GetPhotoBoothDetail(response),
     );
   }
 
@@ -147,7 +147,7 @@ export class PhotoBoothController {
   @SwaggerAPI({ name: '앱에 공개된 포토부스 수정' })
   async updateOpenBooth(
     @Param('id', ParseUUIDPipe, PhotoBoothPipe) id: string,
-    @Body() request: UpdatePhotoBoothDto,
+    @Body() request: UpdatePhotoBooth,
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.updateOpenBooth(id, request.toUpdateEntity());
     return ResponseEntity.OK('공개된 포토부스 지점을 업데이트 했습니다.');

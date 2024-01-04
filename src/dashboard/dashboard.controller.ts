@@ -19,7 +19,7 @@ export class DashboardController {
     const response = await this.dashboardService.combineResultsByDate();
     return ResponseEntity.OK_WITH(
       '날짜별 리뷰수, 가입자수 입니다.',
-      Statistics.results(response),
+      Statistics.list(response),
     );
   }
 
@@ -32,7 +32,7 @@ export class DashboardController {
     const response = await this.dashboardService.countUsersByDate();
     return ResponseEntity.OK_WITH(
       '날짜별 유저수 입니다.',
-      Statistics.results(response),
+      Statistics.list(response),
     );
   }
 
@@ -45,7 +45,7 @@ export class DashboardController {
     const response = await this.dashboardService.countReviewsByDate();
     return ResponseEntity.OK_WITH(
       '날짜별 리뷰수 입니다.',
-      Statistics.results(response),
+      Statistics.list(response),
     );
   }
 }

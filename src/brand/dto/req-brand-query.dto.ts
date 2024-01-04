@@ -10,7 +10,7 @@ import {
 import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
 import { FindBrandOptionProps } from '../brand.interface';
 
-export class BoothBrandQuery extends PaginationDto {
+export class BrandQueryParam extends PaginationDto {
   @ApiProperty({
     description: '포토부스 업체명',
     required: false,

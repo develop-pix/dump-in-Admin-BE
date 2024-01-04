@@ -4,7 +4,7 @@ import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
 import { FindReviewOptionsProps } from '../reivew.interface';
 
-export class ReviewQueryDto extends PaginationDto {
+export class ReviewQueryParam extends PaginationDto {
   @ApiProperty({
     description: '포토부스 업체명',
     required: false,

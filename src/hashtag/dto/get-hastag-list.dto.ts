@@ -2,7 +2,7 @@ import { Exclude, Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
 import { Hashtag } from '../entity/hashtag.entity';
 
-export class GetHashtagListDto {
+export class GetHashtagList {
   @Exclude() private readonly _id: string;
   @Exclude() private readonly _name: string;
   @Exclude() private readonly _description: string;

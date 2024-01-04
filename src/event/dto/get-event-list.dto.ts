@@ -5,7 +5,7 @@ import { Events } from '../entity/event.entity';
 import { EventImage } from '../entity/event-image.entity';
 import { EventHashtag } from '../../hashtag/entity/event-hashtag.entity';
 
-export class GetEventListDto {
+export class GetEventList {
   @Exclude() readonly _id: number;
   @Exclude() readonly _title: string;
   @Exclude() readonly _content: string;

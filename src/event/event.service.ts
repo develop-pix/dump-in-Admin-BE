@@ -39,6 +39,7 @@ export class EventService {
   /**
    * @param id - 이벤트 id
    * @desc - 이벤트 id에 맞는 이벤트 조회
+   * @throws 존재하지 않는 이벤트 (EntityNotFoundError)
    */
   findOneEventById(id: number): Promise<Events> {
     return this.eventRepository.findOneEvent(Events.byId(id));
@@ -50,6 +51,7 @@ export class EventService {
    *       - 이벤트 관련 해시태그 생성
    *       - 이벤트 생성
    *       - 해시태그와 이벤트 연결
+   * @see {@link prepareEventAttributes} 를 호출하여 이벤트 생성에 필요한 속성들을 준비합니다.
    */
   async createEventWithHastags(createProps: EventCreateProps): Promise<Events> {
     const [photoBoothBrand, eventHashtags] =
@@ -67,6 +69,8 @@ export class EventService {
    * @desc - 제목, 내용, 업체명, 대표이미지, 시작일, 마감일, 공개여부, 해시태그
    *       - 이벤트와 이벤트 관련 해시태그 수정
    *       - 이벤트 이미지를 여러장 수정
+   * @see {@link findOneEventById} 를 호출하여 이벤트를 찾습니다.
+   * @see {@link prepareEventAttributes} 를 호출하여 이벤트 생성에 필요한 속성들을 준비합니다.
    */
   async updateEventWithHastags(
     id: number,

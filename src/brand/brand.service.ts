@@ -31,6 +31,7 @@ export class BrandService {
   /**
    * @param id - 포토부스 업체의 id, 이름
    * @desc 포토부스 업체 고유 아이디로 업체에 대한 엔티티 반환
+   * @throws 존재하지 않는 포토부스 업체 (EntityNotFoundError)
    */
   findOneBrandById(id: number): Promise<PhotoBoothBrand> {
     return this.brandRepository.findOneBrand(PhotoBoothBrand.byId(id));
@@ -39,6 +40,7 @@ export class BrandService {
   /**
    * @param brand - 포토부스 업체의 아이디, 이름을 변환한 엔티티
    * @desc 포토부스 업체명으로 업체에 대한 엔티티 반환
+   * @throws 존재하지 않는 포토부스 업체 (EntityNotFoundError)
    */
   findOneBrandBy(brand: PhotoBoothBrand): Promise<PhotoBoothBrand> {
     return this.brandRepository.findOneBrand(brand);

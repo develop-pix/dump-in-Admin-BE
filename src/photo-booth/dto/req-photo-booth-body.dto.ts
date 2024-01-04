@@ -3,7 +3,7 @@ import { Type } from 'class-transformer';
 import { IsNumber, IsString, MaxLength, MinLength } from 'class-validator';
 import { PhotoBoothReqBodyProps, ToBoothProps } from '../photo-booth.interface';
 
-export class PhotoBoothReqBodyDto implements PhotoBoothReqBodyProps {
+export class PhotoBoothReqBody implements PhotoBoothReqBodyProps {
   @ApiProperty({
     description: '포토부스의 업체 + 지점명',
     example: '하루필름 홍대 1호점',

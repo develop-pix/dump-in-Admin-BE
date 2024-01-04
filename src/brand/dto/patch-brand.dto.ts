@@ -2,7 +2,7 @@ import { IsOptional } from 'class-validator';
 import { BrandReqBody } from './req-brand-body.dto';
 import { ToBrandProps } from '../brand.interface';
 
-export class UpdateBoothBrand extends BrandReqBody {
+export class UpdateBrand extends BrandReqBody {
   @IsOptional()
   name: string;
 

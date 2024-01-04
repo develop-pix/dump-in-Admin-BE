@@ -58,8 +58,8 @@ export class PageEntity<T> {
   static create<T>(
     pageProps: PaginationProps,
     count: number,
-    results: T[],
+    response: T[],
   ): PageEntity<T> {
-    return new PageEntity<T>(pageProps, count, results);
+    return new PageEntity<T>(pageProps, count, response);
   }
 }

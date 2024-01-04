@@ -1,8 +1,8 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { GetPhotoBoothListDto } from './get-photo-booth-list.dto';
+import { GetPhotoBoothList } from './get-photo-booth-list.dto';
 
-export class GetPhotoBoothDetailDto extends GetPhotoBoothListDto {
+export class GetPhotoBoothDetail extends GetPhotoBoothList {
   @ApiProperty({
     description: '포토부스 지점의 위도',
     example: 37.566295,

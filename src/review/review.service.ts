@@ -27,6 +27,7 @@ export class ReviewService {
   /**
    * @param id - 리뷰 id
    * @desc 해당 리뷰 데이터 조회
+   * @throws 존재하지 않는 리뷰 (EntityNotFoundError)
    */
   findOneReviewById(id: number): Promise<Review> {
     return this.reviewRepository.findOneReview(Review.byId(id));
@@ -35,6 +36,7 @@ export class ReviewService {
   /**
    * @param id - 삭제할 리뷰 id
    * @desc 해당 리뷰의 is_deleted 컬럼을 true로 수정 (soft)
+   * @see {@link findOneReviewById} 를 호출하여 리뷰를 찾습니다.
    */
   async removeReview(id: number): Promise<Review> {
     await this.findOneReviewById(id);

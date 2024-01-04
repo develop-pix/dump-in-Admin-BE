@@ -4,7 +4,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { FindEventOptionProps } from '../event.interface';
 
-export class EventQueryDto extends PaginationDto {
+export class EventQueryParam extends PaginationDto {
   @ApiProperty({
     description: '이벤트와 관련된 포토부스 업체명',
     required: false,

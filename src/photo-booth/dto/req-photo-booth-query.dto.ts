@@ -4,7 +4,7 @@ import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
 import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
 import { FindBoothOptionProps } from '../photo-booth.interface';
 
-export class BoothQueryDto extends PaginationDto {
+export class BoothQueryParam extends PaginationDto {
   @ApiProperty({
     description: '포토부스에서 지역을 검색하는 쿼리스트링',
     required: false,

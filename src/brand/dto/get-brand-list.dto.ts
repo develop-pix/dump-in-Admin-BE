@@ -4,7 +4,7 @@ import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
 import { BrandHashtag } from '../../hashtag/entity/brand-hashtag.entity';
 import { BrandImage } from '../../brand/entity/brand-image.entity';
 
-export class GetBoothBrandList {
+export class GetBrandList {
   @Exclude() readonly _id: number;
   @Exclude() readonly _name: string;
   @Exclude() readonly _mainThumbnailImageUrl: string;

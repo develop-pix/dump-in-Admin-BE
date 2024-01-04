@@ -4,7 +4,7 @@ import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
 import { PhotoBooth } from '../entity/photo-booth.entity';
 import { HiddenPhotoBooth } from '../entity/photo-booth-hidden.entity';
 
-export class GetPhotoBoothListDto {
+export class GetPhotoBoothList {
   @Exclude() readonly _id: string;
   @Exclude() readonly _name: string;
   @Exclude() readonly _location: string;

@@ -6,7 +6,7 @@ import { User } from '../../user/entity/user.entity';
 import { ReviewImage } from '../entity/review-image.entity';
 import { Review } from '../entity/review.entity';
 
-export class GetReviewListDto {
+export class GetReviewList {
   @Exclude() readonly _id: number;
   @Exclude() readonly _content: string;
   @Exclude() readonly _date: Date;

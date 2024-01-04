@@ -2,7 +2,7 @@ import { ArrayMaxSize, IsArray, IsNotEmpty, IsString } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Hashtag } from '../entity/hashtag.entity';
 
-export class CreateHashtagsDto {
+export class CreateHashtags {
   @ApiProperty({
     description: '해시태그 목록',
     example: ['행사', '웨딩', '파티', '스냅'],

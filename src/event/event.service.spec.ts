@@ -4,7 +4,7 @@ import { HashtagService } from '../hashtag/hashtag.service';
 import { EventRepository } from './repository/event.repository';
 import { PhotoBoothService } from '../photo-booth/photo-booth.service';
 import { Events } from './entity/event.entity';
-import { GetEventListDto } from './dto/get-event-list.dto';
+import { GetEventList } from './dto/get-event-list.dto';
 import { NotFoundException } from '@nestjs/common';
 import { PhotoBoothBrand } from '../brand/entity/brand.entity';
 import { Hashtag } from '../hashtag/entity/hashtag.entity';
@@ -152,7 +152,7 @@ describe('EventService', () => {
         );
 
       const expectedResult = eventInDb.map(
-        (result) => new GetEventListDto(result),
+        (result) => new GetEventList(result),
       );
 
       // When
@@ -180,7 +180,7 @@ describe('EventService', () => {
         );
 
       const expectedResult = eventInDb.map(
-        (result) => new GetEventListDto(result),
+        (result) => new GetEventList(result),
       );
 
       // When

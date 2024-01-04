@@ -1,8 +1,8 @@
 import { IsOptional } from 'class-validator';
-import { EventReqBodyDto } from './req-event-body.dto';
+import { EventReqBody } from './req-event-body.dto';
 import { EventUpdateProps } from '../event.interface';
 
-export class UpdateEventDto extends EventReqBodyDto {
+export class UpdateEvent extends EventReqBody {
   @IsOptional()
   title: string;
 

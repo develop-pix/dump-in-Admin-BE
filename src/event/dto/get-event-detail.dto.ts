@@ -1,8 +1,8 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { GetEventListDto } from './get-event-list.dto';
+import { GetEventList } from './get-event-list.dto';
 
-export class GetEventDetailDto extends GetEventListDto {
+export class GetEventDetail extends GetEventList {
   @ApiProperty({
     description: '이벤트 시작일',
   })

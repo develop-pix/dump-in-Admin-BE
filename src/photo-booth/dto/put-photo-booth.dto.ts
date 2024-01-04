@@ -1,8 +1,8 @@
 import { IsNotEmpty } from 'class-validator';
-import { PhotoBoothReqBodyDto } from './req-photo-booth-body.dto';
+import { PhotoBoothReqBody } from './req-photo-booth-body.dto';
 import { ToBoothProps } from '../photo-booth.interface';
 
-export class MoveHiddenToOpenBoothDto extends PhotoBoothReqBodyDto {
+export class MoveHiddenToOpenBooth extends PhotoBoothReqBody {
   @IsNotEmpty()
   name: string;
 

@@ -1,4 +1,4 @@
-import { HttpStatus, NotFoundException } from '@nestjs/common';
+import { HttpStatus } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
 import { Expose } from 'class-transformer';
 
@@ -60,18 +60,5 @@ export class ResponseEntity<T> {
 
   static EXCEPTION(message: string, code: HttpStatus): ResponseEntity<string> {
     return new ResponseEntity(code, message, false, '');
-  }
-
-  static async validate<T>(
-    message: string,
-    data: T,
-    props: string | number,
-  ): Promise<T> {
-    if (!data) {
-      throw new NotFoundException(
-        `${message} 를 찾지 못했습니다. matching: ${props}`,
-      );
-    }
-    return data;
   }
 }
