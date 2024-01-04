@@ -3,15 +3,12 @@ import { ReviewService } from './review.service';
 import { ReviewRepository } from './repository/review.repository';
 import { NotFoundException } from '@nestjs/common';
 import { Review } from './entity/review.entity';
-import { GetReviewList } from './dto/get-review-list.dto';
-import { FindReviewOptionsProps } from './dto/req-review-query.dto';
 
 class MockReviewRepository {
   findReviewByOptionAndCount = jest.fn();
   findOneReview = jest.fn();
   updateReview = jest.fn();
   save = jest.fn();
-  hasId = jest.fn();
 }
 
 describe('ReviewService', () => {
@@ -40,7 +37,7 @@ describe('ReviewService', () => {
           savedReview.user = review.user;
           return Promise.resolve([[savedReview], 1]);
         } else {
-          return Promise.resolve([[], 0]);
+          return Promise.resolve([[savedReview], 0]);
         }
       });
 
@@ -52,7 +49,7 @@ describe('ReviewService', () => {
           savedReview.id = review.id;
           return Promise.resolve(savedReview);
         } else {
-          return Promise.resolve(null);
+          return Promise.reject(new NotFoundException('EntityNotFoundError'));
         }
       });
 
@@ -60,16 +57,6 @@ describe('ReviewService', () => {
       .spyOn(reviewRepository, 'save')
       .mockImplementation((review: Review) => {
         return Promise.resolve(review);
-      });
-
-    jest
-      .spyOn(reviewRepository, 'hasId')
-      .mockImplementation((review: Review) => {
-        if (review.id === 1) {
-          return true;
-        } else {
-          return false;
-        }
       });
   });
 
@@ -87,7 +74,7 @@ describe('ReviewService', () => {
 
     it('SUCCESS: 포토부스 지점명으로 쿼리했을 때 데이터와 데이터 개수 반환', async () => {
       // Given
-      const queryProps: FindReviewOptionsProps = {
+      const queryProps = {
         boothName: '지점명',
         nickname: undefined,
       };
@@ -98,10 +85,6 @@ describe('ReviewService', () => {
           pageProps,
         );
 
-      const expectedResult = reviewInDb.map(
-        (result) => new GetReviewList(result),
-      );
-
       // When
       const [result, resultCount] = await reviewService.findReviewByQueryParam(
         pageProps,
@@ -109,13 +92,13 @@ describe('ReviewService', () => {
       );
 
       // Then
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(reviewInDb);
       expect(countInDb).toEqual(resultCount);
     });
 
     it('SUCCESS: 유저 닉네임으로 쿼리했을 때 데이터와 데이터 개수 반환', async () => {
       // Given
-      const queryProps: FindReviewOptionsProps = {
+      const queryProps = {
         boothName: undefined,
         nickname: '유저 닉네임',
       };
@@ -126,9 +109,29 @@ describe('ReviewService', () => {
           pageProps,
         );
 
-      const expectedResult = reviewInDb.map(
-        (result) => new GetReviewList(result),
+      // When
+      const [result, resultCount] = await reviewService.findReviewByQueryParam(
+        pageProps,
+        queryProps,
       );
+
+      // Then
+      expect(result).toEqual(reviewInDb);
+      expect(countInDb).toEqual(resultCount);
+    });
+
+    it('SUCCESS: 쿼리 조건이 없을 때 전체 데이터 반환', async () => {
+      // Given
+      const queryProps = {
+        boothName: undefined,
+        nickname: undefined,
+      };
+
+      const [reviewInDb, countInDb] =
+        await reviewRepository.findReviewByOptionAndCount(
+          Review.of(queryProps),
+          pageProps,
+        );
 
       // When
       const [result, resultCount] = await reviewService.findReviewByQueryParam(
@@ -137,34 +140,8 @@ describe('ReviewService', () => {
       );
 
       // Then
-      expect(result).toEqual(expectedResult);
+      expect(result).toEqual(reviewInDb);
       expect(countInDb).toEqual(resultCount);
-    });
-
-    it('FAILURE: 포토부스 지점명으로 쿼리했을 때 리뷰가 존재하지 않으면 404 에러', async () => {
-      // Given
-      const queryProps: FindReviewOptionsProps = {
-        boothName: '없는 지점명',
-        nickname: undefined,
-      };
-
-      // When & Then
-      expect(async () => {
-        await reviewService.findReviewByQueryParam(pageProps, queryProps);
-      }).rejects.toThrowError(new NotFoundException('리뷰를 찾지 못했습니다'));
-    });
-
-    it('FAILURE: 유저 닉네임으로 쿼리했을 때 리뷰가 존재하지 않으면 404 에러', async () => {
-      // Given
-      const queryProps: FindReviewOptionsProps = {
-        nickname: '없는 유저 닉네임',
-        boothName: undefined,
-      };
-
-      // When & Then
-      expect(async () => {
-        await reviewService.findReviewByQueryParam(pageProps, queryProps);
-      }).rejects.toThrowError(new NotFoundException('리뷰를 찾지 못했습니다'));
     });
   });
 
@@ -189,7 +166,7 @@ describe('ReviewService', () => {
       // When & Then
       expect(async () => {
         await reviewService.findOneReviewById(notReviewId);
-      }).rejects.toThrowError(new NotFoundException('리뷰를 찾지 못했습니다.'));
+      }).rejects.toThrowError(new NotFoundException('EntityNotFoundError'));
     });
   });
 
@@ -198,13 +175,15 @@ describe('ReviewService', () => {
       // Given
       const id = 1;
 
-      const isExistReview = reviewRepository.hasId(Review.byId(id));
-
+      const removedReview = await reviewRepository.save({
+        id,
+        isDeleted: true,
+      });
       // When
       const result = await reviewService.removeReview(id);
 
       // Then
-      expect(result).toEqual(isExistReview);
+      expect(result).toEqual(removedReview);
     });
 
     it('FAILURE: id 값이 존재하지 않을 때 404 에러', async () => {
@@ -214,7 +193,7 @@ describe('ReviewService', () => {
       // When & Then
       expect(async () => {
         await reviewService.removeReview(notReviewId);
-      }).rejects.toThrowError(new NotFoundException('리뷰를 찾지 못했습니다.'));
+      }).rejects.toThrowError(new NotFoundException('EntityNotFoundError'));
     });
   });
 });

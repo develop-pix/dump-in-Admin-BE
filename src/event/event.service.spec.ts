@@ -2,35 +2,34 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EventService } from './event.service';
 import { HashtagService } from '../hashtag/hashtag.service';
 import { EventRepository } from './repository/event.repository';
-import { PhotoBoothService } from '../photo-booth/photo-booth.service';
 import { Events } from './entity/event.entity';
-import { GetEventList } from './dto/get-event-list.dto';
 import { NotFoundException } from '@nestjs/common';
 import { PhotoBoothBrand } from '../brand/entity/brand.entity';
 import { Hashtag } from '../hashtag/entity/hashtag.entity';
+import { BrandService } from '../brand/brand.service';
+import { EventImage } from './entity/event-image.entity';
+import { EventHashtag } from '../hashtag/entity/event-hashtag.entity';
 
 class MockEventRepository {
-  hasId = jest.fn();
   save = jest.fn();
   findEventByOptionAndCount = jest.fn();
   findOneEvent = jest.fn();
-  updateEvent = jest.fn();
 }
 
 class MockHashtagService {
-  removeEventHashtags = jest.fn();
   createHashtags = jest.fn();
+  eventHashtags = jest.fn();
 }
 
-class MockPhotoBoothService {
-  findOneBrandByName = jest.fn();
+class MockBrandService {
+  findOneBrandBy = jest.fn();
 }
 
 describe('EventService', () => {
   let eventService: EventService;
   let hashtagService: HashtagService;
   let eventRepository: EventRepository;
-  let photoBoothService: PhotoBoothService;
+  let brandService: BrandService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -38,14 +37,14 @@ describe('EventService', () => {
         EventService,
         { provide: HashtagService, useClass: MockHashtagService },
         { provide: EventRepository, useClass: MockEventRepository },
-        { provide: PhotoBoothService, useClass: MockPhotoBoothService },
+        { provide: BrandService, useClass: MockBrandService },
       ],
     }).compile();
 
     eventService = module.get<EventService>(EventService);
     hashtagService = module.get<HashtagService>(HashtagService);
     eventRepository = module.get<EventRepository>(EventRepository);
-    photoBoothService = module.get<PhotoBoothService>(PhotoBoothService);
+    brandService = module.get<BrandService>(BrandService);
 
     jest.spyOn(eventRepository, 'save').mockImplementation((event: Events) => {
       const saveEvent = new Events();
@@ -55,14 +54,6 @@ describe('EventService', () => {
         return Promise.resolve(saveEvent);
       } else {
         return Promise.resolve(null);
-      }
-    });
-
-    jest.spyOn(eventRepository, 'hasId').mockImplementation((event: Events) => {
-      if (event.id === 1) {
-        return true;
-      } else {
-        return false;
       }
     });
 
@@ -76,10 +67,10 @@ describe('EventService', () => {
 
         if (event.title === '이벤트 제목') {
           return Promise.resolve([[saveEvent], 1]);
-        } else if (event.photoBoothBrand.name === '업체명') {
+        } else if (event.photoBoothBrand?.name === '업체명') {
           return Promise.resolve([[saveEvent], 1]);
         } else {
-          return Promise.resolve([[], 0]);
+          return Promise.resolve([[saveEvent], 0]);
         }
       });
 
@@ -93,29 +84,31 @@ describe('EventService', () => {
           saveEvent.content = '이벤트 내용';
           return Promise.resolve(saveEvent);
         } else {
-          return Promise.resolve(null);
+          return Promise.reject(new NotFoundException('EntityNotFoundError'));
         }
       });
 
     jest
       .spyOn(hashtagService, 'createHashtags')
-      .mockImplementation((hashtags: string[]) => {
-        return Promise.resolve(hashtags.map((name) => Hashtag.create(name)));
+      .mockImplementation((hashtags: Hashtag[]) => {
+        return Promise.resolve(hashtags);
       });
 
     jest
-      .spyOn(photoBoothService, 'findOneBrandByName')
-      .mockImplementation((name: string) => {
-        if (name === '업체명') {
-          const savedBrand = new PhotoBoothBrand();
-          savedBrand.name = name;
-          return Promise.resolve(savedBrand);
-        } else if (typeof name === 'undefined') {
-          return Promise.resolve(name);
+      .spyOn(hashtagService, 'eventHashtags')
+      .mockImplementation((hashtags: Hashtag[]) => {
+        return Promise.resolve(
+          hashtags.map((hashtag) => EventHashtag.create(hashtag)),
+        );
+      });
+
+    jest
+      .spyOn(brandService, 'findOneBrandBy')
+      .mockImplementation((brand: PhotoBoothBrand) => {
+        if (brand.name === '업체명') {
+          return Promise.resolve(brand);
         } else {
-          return Promise.reject(
-            new NotFoundException('포토부스 업체를 찾지 못했습니다.'),
-          );
+          return Promise.reject(new NotFoundException('EntityNotFoundError'));
         }
       });
   });
@@ -128,7 +121,7 @@ describe('EventService', () => {
     expect(eventService).toBeDefined();
     expect(hashtagService).toBeDefined();
     expect(eventRepository).toBeDefined();
-    expect(photoBoothService).toBeDefined();
+    expect(brandService).toBeDefined();
   });
 
   describe('findEventByQueryParam()', () => {
@@ -151,10 +144,6 @@ describe('EventService', () => {
           pageProps,
         );
 
-      const expectedResult = eventInDb.map(
-        (result) => new GetEventList(result),
-      );
-
       // When
       const [result, resultCount] = await eventService.findEventByQueryParam(
         pageProps,
@@ -162,8 +151,8 @@ describe('EventService', () => {
       );
 
       // Then
-      expect(result).toEqual(expectedResult);
-      expect(countInDb).toEqual(resultCount);
+      expect(result).toEqual(eventInDb);
+      expect(resultCount).toEqual(countInDb);
     });
 
     it('SUCCESS: 포토부스 업체명으로 쿼리하면 관련 이벤트 데이터 여러개 반환', async () => {
@@ -179,9 +168,29 @@ describe('EventService', () => {
           pageProps,
         );
 
-      const expectedResult = eventInDb.map(
-        (result) => new GetEventList(result),
+      // When
+      const [result, resultCount] = await eventService.findEventByQueryParam(
+        pageProps,
+        queryProps,
       );
+
+      // Then
+      expect(result).toEqual(eventInDb);
+      expect(resultCount).toEqual(countInDb);
+    });
+
+    it('SUCCESS: 쿼리 조건을 넣지 않으면 이벤트 데이터 전체 반환', async () => {
+      // Given
+      const queryProps = {
+        title: undefined,
+        brandName: undefined,
+      };
+
+      const [eventInDb, countInDb] =
+        await eventRepository.findEventByOptionAndCount(
+          Events.of(queryProps),
+          pageProps,
+        );
 
       // When
       const [result, resultCount] = await eventService.findEventByQueryParam(
@@ -190,41 +199,8 @@ describe('EventService', () => {
       );
 
       // Then
-      expect(result).toEqual(expectedResult);
-      expect(countInDb).toEqual(resultCount);
-    });
-
-    it('FAILURE: 이벤트가 존재하지 않으면 404 에러', async () => {
-      // Given
-      const queryProps = {
-        title: '이벤트에 없는 제목',
-        brandName: undefined,
-      };
-
-      // When & Then
-      expect(async () => {
-        await eventService.findEventByQueryParam(pageProps, queryProps);
-      }).rejects.toThrowError(
-        new NotFoundException('이벤트를 찾지 못했습니다'),
-      );
-    });
-
-    it('FAILURE: 포토부스 업체명으로 쿼리했을 때 이벤트가 존재하지 않으면 404 에러', async () => {
-      // Given
-      const queryProps = {
-        title: undefined,
-        brandName: '없는 업체명',
-      };
-
-      // When & Then
-      expect(async () => {
-        await eventService.findEventByQueryParam(
-          pageProps,
-          Events.of(queryProps),
-        );
-      }).rejects.toThrowError(
-        new NotFoundException('이벤트를 찾지 못했습니다'),
-      );
+      expect(result).toEqual(eventInDb);
+      expect(resultCount).toEqual(countInDb);
     });
   });
 
@@ -249,9 +225,7 @@ describe('EventService', () => {
       // When & Then
       expect(async () => {
         await eventService.findOneEventById(notEventId);
-      }).rejects.toThrowError(
-        new NotFoundException('이벤트를 찾지 못했습니다.'),
-      );
+      }).rejects.toThrowError(new NotFoundException('EntityNotFoundError'));
     });
   });
 
@@ -260,22 +234,35 @@ describe('EventService', () => {
       title: '없는 제목',
       content: '내용',
       mainThumbnailUrl: '썸네일 이미지',
-      brandName: '업체명',
+      brandName: PhotoBoothBrand.byName('업체명'),
       startDate: new Date(),
       endDate: new Date(),
       isPublic: true,
-      hashtags: ['캐릭터', '콜라보', '연예인', '스냅', '이달의프레임'],
-      images: ['url1', 'url2', 'url3'],
+      hashtags: Hashtag.unique([
+        '캐릭터',
+        '콜라보',
+        '연예인',
+        '스냅',
+        '이달의프레임',
+      ]),
+      images: ['url1', 'url2', 'url3'].map((image) => EventImage.create(image)),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
 
-    it('SUCCESS: 전달 받은 정보로 이벤트 생성 (boolean)', async () => {
+    it('SUCCESS: 전달 받은 정보로 이벤트 생성', async () => {
       // Given
-
-      const expectedResult = !!(await eventRepository.save({
+      const photoBoothBrand = await brandService.findOneBrandBy(
+        eventCreateProps.brandName,
+      );
+      const eventHashtags = await hashtagService.eventHashtags(
+        eventCreateProps.hashtags,
+      );
+      const expectedResult = await eventRepository.save({
+        photoBoothBrand,
+        eventHashtags,
         ...eventCreateProps,
-      }));
+      });
 
       // When
       const result =
@@ -287,35 +274,49 @@ describe('EventService', () => {
 
     it('FAILURE: 이벤트를 생성해야할 때 업체명이 존재하지 않으면 404 에러', async () => {
       // Given
-      eventCreateProps.brandName = '업체명이 없을 때';
+      eventCreateProps.brandName = PhotoBoothBrand.byName('업체명이 없을 때');
 
       // When & Then
       expect(async () => {
         await eventService.createEventWithHastags(eventCreateProps);
-      }).rejects.toThrowError(
-        new NotFoundException('포토부스 업체를 찾지 못했습니다.'),
-      );
+      }).rejects.toThrowError(new NotFoundException('EntityNotFoundError'));
     });
   });
 
   describe('updateEventWithHastags()', () => {
     const eventUpdateProps = {
-      title: '제목',
+      title: '없는 제목',
       content: '내용',
       mainThumbnailUrl: '썸네일 이미지',
-      brandName: undefined,
+      brandName: PhotoBoothBrand.byName('업체명'),
       startDate: new Date(),
       endDate: new Date(),
       isPublic: true,
-      hashtags: ['캐릭터', '콜라보', '연예인', '스냅', '이달의프레임'],
-      images: ['url1', 'url2'],
+      hashtags: Hashtag.unique([
+        '캐릭터',
+        '콜라보',
+        '연예인',
+        '스냅',
+        '이달의프레임',
+      ]),
+      images: ['url1', 'url2', 'url3'].map((image) => EventImage.create(image)),
     };
 
-    it('SUCCESS: id 값이 존재할 때 전달 받은 정보로 업데이트 (boolean)', async () => {
+    it('SUCCESS: id 값이 존재할 때 전달 받은 정보로 업데이트', async () => {
       // Given
       const id = 1;
-
-      const isExistEvent = await eventRepository.hasId(Events.byId(id));
+      const photoBoothBrand = await brandService.findOneBrandBy(
+        eventUpdateProps.brandName,
+      );
+      const eventHashtags = await hashtagService.eventHashtags(
+        eventUpdateProps.hashtags,
+      );
+      const expectedResult = await eventRepository.save({
+        id,
+        photoBoothBrand,
+        eventHashtags,
+        ...eventUpdateProps,
+      });
 
       // When
       const result = await eventService.updateEventWithHastags(
@@ -324,50 +325,29 @@ describe('EventService', () => {
       );
 
       // Then
-      expect(result).toEqual(isExistEvent);
-    });
-
-    it('SUCCESS: 수정할 속성에 업체명이 존재할 때 업체명 업데이트 (boolean)', async () => {
-      // Given
-      const id = 1;
-      eventUpdateProps.brandName = '업체명';
-
-      const isExistEvent = await eventRepository.hasId(Events.byId(id));
-
-      // When
-      const result = await eventService.updateEventWithHastags(
-        id,
-        eventUpdateProps,
-      );
-
-      // Then
-      expect(result).toEqual(isExistEvent);
+      expect(result).toEqual(expectedResult);
     });
 
     it('FAILURE: id 값이 존재하지 않을 때 404 에러', async () => {
       // Given
       const notEventId = 222222;
-      eventUpdateProps.brandName = '업체명';
+      eventUpdateProps.brandName = PhotoBoothBrand.byName('업체명');
 
       // When & Then
       expect(async () => {
         await eventService.updateEventWithHastags(notEventId, eventUpdateProps);
-      }).rejects.toThrowError(
-        new NotFoundException('업데이트할 이벤트가 없습니다.'),
-      );
+      }).rejects.toThrowError(new NotFoundException('EntityNotFoundError'));
     });
 
     it('FAILURE: 수정해야할 업체명이 존재하지 않을 때 404 에러', async () => {
       // Given
       const id = 1;
-      eventUpdateProps.brandName = '업체명이 없을 때';
+      eventUpdateProps.brandName = PhotoBoothBrand.byName('업체명이 없을 때');
 
       // When & Then
       expect(async () => {
         await eventService.updateEventWithHastags(id, eventUpdateProps);
-      }).rejects.toThrowError(
-        new NotFoundException('포토부스 업체를 찾지 못했습니다.'),
-      );
+      }).rejects.toThrowError(new NotFoundException('EntityNotFoundError'));
     });
   });
 });

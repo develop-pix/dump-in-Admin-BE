@@ -3,18 +3,16 @@ import { PhotoBoothService } from './photo-booth.service';
 import { PhotoBoothRepository } from './repository/photo-booth.repository';
 import { HiddenBoothRepository } from './repository/photo-booth-hidden.repository';
 import { PhotoBooth } from './entity/photo-booth.entity';
-import { GetPhotoBoothList } from './dto/get-photo-booth-list.dto';
-import { ConflictException, NotFoundException } from '@nestjs/common';
-import { PhotoBoothBrand } from '../brand/entity/brand.entity';
+import { NotFoundException } from '@nestjs/common';
 import { HiddenPhotoBooth } from './entity/photo-booth-hidden.entity';
-import { HashtagService } from '../hashtag/hashtag.service';
-import { Hashtag } from '../hashtag/entity/hashtag.entity';
+import { BrandService } from '../brand/brand.service';
+import { PhotoBoothBrand } from '../brand/entity/brand.entity';
+import { ToBoothProps } from './photo-booth.interface';
 
 class MockPhotoBoothRepository {
   findBoothByOptionAndCount = jest.fn();
   findOneBooth = jest.fn();
   save = jest.fn();
-  hasId = jest.fn();
   remove = jest.fn();
 }
 
@@ -22,54 +20,39 @@ class MockHiddenPhotoBoothRepository {
   findHiddenBoothByOptionAndCount = jest.fn();
   findOneHiddenBooth = jest.fn();
   save = jest.fn();
-  hasId = jest.fn();
+  merge = jest.fn();
 }
 
-class MockPhotoBoothBrandRepository {
-  findBrandByOptionAndCount = jest.fn();
-  findOneBrand = jest.fn();
-  save = jest.fn();
-  hasId = jest.fn();
-}
-
-class MockHashtagService {
-  createHashtags = jest.fn();
+class MockBrandService {
+  findOneBrandBy = jest.fn();
 }
 
 describe('PhotoBoothService', () => {
-  let hashtagService: HashtagService;
   let photoBoothService: PhotoBoothService;
   let photoBoothRepository: PhotoBoothRepository;
   let photoBoothHiddenRepository: HiddenBoothRepository;
-  let brandRepository: PhotoBoothBrandRepository;
+  let brandService: BrandService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         PhotoBoothService,
-        { provide: HashtagService, useClass: MockHashtagService },
         { provide: PhotoBoothRepository, useClass: MockPhotoBoothRepository },
         {
           provide: HiddenBoothRepository,
           useClass: MockHiddenPhotoBoothRepository,
         },
-        {
-          provide: PhotoBoothBrandRepository,
-          useClass: MockPhotoBoothBrandRepository,
-        },
+        { provide: BrandService, useClass: MockBrandService },
       ],
     }).compile();
 
-    hashtagService = module.get<HashtagService>(HashtagService);
     photoBoothService = module.get<PhotoBoothService>(PhotoBoothService);
     photoBoothRepository =
       module.get<PhotoBoothRepository>(PhotoBoothRepository);
     photoBoothHiddenRepository = module.get<HiddenBoothRepository>(
       HiddenBoothRepository,
     );
-    brandRepository = module.get<PhotoBoothBrandRepository>(
-      PhotoBoothBrandRepository,
-    );
+    brandService = module.get<BrandService>(BrandService);
 
     jest
       .spyOn(photoBoothRepository, 'findBoothByOptionAndCount')
@@ -82,34 +65,32 @@ describe('PhotoBoothService', () => {
           savedPhotoBooth.name = booth.name;
           return Promise.resolve([[savedPhotoBooth], 1]);
         } else {
-          return Promise.resolve([[], 0]);
+          return Promise.resolve([[savedPhotoBooth], 0]);
         }
       });
 
     jest
       .spyOn(photoBoothRepository, 'findOneBooth')
       .mockImplementation((booth: PhotoBooth) => {
-        if (booth.id === 'uuid') {
-          const savePhotoBooth = new PhotoBooth();
-          savePhotoBooth.id = 'uuid';
-          savePhotoBooth.name = '하루필름';
-          savePhotoBooth.location = '서울';
+        const savePhotoBooth = new PhotoBooth();
 
+        if (booth.id === 'uuid') {
+          savePhotoBooth.id = 'uuid';
           return Promise.resolve(savePhotoBooth);
         } else {
-          return Promise.resolve(null);
+          return Promise.reject(new NotFoundException('EntityNotFoundError'));
         }
       });
 
     jest
-      .spyOn(brandRepository, 'findOneBrand')
-      .mockImplementation((brand: PhotoBoothBrand) => {
-        if (brand.name === '업체명') {
-          const saveBrand = new PhotoBoothBrand();
-          saveBrand.name = '업체명';
-          return Promise.resolve(saveBrand);
+      .spyOn(photoBoothHiddenRepository, 'findOneHiddenBooth')
+      .mockImplementation((booth: HiddenPhotoBooth) => {
+        if (booth.id === 'hiddenId') {
+          return Promise.resolve(booth);
+        } else if (booth.id === 'uuid') {
+          return Promise.resolve(booth);
         } else {
-          return Promise.resolve(null);
+          return Promise.reject(new NotFoundException('EntityNotFoundError'));
         }
       });
 
@@ -132,49 +113,13 @@ describe('PhotoBoothService', () => {
       });
 
     jest
-      .spyOn(brandRepository, 'save')
-      .mockImplementation((brand: PhotoBoothBrand) => {
-        return Promise.resolve(brand);
-      });
-
-    jest
-      .spyOn(photoBoothRepository, 'hasId')
-      .mockImplementation((booth: PhotoBooth) => {
-        if (booth.id === 'uuid') {
-          return true;
-        } else if (booth.id === 'boothId') {
-          return true;
-        } else {
-          return false;
-        }
-      });
-
-    jest
-      .spyOn(photoBoothHiddenRepository, 'hasId')
-      .mockImplementation((booth: HiddenPhotoBooth) => {
-        if (booth.id === 'uuid') {
-          return true;
-        } else if (booth.id === 'hiddenId') {
-          return true;
-        } else {
-          return false;
-        }
-      });
-
-    jest
-      .spyOn(brandRepository, 'hasId')
+      .spyOn(brandService, 'findOneBrandBy')
       .mockImplementation((brand: PhotoBoothBrand) => {
         if (brand.name === '업체명') {
-          return true;
+          return Promise.resolve(brand);
         } else {
-          return false;
+          return Promise.reject(new NotFoundException('EntityNotFoundError'));
         }
-      });
-
-    jest
-      .spyOn(hashtagService, 'createHashtags')
-      .mockImplementation((hashtags: string[]) => {
-        return Promise.resolve(hashtags.map((name) => Hashtag.create(name)));
       });
   });
 
@@ -183,11 +128,10 @@ describe('PhotoBoothService', () => {
   });
 
   it('should be defined', () => {
-    expect(hashtagService).toBeDefined();
     expect(photoBoothService).toBeDefined();
     expect(photoBoothRepository).toBeDefined();
-    expect(brandRepository).toBeDefined();
     expect(photoBoothHiddenRepository).toBeDefined();
+    expect(brandService).toBeDefined();
   });
 
   describe('findBoothByOptionAndCount()', () => {
@@ -202,34 +146,32 @@ describe('PhotoBoothService', () => {
       const booth = new PhotoBooth();
       booth.name = '포토그레이';
 
-      const [photoBoothsInDb] =
+      const [photoBoothsInDb, countInDb] =
         await photoBoothRepository.findBoothByOptionAndCount(booth, pageProps);
 
-      const expectedResult = photoBoothsInDb.map(
-        (photoBooth) => new GetPhotoBoothList(photoBooth),
-      );
-
       // When
-      const [result] = await photoBoothService.findOpenBoothByQueryParam(
-        pageProps,
-        booth,
-      );
+      const [result, resultCount] =
+        await photoBoothService.findOpenBoothByQueryParam(pageProps, booth);
 
       // Then
-      expect(result).toEqual(expectedResult);
+      expect(resultCount).toEqual(countInDb);
+      expect(result).toEqual(photoBoothsInDb);
     });
 
-    it('FAILURE: 포토부스가 존재하지 않으면 404 에러', async () => {
+    it('SUCCESS: 쿼리 조건을 추가하지 않으면 전체 목록 반환', async () => {
       // Given
       const booth = new PhotoBooth();
-      booth.location = '경기';
 
-      // When & Then
-      expect(async () => {
+      const [photoBoothsInDb, countInDb] =
+        await photoBoothRepository.findBoothByOptionAndCount(booth, pageProps);
+
+      // When
+      const [result, resultCount] =
         await photoBoothService.findOpenBoothByQueryParam(pageProps, booth);
-      }).rejects.toThrowError(
-        new NotFoundException('공개된 포토부스 지점을 찾지 못했습니다.'),
-      );
+
+      // Then
+      expect(resultCount).toEqual(countInDb);
+      expect(result).toEqual(photoBoothsInDb);
     });
   });
 
@@ -256,107 +198,70 @@ describe('PhotoBoothService', () => {
       // When & Then
       expect(async () => {
         await photoBoothService.findOneOpenBooth(notBoothId);
-      }).rejects.toThrowError(
-        new NotFoundException('공개된 포토부스 지점을 찾지 못했습니다.'),
-      );
+      }).rejects.toThrowError(new NotFoundException('EntityNotFoundError'));
     });
   });
 
   describe('updateOpenBooth()', () => {
+    const updateProps: ToBoothProps = {
+      longitude: 0,
+      latitude: 0,
+      name: '포토부스 이름',
+      location: '지역',
+      streetAddress: '지번 주소',
+      roadAddress: '도로명 주소',
+      brandName: '업체명',
+      operationTime: 'string',
+    };
     it('SUCCESS: uuid 값이 존재할 때 전달 받은 정보로 업데이트 (boolean)', async () => {
       // Given
       const id = 'uuid';
-      const photoBoothUpdateProps = {
-        name: '포토부스 이름',
-        location: '지역',
-        streetAddress: '지번 주소',
-        roadAddress: '도로명 주소',
-        brandName: '업체명',
-        operationTime: 'string',
-      };
-
-      const isPhotoBoothExist = await photoBoothRepository.hasId(
-        PhotoBooth.byId(id),
+      const photoBoothBrand = await brandService.findOneBrandBy(
+        PhotoBoothBrand.byName(updateProps.brandName),
       );
+
+      const savedBooth = await photoBoothRepository.save({
+        id,
+        photoBoothBrand,
+        ...updateProps,
+      });
 
       // When
-      const result = await photoBoothService.updateOpenBooth(
-        id,
-        photoBoothUpdateProps,
-      );
+      const result = await photoBoothService.updateOpenBooth(id, updateProps);
 
       // Then
-      expect(result).toEqual(isPhotoBoothExist);
+      expect(result).toEqual(savedBooth);
     });
 
-    it('SUCCESS: 수정할 속성에 업체명이 존재할 때 업체명 업데이트 (boolean)', async () => {
+    it('FAILURE: 수정할 속성에 업체명이 존재하지 않을 때 404 에러', async () => {
       // Given
       const id = 'uuid';
-      const photoBoothUpdateProps = {
-        brandName: '업체명',
-      };
+      updateProps.brandName = '없는 업체명';
 
-      const isPhotoBoothExist = await photoBoothRepository.hasId(
-        PhotoBooth.byId(id),
-      );
-
-      // When
-      const result = await photoBoothService.updateOpenBooth(
-        id,
-        photoBoothUpdateProps,
-      );
-
-      // Then
-      expect(result).toEqual(isPhotoBoothExist);
+      // When & Then
+      expect(async () => {
+        await photoBoothService.updateOpenBooth(id, updateProps);
+      }).rejects.toThrowError(new NotFoundException('EntityNotFoundError'));
     });
 
     it('FAILURE: uuid 값이 존재하지 않을 때 404 에러', async () => {
       // Given
       const notBoothId = 'not uuid';
-      const photoBoothUpdateProps = {
-        name: '포토부스 이름',
-        location: '지역',
-        streetAddress: '지번 주소',
-        roadAddress: '도로명 주소',
-        brandName: '업체명',
-      };
+      updateProps.brandName = '업체명';
 
       // When & Then
       expect(async () => {
-        await photoBoothService.updateOpenBooth(
-          notBoothId,
-          photoBoothUpdateProps,
-        );
-      }).rejects.toThrowError(
-        new NotFoundException('포토부스를 찾지 못했습니다.'),
-      );
-    });
-
-    it('FAILURE: 수정해야할 업체명이 존재하지 않을 때 404 에러', async () => {
-      // Given
-      const id = 'uuid';
-      const photoBoothUpdateProps = {
-        name: '포토부스 이름',
-        location: '지역',
-        streetAddress: '지번 주소',
-        roadAddress: '도로명 주소',
-        brandName: '업체명이 없을 때',
-      };
-      // When & Then
-      expect(async () => {
-        await photoBoothService.updateOpenBooth(id, photoBoothUpdateProps);
-      }).rejects.toThrowError(
-        new NotFoundException('포토부스 업체를 찾지 못했습니다.'),
-      );
+        await photoBoothService.updateOpenBooth(notBoothId, updateProps);
+      }).rejects.toThrowError(new NotFoundException('EntityNotFoundError'));
     });
   });
 
   describe('deleteOpenBooth()', () => {
-    it('SUCCESS: uuid 값이 존재할 때 해당 id의 포토부스 지점을 삭제하고 hiddenBooth로 이동 (boolean)', async () => {
+    it('SUCCESS: uuid 값이 존재할 때 해당 id의 포토부스 지점을 삭제하고 hiddenBooth로 이동', async () => {
       // Given
       const id = 'uuid';
 
-      const isPhotoBoothExist = await photoBoothRepository.hasId(
+      const booth = await photoBoothRepository.findOneBooth(
         PhotoBooth.byId(id),
       );
 
@@ -364,7 +269,7 @@ describe('PhotoBoothService', () => {
       const result = await photoBoothService.deleteOpenBooth(id);
 
       // Then
-      expect(result).toEqual(isPhotoBoothExist);
+      expect(result).toEqual(booth);
     });
 
     it('FAILURE: uuid 값이 존재하지 않을 때 404 에러', async () => {
@@ -374,57 +279,43 @@ describe('PhotoBoothService', () => {
       // When & Then
       expect(async () => {
         await photoBoothService.deleteOpenBooth(notBoothId);
-      }).rejects.toThrowError(
-        new NotFoundException('포토부스를 찾지 못했습니다.'),
-      );
+      }).rejects.toThrowError(new NotFoundException('EntityNotFoundError'));
     });
   });
 
   describe('updateHiddenBooth()', () => {
-    it('SUCCESS: uuid 값이 존재할 때 전달 받은 정보로 업데이트 (boolean)', async () => {
+    const updateProps: ToBoothProps = {
+      longitude: 0,
+      latitude: 0,
+      name: '포토부스 이름',
+      location: '지역',
+      streetAddress: '지번 주소',
+      roadAddress: '도로명 주소',
+      brandName: '업체명',
+      operationTime: 'string',
+    };
+    it('SUCCESS: uuid 값이 존재할 때 전달 받은 정보로 업데이트 ', async () => {
       // Given
       const id = 'uuid';
-      const photoBoothUpdateProps = {
-        name: '포토부스 이름',
-        location: '지역',
-        streetAddress: '지번 주소',
-        roadAddress: '도로명 주소',
-      };
-
-      const isHiddenBoothExist = await photoBoothHiddenRepository.hasId(
-        HiddenPhotoBooth.byId(id),
-      );
-
-      // When
-      const result = await photoBoothService.updateHiddenBooth(
+      const savedBooth = await photoBoothHiddenRepository.save({
         id,
-        photoBoothUpdateProps,
-      );
+        ...updateProps,
+      });
+      // When
+      const result = await photoBoothService.updateHiddenBooth(id, updateProps);
 
       // Then
-      expect(result).toEqual(isHiddenBoothExist);
+      expect(result).toEqual(savedBooth);
     });
 
     it('FAILURE: uuid 값이 존재하지 않을 때 404 에러', async () => {
       // Given
       const notBoothId = 'not uuid';
-      const photoBoothUpdateProps = {
-        name: '포토부스 이름',
-        location: '지역',
-        streetAddress: '지번 주소',
-        roadAddress: '도로명 주소',
-        isDelete: false,
-      };
 
       // When & Then
       expect(async () => {
-        await photoBoothService.updateHiddenBooth(
-          notBoothId,
-          photoBoothUpdateProps,
-        );
-      }).rejects.toThrowError(
-        new NotFoundException('공개되지 않은 포토부스 지점을 찾지 못했습니다.'),
-      );
+        await photoBoothService.updateHiddenBooth(notBoothId, updateProps);
+      }).rejects.toThrowError(new NotFoundException('EntityNotFoundError'));
     });
   });
 
@@ -438,14 +329,20 @@ describe('PhotoBoothService', () => {
       roadAddress: '도로명 주소',
       brandName: '업체명',
       operationTime: '운영 시간',
-      isDelete: true,
     };
 
-    it('SUCCESS: 공개된 포토부스에 uuid 값이 없을 때 비공개 포토부스에서 공개포토부스로 이동 (boolean)', async () => {
+    it('SUCCESS: 비공개 포토부스에서 공개포토부스로 이동', async () => {
       // Given
       const id = 'hiddenId';
 
-      const isPhotoBoothExist = photoBoothRepository.hasId(PhotoBooth.byId(id));
+      const photoBoothBrand = await brandService.findOneBrandBy(
+        PhotoBoothBrand.byName(photoBoothUpdateProps.brandName),
+      );
+      const savedBooth = await photoBoothRepository.save({
+        id,
+        photoBoothBrand,
+        ...photoBoothUpdateProps,
+      });
 
       // When
       const result = await photoBoothService.moveHiddenToOpenBooth(
@@ -454,22 +351,7 @@ describe('PhotoBoothService', () => {
       );
 
       // Then
-      expect(result).toEqual(!isPhotoBoothExist);
-    });
-
-    it('FAILURE: 공개 포토부스에 uuid 값이 존재할 때 404 에러', async () => {
-      // Given
-      const id = 'boothId';
-
-      // When & Then
-      expect(async () => {
-        await photoBoothService.moveHiddenToOpenBooth(
-          id,
-          photoBoothUpdateProps,
-        );
-      }).rejects.toThrowError(
-        new ConflictException('이미 포토부스가 존재합니다.'),
-      );
+      expect(result).toEqual(savedBooth);
     });
 
     it('FAILURE: 비공개 포토부스에 업체명이 존재하지 않을 때 404 에러', async () => {
@@ -483,9 +365,7 @@ describe('PhotoBoothService', () => {
           id,
           photoBoothUpdateProps,
         );
-      }).rejects.toThrowError(
-        new NotFoundException('포토부스 업체를 찾지 못했습니다.'),
-      );
+      }).rejects.toThrowError(new NotFoundException('EntityNotFoundError'));
     });
   });
 });

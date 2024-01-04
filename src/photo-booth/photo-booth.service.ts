@@ -74,13 +74,11 @@ export class PhotoBoothService {
    * @see {@link findOneOpenBooth} 를 호출하여 포토부스 지점을 찾습니다.
    * @see {@link deleteHiddenBooth} 를 호출하여 포토부스 지점을 삭제합니다.
    */
-  async deleteOpenBooth(id: string): Promise<boolean> {
+  async deleteOpenBooth(id: string): Promise<PhotoBooth> {
     const booth = await this.findOneOpenBooth(id);
 
     await this.deleteHiddenBooth(id);
-    await this.photoBoothRepository.remove(booth);
-
-    return true;
+    return this.photoBoothRepository.remove(booth);
   }
 
   /**
@@ -120,9 +118,8 @@ export class PhotoBoothService {
     id: string,
     updateProps: ToBoothProps,
   ): Promise<HiddenPhotoBooth> {
-    const booth = await this.findOneHiddenBooth(id);
-    const updatedBooth = this.hiddenBoothRepository.merge(booth, updateProps);
-    return this.hiddenBoothRepository.save(updatedBooth);
+    await this.findOneHiddenBooth(id);
+    return this.hiddenBoothRepository.save({ id, ...updateProps });
   }
 
   /**

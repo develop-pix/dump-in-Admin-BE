@@ -12,4 +12,7 @@ export interface PhotoBoothReqBodyProps {
 export interface ToBoothProps extends PhotoBoothReqBodyProps {}
 
 export interface FindBoothOptionProps
-  extends Pick<PhotoBoothReqBodyProps, 'location' | 'brandName' | 'name'> {}
+  extends Pick<
+    Partial<PhotoBoothReqBodyProps>,
+    'location' | 'brandName' | 'name'
+  > {}
