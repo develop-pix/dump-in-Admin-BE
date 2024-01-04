@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import * as bcrypt from 'bcrypt';
 import { User } from '../user/entity/user.entity';
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 
 class MockUserService {
@@ -23,13 +22,6 @@ describe('AuthService', () => {
 
     authService = module.get<AuthService>(AuthService);
     userService = module.get<UserService>(UserService);
-
-    //Bcrypt Stub
-    jest
-      .spyOn(bcrypt, 'compare')
-      .mockImplementation((plain, hashed) =>
-        Promise.resolve(`${plain} hashed 12` === hashed),
-      );
 
     // UserService Stub
     jest.spyOn(userService, 'findOneAdminBy').mockImplementation((username) => {
@@ -67,14 +59,16 @@ describe('AuthService', () => {
       expect(result.isAdmin).toEqual(true);
     });
 
-    it('FAILURE: 비밀번호가 맞지 않을 때, 404 예외 throw', async () => {
+    it('FAILURE: 비밀번호가 맞지 않을 때, 거짓 반환 (boolean)', async () => {
       getLogInProps.password = 'wrong password';
-
-      await expect(async () => {
-        await authService.login(getLogInProps);
-      }).rejects.toThrowError(
-        new UnauthorizedException('비밀번호가 일치하지 않습니다.'),
+      const result = await authService.login(getLogInProps);
+      const response = await User.comparePassword(
+        getLogInProps.password,
+        result.password,
       );
+
+      expect(result).toBeInstanceOf(User);
+      expect(response).toEqual(false);
     });
 
     it('FAILURE: 관리자 정보가 존재하지 않을 때, 404 예외 throw', async () => {
