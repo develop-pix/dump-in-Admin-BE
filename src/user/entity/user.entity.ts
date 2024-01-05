@@ -80,10 +80,15 @@ export class User extends BaseDateEntity {
     dbPassword: string,
   ): Promise<boolean> {
     const parsingDBPassword = dbPassword.replace('bcrypt_sha256$', '');
-    const hashed = crypto
-      .createHash('sha256')
-      .update(requestPassword)
-      .digest('hex');
+    const hashed = this.hashCrypto(requestPassword);
     return bcrypt.compare(hashed, parsingDBPassword);
+  }
+
+  static hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 12);
+  }
+
+  static hashCrypto(password: string): string {
+    return crypto.createHash('sha256').update(password).digest('hex');
   }
 }
