@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { DashboardService } from './dashboard.service';
-import { ResponseEntity } from 'src/common/entity/response.entity';
+import { ResponseEntity } from '../common/entity/response.entity';
 import { Statistics } from './dto/get-statistics.dto';
 import { ApiTags } from '@nestjs/swagger';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
