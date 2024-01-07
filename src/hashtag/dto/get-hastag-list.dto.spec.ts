@@ -16,6 +16,7 @@ describe('GetHashtagList', () => {
 
   it('should be defined', () => {
     expect(hashtagList).toBeDefined();
+    expect(mockHashtagData).toBeInstanceOf(Hashtag);
   });
 
   it('SUCCESS: Hashtag 엔티티로 GetHashtagList DTO 생성', () => {
