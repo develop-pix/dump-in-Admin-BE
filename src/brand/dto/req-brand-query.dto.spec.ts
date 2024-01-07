@@ -13,14 +13,16 @@ describe('BrandQueryParam', () => {
 
   describe('getQueryProps()', () => {
     it('SUCCESS: 쿼리 속성 전달 확인', () => {
-      brandQueryParam.name = '포토그레이';
-      brandQueryParam.isEvent = true;
+      const name = 'Example Brand';
+      const isExampleEvent = true;
+      brandQueryParam.name = name;
+      brandQueryParam.isEvent = isExampleEvent;
 
       const queryProps = brandQueryParam.getQueryProps();
 
       expect(queryProps).toEqual({
-        name: '포토그레이',
-        isEvent: true,
+        name,
+        isEvent: isExampleEvent,
       });
     });
   });

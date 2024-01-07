@@ -7,13 +7,6 @@ describe('BrandReqBody', () => {
 
   beforeEach(() => {
     brandReqBody = new BrandReqBody();
-  });
-
-  it('should be defined', () => {
-    expect(brandReqBody).toBeDefined();
-  });
-
-  it('SUCCESS: toEntity() 속성 확인', () => {
     brandReqBody.name = '포토그레이';
     brandReqBody.mainThumbnailImageUrl = 'https://example.com/image.jpg';
     brandReqBody.description = '포토부스 업체 설명';
@@ -24,19 +17,23 @@ describe('BrandReqBody', () => {
       'https://example.com/image1.jpg',
       'https://example.com/image2.jpg',
     ];
+  });
 
+  it('should be defined', () => {
+    expect(brandReqBody).toBeDefined();
+  });
+
+  it('SUCCESS: toEntity() 속성 확인', () => {
     const entity = brandReqBody.toEntity();
 
-    expect(entity.name).toEqual('포토그레이');
+    expect(entity.name).toEqual(brandReqBody.name);
     expect(entity.mainThumbnailImageUrl).toEqual(
-      'https://example.com/image.jpg',
+      brandReqBody.mainThumbnailImageUrl,
     );
-    expect(entity.description).toEqual('포토부스 업체 설명');
-    expect(entity.photoBoothUrl).toEqual('https://example.com');
-    expect(entity.isEvent).toEqual(true);
-    expect(entity.hashtags).toEqual(
-      Hashtag.unique(['행사', '웨딩', '파티', '스냅']),
-    );
+    expect(entity.description).toEqual(brandReqBody.description);
+    expect(entity.photoBoothUrl).toEqual(brandReqBody.photoBoothUrl);
+    expect(entity.isEvent).toEqual(brandReqBody.isEvent);
+    expect(entity.hashtags).toEqual(Hashtag.unique(brandReqBody.hashtags));
     expect(entity.images).toHaveLength(2);
     expect(entity.images[0]).toBeInstanceOf(BrandImage);
   });
