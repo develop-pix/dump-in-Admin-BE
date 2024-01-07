@@ -19,7 +19,7 @@ class MockEventService {
 }
 
 describe('EventController', () => {
-  let controller: EventController;
+  let eventController: EventController;
   let eventService: EventService;
 
   beforeEach(async () => {
@@ -28,7 +28,7 @@ describe('EventController', () => {
       providers: [{ provide: EventService, useClass: MockEventService }],
     }).compile();
 
-    controller = module.get<EventController>(EventController);
+    eventController = module.get<EventController>(EventController);
     eventService = module.get<EventService>(EventService);
   });
 
@@ -37,7 +37,8 @@ describe('EventController', () => {
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(eventController).toBeDefined();
+    expect(eventService).toBeDefined();
   });
 
   describe('findEventByQueryParam', () => {
@@ -52,7 +53,7 @@ describe('EventController', () => {
         .spyOn(eventService, 'findEventByQueryParam')
         .mockResolvedValue([mockResponse, mockCount]);
 
-      const result = await controller.findEventByQueryParam(mockRequest);
+      const result = await eventController.findEventByQueryParam(mockRequest);
 
       expect(eventService.findEventByQueryParam).toHaveBeenCalledWith(
         mockRequest.getPageProps(),
@@ -87,7 +88,7 @@ describe('EventController', () => {
       ];
       mockRequest.images = ['url', 'url2', 'url3', 'url4'];
 
-      const result = await controller.createEvent(mockRequest);
+      const result = await eventController.createEvent(mockRequest);
 
       expect(eventService.createEventWithHastags).toHaveBeenCalledWith(
         mockRequest.toCreateEntity(),
@@ -106,7 +107,7 @@ describe('EventController', () => {
         .spyOn(eventService, 'findOneEventById')
         .mockResolvedValue(mockResponse);
 
-      const result = await controller.findOneEvent(mockId);
+      const result = await eventController.findOneEvent(mockId);
 
       expect(eventService.findOneEventById).toHaveBeenCalledWith(mockId);
       expect(result.code).toEqual(HttpStatus.OK);
@@ -139,7 +140,7 @@ describe('EventController', () => {
       ];
       mockRequest.images = ['url', 'url2', 'url3', 'url4'];
 
-      const result = await controller.updateEvent(mockId, mockRequest);
+      const result = await eventController.updateEvent(mockId, mockRequest);
 
       expect(eventService.updateEventWithHastags).toHaveBeenCalledWith(
         mockId,

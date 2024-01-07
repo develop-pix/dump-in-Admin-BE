@@ -12,8 +12,8 @@ class MockDashboardService {
 }
 
 describe('DashboardController', () => {
-  let controller: DashboardController;
-  let service: DashboardService;
+  let dashboardController: DashboardController;
+  let dashboardService: DashboardService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -23,12 +23,12 @@ describe('DashboardController', () => {
       ],
     }).compile();
 
-    controller = module.get<DashboardController>(DashboardController);
-    service = module.get<DashboardService>(DashboardService);
+    dashboardController = module.get<DashboardController>(DashboardController);
+    dashboardService = module.get<DashboardService>(DashboardService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(dashboardController).toBeDefined();
   });
 
   describe('combineResultsByDate', () => {
@@ -36,13 +36,15 @@ describe('DashboardController', () => {
       const expectedResult: ResponseEntity<Statistics[]> =
         ResponseEntity.OK_WITH('날짜별 리뷰수, 가입자수 입니다.', []);
 
-      jest.spyOn(service, 'combineResultsByDate').mockResolvedValue([]);
+      jest
+        .spyOn(dashboardService, 'combineResultsByDate')
+        .mockResolvedValue([]);
 
-      const result = await controller.combineResultsByDate();
+      const result = await dashboardController.combineResultsByDate();
 
       expect(result).toEqual(expectedResult);
       expect(result.code).toEqual(HttpStatus.OK);
-      expect(service.combineResultsByDate).toHaveBeenCalled();
+      expect(dashboardService.combineResultsByDate).toHaveBeenCalled();
     });
   });
 
@@ -50,13 +52,13 @@ describe('DashboardController', () => {
     it('should return count of users by date', async () => {
       const expectedResult: ResponseEntity<Statistics[]> =
         ResponseEntity.OK_WITH('날짜별 유저수 입니다.', []);
-      jest.spyOn(service, 'countUsersByDate').mockResolvedValue([]);
+      jest.spyOn(dashboardService, 'countUsersByDate').mockResolvedValue([]);
 
-      const result = await controller.countUsersByDate();
+      const result = await dashboardController.countUsersByDate();
 
       expect(result).toEqual(expectedResult);
       expect(result.code).toEqual(HttpStatus.OK);
-      expect(service.countUsersByDate).toHaveBeenCalled();
+      expect(dashboardService.countUsersByDate).toHaveBeenCalled();
     });
   });
 
@@ -65,13 +67,13 @@ describe('DashboardController', () => {
       const expectedResult: ResponseEntity<Statistics[]> =
         ResponseEntity.OK_WITH('날짜별 리뷰수 입니다.', []);
 
-      jest.spyOn(service, 'countReviewsByDate').mockResolvedValue([]);
+      jest.spyOn(dashboardService, 'countReviewsByDate').mockResolvedValue([]);
 
-      const result = await controller.countReviewsByDate();
+      const result = await dashboardController.countReviewsByDate();
 
       expect(result).toEqual(expectedResult);
       expect(result.code).toEqual(HttpStatus.OK);
-      expect(service.countReviewsByDate).toHaveBeenCalled();
+      expect(dashboardService.countReviewsByDate).toHaveBeenCalled();
     });
   });
 });

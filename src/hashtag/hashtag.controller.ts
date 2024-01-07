@@ -5,7 +5,7 @@ import { GetHashtagList } from './dto/get-hastag-list.dto';
 import { ResponseEntity } from '../common/entity/response.entity';
 import { CreateHashtags } from './dto/post-hashtag.dto';
 import { SwaggerAPI } from '../common/swagger/api.decorator';
-import { PaginationDto } from 'src/common/dto/get-pagination-query.dto';
+import { PaginationDto } from '../common/dto/get-pagination-query.dto';
 import { PageEntity } from '../common/dto/get-pagination-list.dto';
 
 @ApiTags('해시태그')
@@ -38,7 +38,7 @@ export class HashtagController {
 
   @Post()
   @SwaggerAPI({ name: '해시태그 생성', success: 201 })
-  async createHastags(
+  async createHashtags(
     @Body() request: CreateHashtags,
   ): Promise<ResponseEntity<string>> {
     await this.hashtagService.createHashtags(request.toCreateEntity());

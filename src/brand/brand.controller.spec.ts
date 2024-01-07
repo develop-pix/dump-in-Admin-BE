@@ -19,7 +19,7 @@ class MockBrandService {
 }
 
 describe('BrandController', () => {
-  let controller: BrandController;
+  let brandController: BrandController;
   let brandService: BrandService;
 
   beforeEach(async () => {
@@ -28,7 +28,7 @@ describe('BrandController', () => {
       providers: [{ provide: BrandService, useClass: MockBrandService }],
     }).compile();
 
-    controller = module.get<BrandController>(BrandController);
+    brandController = module.get<BrandController>(BrandController);
     brandService = module.get<BrandService>(BrandService);
   });
 
@@ -37,7 +37,8 @@ describe('BrandController', () => {
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(brandController).toBeDefined();
+    expect(brandService).toBeDefined();
   });
 
   describe('findBrandByQueryParam', () => {
@@ -50,7 +51,7 @@ describe('BrandController', () => {
         .spyOn(brandService, 'findBrandByQueryParam')
         .mockResolvedValueOnce([mockResponse, mockCount]);
 
-      const result = await controller.findBrandByQueryParam(mockRequest);
+      const result = await brandController.findBrandByQueryParam(mockRequest);
 
       expect(brandService.findBrandByQueryParam).toHaveBeenCalledWith(
         mockRequest.getPageProps(),
@@ -75,7 +76,7 @@ describe('BrandController', () => {
         .spyOn(brandService, 'findOneBrandById')
         .mockResolvedValueOnce(mockResponse);
 
-      const result = await controller.findOneBrand(mockId);
+      const result = await brandController.findOneBrand(mockId);
 
       expect(brandService.findOneBrandById).toHaveBeenCalledWith(mockId);
       expect(result.code).toEqual(HttpStatus.OK);
@@ -102,7 +103,7 @@ describe('BrandController', () => {
         'https://example.com/image2.jpg',
       ];
 
-      const result = await controller.createBrand(mockRequest);
+      const result = await brandController.createBrand(mockRequest);
 
       expect(brandService.createBrandWithHastags).toHaveBeenCalledWith(
         mockRequest.toCreateEntity(),
@@ -127,7 +128,7 @@ describe('BrandController', () => {
         'https://example.com/image2.jpg',
       ];
 
-      const result = await controller.updateBrand(mockId, mockRequest);
+      const result = await brandController.updateBrand(mockId, mockRequest);
 
       expect(brandService.updateBrandWithHastags).toHaveBeenCalledWith(
         mockId,
