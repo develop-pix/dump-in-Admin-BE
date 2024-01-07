@@ -92,16 +92,12 @@ describe('BrandController', () => {
   describe('createBrand', () => {
     it('SUCCESS: 포토부스 업체 생성', async () => {
       const mockRequest = new CreateBrand();
-      mockRequest.name = '포토그레이';
-      mockRequest.mainThumbnailImageUrl = 'https://example.com/image.jpg';
-      mockRequest.description = '포토부스 업체 설명';
-      mockRequest.photoBoothUrl = 'https://example.com';
-      mockRequest.isEvent = true;
-      mockRequest.hashtags = ['행사', '웨딩', '파티', '스냅'];
-      mockRequest.images = [
-        'https://example.com/image1.jpg',
-        'https://example.com/image2.jpg',
-      ];
+      const mockResponse = new PhotoBoothBrand();
+      mockRequest.toCreateEntity = jest.fn().mockReturnValue(mockResponse);
+
+      jest
+        .spyOn(brandService, 'createBrandWithHastags')
+        .mockResolvedValue(mockResponse);
 
       const result = await brandController.createBrand(mockRequest);
 
@@ -117,16 +113,12 @@ describe('BrandController', () => {
     it('SUCCESS: 포토부스 업체 수정', async () => {
       const mockId = 1;
       const mockRequest = new UpdateBrand();
-      mockRequest.name = '포토그레이';
-      mockRequest.mainThumbnailImageUrl = 'https://example.com/image.jpg';
-      mockRequest.description = '포토부스 업체 설명';
-      mockRequest.photoBoothUrl = 'https://example.com';
-      mockRequest.isEvent = true;
-      mockRequest.hashtags = ['행사', '웨딩', '파티', '스냅'];
-      mockRequest.images = [
-        'https://example.com/image1.jpg',
-        'https://example.com/image2.jpg',
-      ];
+      const mockResponse = new PhotoBoothBrand();
+      mockRequest.toUpdateEntity = jest.fn().mockReturnValue(mockResponse);
+
+      jest
+        .spyOn(brandService, 'updateBrandWithHastags')
+        .mockResolvedValue(mockResponse);
 
       const result = await brandController.updateBrand(mockId, mockRequest);
 
