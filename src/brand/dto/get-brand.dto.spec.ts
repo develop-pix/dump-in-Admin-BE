@@ -7,8 +7,6 @@ import { GetBrandDetail } from './get-brand-detail.dto';
 
 describe('GetBrandDto', () => {
   let brandReqBody: BrandReqBody;
-  let getBrandList: GetBrandList;
-  let getBrandDetail: GetBrandDetail;
   let mockBrandData: PhotoBoothBrand;
 
   beforeEach(() => {
@@ -30,20 +28,17 @@ describe('GetBrandDto', () => {
       brandImages: brandToEntity.images,
       ...brandToEntity,
     });
-
-    getBrandList = new GetBrandList(mockBrandData);
-    getBrandDetail = new GetBrandDetail(mockBrandData);
   });
 
   it('should be defined', () => {
     expect(brandReqBody).toBeDefined();
-    expect(getBrandList).toBeDefined();
-    expect(getBrandDetail).toBeDefined();
     expect(mockBrandData).toBeInstanceOf(PhotoBoothBrand);
   });
 
   describe('GetBrandList', () => {
     it('SUCCESS: PhotoBoothBrand 엔티티로 GetBrandList DTO 생성', () => {
+      const getBrandList: GetBrandList = new GetBrandList(mockBrandData);
+
       expect(getBrandList.id).toEqual(mockBrandData.id);
       expect(getBrandList.name).toEqual(mockBrandData.name);
       expect(getBrandList.isEvent).toEqual(mockBrandData.isEvent);
@@ -61,6 +56,9 @@ describe('GetBrandDto', () => {
 
   describe('GetBrandDetail', () => {
     it('SUCCESS: PhotoBoothBrand 엔티티로 GetBrandDetail DTO 생성', () => {
+      const getBrandDetail: GetBrandDetail = new GetBrandDetail(mockBrandData);
+
+      expect(getBrandDetail.id).toEqual(mockBrandData.id);
       expect(getBrandDetail.description).toEqual(mockBrandData.description);
       expect(getBrandDetail.photoBoothUrl).toEqual(mockBrandData.photoBoothUrl);
       expect(getBrandDetail.isEvent).toEqual(mockBrandData.isEvent);

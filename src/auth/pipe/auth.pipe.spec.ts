@@ -73,7 +73,7 @@ describe('AuthPipe', () => {
     expect(authService).toBeDefined();
   });
 
-  describe('transform()', () => {
+  describe('transform', () => {
     const loginAdmin: LoginAdmin = { username: 'admin', password: 'admin' };
 
     it('SUCCESS: 관리자 정보가 존재하고 비밀번호가 일치할 때, GetAdminSession 객체 반환', async () => {

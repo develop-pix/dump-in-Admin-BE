@@ -47,7 +47,7 @@ describe('AuthController', () => {
     expect(authService).toBeDefined();
   });
 
-  describe('login()', () => {
+  describe('login', () => {
     const mockRequest: LoginAdmin = {
       username: 'admin',
       password: 'admin',

@@ -11,7 +11,7 @@ describe('BrandQueryParam', () => {
     expect(brandQueryParam).toBeDefined();
   });
 
-  describe('getQueryProps()', () => {
+  describe('getQueryProps', () => {
     it('SUCCESS: 쿼리 속성 전달 확인', () => {
       const name = 'Example Brand';
       const isExampleEvent = true;

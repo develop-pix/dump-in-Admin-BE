@@ -146,7 +146,7 @@ describe('BrandService', () => {
     });
   });
 
-  describe('findOneBrandById()', () => {
+  describe('findOneBrandById', () => {
     it('SUCCESS: id 값이 존재할 때 데이터 반환', async () => {
       // Given
       const id = 1;
@@ -171,7 +171,7 @@ describe('BrandService', () => {
     });
   });
 
-  describe('findOneBrandBy()', () => {
+  describe('findOneBrandBy', () => {
     it('SUCCESS: 업체명이 존재할 때 데이터 반환', async () => {
       // Given
       const name = '업체명';
@@ -198,7 +198,7 @@ describe('BrandService', () => {
     });
   });
 
-  describe('createBrandWithHastags()', () => {
+  describe('createBrandWithHastags', () => {
     const createProps: ToBrandProps = {
       name: 'string',
       isEvent: true,
@@ -233,7 +233,7 @@ describe('BrandService', () => {
     });
   });
 
-  describe('updateBrandWithHastags()', () => {
+  describe('updateBrandWithHastags', () => {
     const updateProps: ToBrandProps = {
       name: 'string',
       isEvent: undefined,

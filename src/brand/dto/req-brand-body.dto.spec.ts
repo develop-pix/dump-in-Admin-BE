@@ -23,7 +23,7 @@ describe('BrandReqBody', () => {
     expect(brandReqBody).toBeDefined();
   });
 
-  it('SUCCESS: toEntity() 속성 확인', () => {
+  it('SUCCESS: toEntity 속성 확인', () => {
     const entity = brandReqBody.toEntity();
 
     expect(entity.name).toEqual(brandReqBody.name);

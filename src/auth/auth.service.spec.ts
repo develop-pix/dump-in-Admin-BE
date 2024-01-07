@@ -49,7 +49,7 @@ describe('AuthService', () => {
     expect(userService).toBeDefined();
   });
 
-  describe('validateAdminForLogIn()', () => {
+  describe('validateAdminForLogIn', () => {
     const getLogInProps = { username: 'admin', password: 'admin' };
 
     it('SUCCESS: 어드민 역할을 가진 유저일 때 로그인', async () => {

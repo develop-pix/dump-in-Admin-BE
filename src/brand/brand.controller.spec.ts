@@ -36,7 +36,11 @@ describe('BrandController', () => {
     jest.clearAllMocks();
   });
 
-  describe('findBrandByQueryParam()', () => {
+  it('should be defined', () => {
+    expect(controller).toBeDefined();
+  });
+
+  describe('findBrandByQueryParam', () => {
     it('SUCCESS: 포토부스 업체 목록 반환', async () => {
       const mockResponse = [new PhotoBoothBrand()];
       const mockCount = 1;
@@ -55,14 +59,14 @@ describe('BrandController', () => {
       expect(result.code).toEqual(HttpStatus.OK);
       expect(result).toEqual(
         ResponseEntity.OK_WITH<PageEntity<GetBrandList>>(
-          expect.anything(),
-          expect.anything(),
+          expect.any(String),
+          expect.any(PageEntity<GetBrandList>),
         ),
       );
     });
   });
 
-  describe('findOneBrand()', () => {
+  describe('findOneBrand', () => {
     it('SUCCESS: 요청한 ID로 포토부스 업체 반환', async () => {
       const mockResponse = new PhotoBoothBrand();
       const mockId = 1;
@@ -77,14 +81,14 @@ describe('BrandController', () => {
       expect(result.code).toEqual(HttpStatus.OK);
       expect(result).toEqual(
         ResponseEntity.OK_WITH<GetBrandDetail>(
-          expect.anything(),
-          expect.anything(),
+          expect.any(String),
+          expect.any(GetBrandDetail),
         ),
       );
     });
   });
 
-  describe('createBrand()', () => {
+  describe('createBrand', () => {
     it('SUCCESS: 포토부스 업체 생성', async () => {
       const mockRequest = new CreateBrand();
       mockRequest.name = '포토그레이';
@@ -104,11 +108,11 @@ describe('BrandController', () => {
         mockRequest.toCreateEntity(),
       );
       expect(result.code).toEqual(HttpStatus.CREATED);
-      expect(result).toEqual(ResponseEntity.CREATED(expect.anything()));
+      expect(result).toEqual(ResponseEntity.CREATED(expect.any(String)));
     });
   });
 
-  describe('updateBrand()', () => {
+  describe('updateBrand', () => {
     it('SUCCESS: 포토부스 업체 수정', async () => {
       const mockId = 1;
       const mockRequest = new UpdateBrand();
@@ -130,7 +134,7 @@ describe('BrandController', () => {
         mockRequest.toUpdateEntity(),
       );
       expect(result.code).toEqual(HttpStatus.OK);
-      expect(result).toEqual(ResponseEntity.OK(expect.anything()));
+      expect(result).toEqual(ResponseEntity.OK(expect.any(String)));
     });
   });
 });
