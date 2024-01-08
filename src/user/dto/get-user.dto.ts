@@ -3,11 +3,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { User } from '../entity/user.entity';
 import { Review } from '../../review/entity/review.entity';
 
-export class GetUserDto {
+export class GetUserList {
   @Exclude() readonly _id: number;
   @Exclude() readonly _username: string;
   @Exclude() readonly _nickname: string;
+  @Exclude() readonly _password: string;
   @Exclude() readonly _email: string;
+  @Exclude() readonly _isAdmin: boolean;
   @Exclude() readonly _createdAt: Date;
   @Exclude() readonly _deletedAt: Date | null;
   @Exclude() readonly _reviews: Review[];

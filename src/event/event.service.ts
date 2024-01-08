@@ -1,23 +1,23 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { EventRepository } from './repository/event.repository';
 import { HashtagService } from '../hashtag/hashtag.service';
 import { PaginationProps } from '../common/dto/get-pagination-query.dto';
-import { FindEventOptionProps } from './dto/get-event-query.dto';
-import { GetEventListDto } from './dto/get-event-list.dto';
 import { Events } from './entity/event.entity';
-import { PhotoBoothService } from '../photo-booth/photo-booth.service';
-import { EventCreateProps } from './dto/post-event.dto';
-import { EventUpdateProps } from './dto/patch-event.dto';
-import { EventImage } from './entity/event-image.entity';
 import { EventHashtag } from '../hashtag/entity/event-hashtag.entity';
-import { PhotoBoothBrand } from '../photo-booth/entity/photo-booth-brand.entity';
+import { PhotoBoothBrand } from '../brand/entity/brand.entity';
+import { BrandService } from '../brand/brand.service';
+import {
+  EventCreateProps,
+  EventUpdateProps,
+  FindEventOptionProps,
+} from './event.interface';
 
 @Injectable()
 export class EventService {
   constructor(
     private readonly hashtagService: HashtagService,
     private readonly eventRepository: EventRepository,
-    private readonly photoBoothService: PhotoBoothService,
+    private readonly brandService: BrandService,
   ) {}
 
   /**
@@ -26,40 +26,23 @@ export class EventService {
    * @desc - 쿼리 파라미터에 맞는 이벤트 목록 조회
    *       - 쿼리 옵션이 없으면 전체 이벤트 조회
    */
-  async findEventByQueryParam(
+  findEventByQueryParam(
     pageProps: PaginationProps,
     query: FindEventOptionProps,
-  ): Promise<[GetEventListDto[], number]> {
-    const [results, count] =
-      await this.eventRepository.findEventByOptionAndCount(
-        Events.of(query),
-        pageProps,
-      );
-
-    if (count === 0) {
-      throw new NotFoundException('이벤트를 찾지 못했습니다');
-    }
-
-    return [
-      results.map((result: Events) => new GetEventListDto(result)),
-      count,
-    ];
+  ): Promise<[Events[], number]> {
+    return this.eventRepository.findEventByOptionAndCount(
+      Events.of(query),
+      pageProps,
+    );
   }
 
   /**
-   * @param pageProps - Pagination (항목수, 페이지)
-   * @param query - Request Query (업체명, 제목)
-   * @desc - 쿼리 파라미터에 맞는 이벤트 목록 조회
-   *       - 쿼리 옵션이 없으면 전체 이벤트 조회
+   * @param id - 이벤트 id
+   * @desc - 이벤트 id에 맞는 이벤트 조회
+   * @throws 존재하지 않는 이벤트 (EntityNotFoundError)
    */
-  async findOneEventById(id: number): Promise<Events> {
-    const event = await this.eventRepository.findOneEvent(Events.byId(id));
-
-    if (!event) {
-      throw new NotFoundException('이벤트를 찾지 못했습니다.');
-    }
-
-    return event;
+  findOneEventById(id: number): Promise<Events> {
+    return this.eventRepository.findOneEvent(Events.byId(id));
   }
 
   /**
@@ -68,21 +51,16 @@ export class EventService {
    *       - 이벤트 관련 해시태그 생성
    *       - 이벤트 생성
    *       - 해시태그와 이벤트 연결
+   * @see {@link prepareEventAttributes} 를 호출하여 이벤트 생성에 필요한 속성들을 준비합니다.
    */
-  async createEventWithHastags(
-    createProps: EventCreateProps,
-  ): Promise<boolean> {
-    const [photoBoothBrand, eventImages, eventHashtags] =
+  async createEventWithHastags(createProps: EventCreateProps): Promise<Events> {
+    const [photoBoothBrand, eventHashtags] =
       await this.prepareEventAttributes(createProps);
-
-    await this.eventRepository.save({
+    return this.eventRepository.save({
       photoBoothBrand,
-      eventImages,
       eventHashtags,
       ...createProps,
     });
-
-    return true;
   }
 
   /**
@@ -91,30 +69,22 @@ export class EventService {
    * @desc - 제목, 내용, 업체명, 대표이미지, 시작일, 마감일, 공개여부, 해시태그
    *       - 이벤트와 이벤트 관련 해시태그 수정
    *       - 이벤트 이미지를 여러장 수정
+   * @see {@link findOneEventById} 를 호출하여 이벤트를 찾습니다.
+   * @see {@link prepareEventAttributes} 를 호출하여 이벤트 생성에 필요한 속성들을 준비합니다.
    */
   async updateEventWithHastags(
     id: number,
     updateProps: EventUpdateProps,
-  ): Promise<boolean> {
-    const eventId = Events.byId(id);
-    const isExistEvent = this.eventRepository.hasId(eventId);
-
-    if (!isExistEvent) {
-      throw new NotFoundException('업데이트할 이벤트가 없습니다.');
-    }
-
-    const [photoBoothBrand, eventImages, eventHashtags] =
+  ): Promise<Events> {
+    await this.findOneEventById(id);
+    const [photoBoothBrand, eventHashtags] =
       await this.prepareEventAttributes(updateProps);
-
-    await this.eventRepository.save({
+    return this.eventRepository.save({
       id,
-      eventImages,
       eventHashtags,
       photoBoothBrand,
       ...updateProps,
     });
-
-    return true;
   }
 
   /**
@@ -123,17 +93,12 @@ export class EventService {
    *        - 이벤트 관련 해시태그 가져오기
    *        - 이벤트 이미지 엔티티에 이벤트 이미지를 삽입
    */
-  private async prepareEventAttributes(
+  private prepareEventAttributes(
     props: EventCreateProps | EventUpdateProps,
-  ): Promise<[PhotoBoothBrand, EventImage[], EventHashtag[]]> {
-    const hashtags = await this.hashtagService.createHashtags(props.hashtags);
-
+  ): Promise<[PhotoBoothBrand, EventHashtag[]]> {
     return Promise.all([
-      this.photoBoothService.findOneBrandByName(props.brandName),
-      props.images?.map((image) => EventImage.create(image)),
-      hashtags.length !== 0
-        ? hashtags.map((hashtag) => EventHashtag.create(hashtag))
-        : undefined,
+      this.brandService.findOneBrandBy(props.brandName),
+      this.hashtagService.eventHashtags(props.hashtags),
     ]);
   }
 }

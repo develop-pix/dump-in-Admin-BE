@@ -12,6 +12,7 @@ import { typeOrmConfig } from './common/config/typeorm.config';
 import { HealthController } from './health.controller';
 import { TerminusModule } from '@nestjs/terminus';
 import { ScheduleModule } from '@nestjs/schedule';
+import { BrandModule } from './brand/brand.module';
 
 @Module({
   controllers: [HealthController],
@@ -27,6 +28,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     ReviewModule,
     DashboardModule,
     TerminusModule,
+    BrandModule,
   ],
 })
 export class AppModule {}

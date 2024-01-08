@@ -31,7 +31,7 @@ export class EventRepository extends Repository<Events> {
 
   findOneEvent(event: Events): Promise<Events> {
     const options = this.findEventManyOptions(event);
-    return this.findOne(options);
+    return this.findOneOrFail(options);
   }
 
   private findEventManyOptions(event: Events): FindManyOptions<Events> {

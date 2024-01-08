@@ -1,11 +1,11 @@
-import { Exclude, Expose, Type } from 'class-transformer';
+import { Exclude, Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { PhotoBoothBrand } from '../../photo-booth/entity/photo-booth-brand.entity';
+import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
 import { Events } from '../entity/event.entity';
 import { EventImage } from '../entity/event-image.entity';
 import { EventHashtag } from '../../hashtag/entity/event-hashtag.entity';
 
-export class GetEventListDto {
+export class GetEventList {
   @Exclude() readonly _id: number;
   @Exclude() readonly _title: string;
   @Exclude() readonly _content: string;
@@ -65,7 +65,6 @@ export class GetEventListDto {
     description: '이벤트와 관련된 해시태그',
   })
   @Expose()
-  @Type(() => EventHashtag)
   get hashtags(): string[] {
     return this._eventHashtags.map((hashtags) => hashtags.hashtag.name);
   }

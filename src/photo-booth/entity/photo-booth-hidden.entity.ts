@@ -1,6 +1,6 @@
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
-import { FindBoothOptionProps } from '../dto/get-photo-booth-query.dto';
+import { FindBoothOptionProps } from '../photo-booth.interface';
 
 @Entity('photo_booth_raw_data')
 export class HiddenPhotoBooth extends BaseDateEntity {

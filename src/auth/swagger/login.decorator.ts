@@ -6,7 +6,7 @@ import {
   ApiOperation,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { createSchema } from '../../../common/swagger/api.schema';
+import { createSchema } from '../../common/swagger/api.schema';
 
 export const SwaggerLogIn = (): MethodDecorator =>
   applyDecorators(
@@ -32,11 +32,11 @@ export const SwaggerLogIn = (): MethodDecorator =>
 
     ApiUnauthorizedResponse({
       description:
-        '로그인하지 않았을 때 응답입니다. 401 상태코드와 함께 요청 실패 메시지가 반환됩니다',
+        '로그인하지 않았을 때 응답입니다. 403 상태코드와 함께 요청 실패 메시지가 반환됩니다',
       schema: {
         allOf: [
           createSchema({
-            status: HttpStatus.UNAUTHORIZED,
+            status: HttpStatus.FORBIDDEN,
             message: '로그인이 필요합니다.',
             success: false,
           }),

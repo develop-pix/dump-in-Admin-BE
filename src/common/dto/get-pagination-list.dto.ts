@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Expose } from 'class-transformer';
 import { PaginationProps } from './get-pagination-query.dto';
 
-export class Page<T> {
+export class PageEntity<T> {
   @Exclude() private readonly _take: number;
   @Exclude() private readonly _count: number;
   @Exclude() private readonly _results: T[];
@@ -58,8 +58,8 @@ export class Page<T> {
   static create<T>(
     pageProps: PaginationProps,
     count: number,
-    results: T[],
-  ): Page<T> {
-    return new Page<T>(pageProps, count, results);
+    response: T[],
+  ): PageEntity<T> {
+    return new PageEntity<T>(pageProps, count, response);
   }
 }

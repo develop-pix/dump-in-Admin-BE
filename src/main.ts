@@ -13,6 +13,7 @@ import { pipeOptions } from './common/config/pipe.config';
 import { limiter, loginLimiter } from './common/config/limiter.config';
 import { swaggerConfig } from './common/config/swagger.config';
 import * as Sentry from '@sentry/node';
+import { useContainer } from 'class-validator';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule, {
@@ -31,9 +32,10 @@ async function bootstrap(): Promise<void> {
   app.setGlobalPrefix('api');
   app.use(limiter);
   app.use('/api/auth/login', loginLimiter);
-  app.use(Sentry.Handlers.requestHandler());
+  app.use(Sentry.Handlers.requestHandler({ include: { request: ['api'] } }));
   app.use(Sentry.Handlers.tracingHandler());
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+  useContainer(app.select(AppModule), { fallbackOnErrors: true });
   await app.listen(+process.env.APP_SERVER_PORT);
 }
 bootstrap();

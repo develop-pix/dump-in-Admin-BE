@@ -73,7 +73,7 @@ describe('HashtagService', () => {
       const hashtagInDb = hashtagNames.map((name) => Hashtag.create(name));
 
       // When
-      const result = await hashtagService.createHashtags(hashtagNames);
+      const result = await hashtagService.createHashtags(hashtagInDb);
 
       // Then
       expect(result).toEqual(hashtagInDb);

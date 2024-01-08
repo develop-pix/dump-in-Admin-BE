@@ -1,6 +1,6 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UserRepository } from '../user/repository/user.repository';
-import { RawCountByDate } from './dto/get-statistics.dto';
+import { Statistics, RawCountByDate } from './dto/get-statistics.dto';
 import { ReviewRepository } from '../review/repository/review.repository';
 
 @Injectable()
@@ -13,25 +13,15 @@ export class DashboardService {
   /**
    * @desc 날짜별 가입 유저수 조회
    */
-  async countUsersByDate(): Promise<RawCountByDate[]> {
-    const results = await this.userRepository.countUsersByDate();
-    if (!results.length) {
-      throw new NotFoundException(
-        '날짜별 가입 유저수 조회 요청에 실패했습니다.',
-      );
-    }
-    return results;
+  countUsersByDate(): Promise<RawCountByDate[]> {
+    return this.userRepository.countUsersByDate();
   }
 
   /**
    * @desc 날짜별 리뷰 작성수 조회
    */
-  async countReviewsByDate(): Promise<RawCountByDate[]> {
-    const results = await this.reviewRepository.countReviewsByDate();
-    if (!results.length) {
-      throw new NotFoundException('날짜별 리뷰수 조회 요청에 실패했습니다.');
-    }
-    return results;
+  countReviewsByDate(): Promise<RawCountByDate[]> {
+    return this.reviewRepository.countReviewsByDate();
   }
 
   /**
@@ -43,28 +33,8 @@ export class DashboardService {
       this.countReviewsByDate(),
     ]);
 
-    const mergedResults: Map<string, RawCountByDate> = new Map();
-
-    const mergeResult = (result: RawCountByDate): void => {
-      const date = result.created.toISOString();
-      const existingResult = mergedResults.get(date);
-
-      if (!existingResult) {
-        mergedResults.set(date, {
-          created: new Date(date),
-          user: result.user,
-          review: result.review,
-        });
-      } else {
-        existingResult.review += result.review ? result.review : 0;
-        existingResult.user += result.user ? result.user : 0;
-      }
-    };
-
-    [...userResults, ...reviewResults].forEach((result) => mergeResult(result));
-
-    return Array.from(mergedResults.values()).sort(
-      (a, b) => b.created.getTime() - a.created.getTime(),
+    return Statistics.mergeResults([...userResults, ...reviewResults]).sort(
+      (a, b) => Statistics.compare(a, b),
     );
   }
 }

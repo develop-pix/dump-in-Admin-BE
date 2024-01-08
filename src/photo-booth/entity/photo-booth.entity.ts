@@ -7,9 +7,9 @@ import {
   JoinColumn,
   OneToMany,
 } from 'typeorm';
-import { PhotoBoothBrand } from './photo-booth-brand.entity';
-import { FindBoothOptionProps } from '../dto/get-photo-booth-query.dto';
+import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
 import { Review } from '../../review/entity/review.entity';
+import { FindBoothOptionProps } from '../photo-booth.interface';
 
 @Entity('photo_booth')
 export class PhotoBooth extends BaseDateEntity {

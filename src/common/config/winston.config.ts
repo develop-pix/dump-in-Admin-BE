@@ -6,7 +6,6 @@ export const consoleTransport = new winston.transports.Console({
   level: process.env.NODE_ENV === 'production' ? 'info' : 'silly',
   format: winston.format.combine(
     winston.format.timestamp(),
-    winston.format.colorize(),
     utilities.format.nestLike('DumpInAdmin', {
       prettyPrint: true,
       colors: true,

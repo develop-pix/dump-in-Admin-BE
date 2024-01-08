@@ -1,18 +1,15 @@
-import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, MaxLength, MinLength } from 'class-validator';
-import * as crypto from 'crypto';
+import { IsNotEmpty, IsString, MaxLength, MinLength } from 'class-validator';
 
-export class LogInDto {
+export class LoginAdmin {
   @ApiProperty({
     description: '어드민이 로그인에 사용할 아이디 필드입니다.',
     required: true,
     example: 'admin',
   })
-  @Expose()
+  @IsString()
   @IsNotEmpty()
-  @MinLength(5)
-  @MaxLength(128)
+  @MaxLength(32)
   username: string;
 
   @ApiProperty({
@@ -20,20 +17,9 @@ export class LogInDto {
     required: true,
     example: 'dump-in123!',
   })
-  @Expose()
+  @IsString()
   @IsNotEmpty()
-  @MaxLength(30)
-  password: string;
-
-  getLogInProps(): AdminLogInProps {
-    return {
-      username: this.username,
-      password: crypto.createHash('sha256').update(this.password).digest('hex'),
-    };
-  }
-}
-
-export interface AdminLogInProps {
-  username: string;
+  @MinLength(4)
+  @MaxLength(32)
   password: string;
 }

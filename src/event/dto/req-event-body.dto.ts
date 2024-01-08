@@ -9,20 +9,12 @@ import {
   MinLength,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { EventImage } from '../entity/event-image.entity';
+import { PhotoBoothBrand } from '../../brand/entity/brand.entity';
+import { EventReqBodyProps, ToEventProps } from '../event.interface';
+import { Hashtag } from '../../hashtag/entity/hashtag.entity';
 
-export interface EventReqBodyProps {
-  title: string;
-  content: string;
-  mainThumbnailUrl: string;
-  brandName: string;
-  isPublic: boolean;
-  startDate: Date;
-  endDate: Date;
-  hashtags: string[];
-  images: string[];
-}
-
-export class EventReqBodyDto implements EventReqBodyProps {
+export class EventReqBody implements EventReqBodyProps {
   @ApiProperty({
     description: '이벤트의 제목',
   })
@@ -98,4 +90,19 @@ export class EventReqBodyDto implements EventReqBodyProps {
   @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
   @IsUrl({}, { each: true })
   images: string[];
+
+  toEntity(): ToEventProps {
+    const hashtags = Hashtag.unique(this.hashtags);
+    return {
+      title: this.title,
+      content: this.content,
+      mainThumbnailUrl: this.mainThumbnailUrl,
+      brandName: PhotoBoothBrand.byName(this.brandName),
+      isPublic: this.isPublic,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      images: this.images.map((image) => EventImage.create(image)),
+      hashtags,
+    };
+  }
 }

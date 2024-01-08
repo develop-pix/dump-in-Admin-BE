@@ -1,7 +1,8 @@
 import { IsNotEmpty } from 'class-validator';
-import { EventReqBodyDto, EventReqBodyProps } from './req-event-body.dto';
+import { EventReqBody } from './req-event-body.dto';
+import { EventCreateProps } from '../event.interface';
 
-export class CreateEventDto extends EventReqBodyDto {
+export class CreateEvent extends EventReqBody {
   @IsNotEmpty()
   title: string;
 
@@ -23,24 +24,11 @@ export class CreateEventDto extends EventReqBodyDto {
   @IsNotEmpty()
   endDate: Date;
 
-  getCreateProps(): EventCreateProps {
+  toCreateEntity(): EventCreateProps {
     return {
-      title: this.title,
-      content: this.content,
-      mainThumbnailUrl: this.mainThumbnailUrl,
-      brandName: this.brandName,
-      isPublic: this.isPublic,
-      startDate: this.startDate,
-      endDate: this.endDate,
-      hashtags: this.hashtags,
-      images: this.images,
       createdAt: new Date(),
       updatedAt: new Date(),
+      ...this.toEntity(),
     };
   }
-}
-
-export interface EventCreateProps extends EventReqBodyProps {
-  createdAt: Date;
-  updatedAt: Date;
 }

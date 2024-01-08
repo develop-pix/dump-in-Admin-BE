@@ -6,7 +6,7 @@ import { User } from '../../user/entity/user.entity';
 import { ReviewImage } from '../entity/review-image.entity';
 import { Review } from '../entity/review.entity';
 
-export class GetReviewListDto {
+export class GetReviewList {
   @Exclude() readonly _id: number;
   @Exclude() readonly _content: string;
   @Exclude() readonly _date: Date;
@@ -49,8 +49,8 @@ export class GetReviewListDto {
   })
   @Expose()
   @Type(() => ReviewConcept)
-  get reviewConcept(): ReviewConcept[] {
-    return this._reviewConcepts;
+  get reviewConcept(): string[] {
+    return this._reviewConcepts.map((concept) => concept.concept.name);
   }
 
   @ApiProperty({
@@ -58,8 +58,8 @@ export class GetReviewListDto {
   })
   @Expose()
   @Type(() => ReviewImage)
-  get reviewImages(): ReviewImage[] {
-    return this._reviewImages;
+  get reviewImages(): string[] {
+    return this._reviewImages.map((image) => image.reviewImageUrl);
   }
 
   @ApiProperty({
@@ -74,7 +74,7 @@ export class GetReviewListDto {
     description: '리뷰를 작성한 유저 정보',
   })
   @Expose()
-  get userName(): string {
-    return this._user.nickname;
+  get userName(): User {
+    return this._user;
   }
 }

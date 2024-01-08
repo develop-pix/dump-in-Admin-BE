@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { WinstonModule } from 'nest-winston';
 import {
@@ -9,6 +9,9 @@ import {
 import { envConfigOptions } from './config/env.config';
 import { SentryModule } from './sentry/sentry.module';
 import { sentryOptions } from './config/sentry.config';
+import { APP_FILTER } from '@nestjs/core';
+import { HttpExceptionFilter } from './filter/http-exception.filter';
+import { EntityNotFoundExceptionFilter } from './filter/typeorm-exception.filter';
 
 @Module({
   imports: [
@@ -21,6 +24,17 @@ import { sentryOptions } from './config/sentry.config';
         errorLogFileTransport,
       ],
     }),
+  ],
+  providers: [
+    Logger,
+    {
+      provide: APP_FILTER,
+      useClass: HttpExceptionFilter,
+    },
+    {
+      provide: APP_FILTER,
+      useClass: EntityNotFoundExceptionFilter,
+    },
   ],
   exports: [ConfigModule, WinstonModule],
 })

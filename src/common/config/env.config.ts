@@ -61,7 +61,6 @@ function validate(config: Record<string, unknown>): EnvironmentVariables {
   });
 
   if (errors.length > 0) {
-    this.logger.error(errors);
     throw new Error(errors.toString());
   }
   return validatedConfig;

@@ -7,6 +7,8 @@ import {
   Unique,
   OneToMany,
 } from 'typeorm';
+import * as bcrypt from 'bcrypt';
+import * as crypto from 'crypto';
 
 @Entity('user')
 @Unique(['email'])
@@ -56,7 +58,7 @@ export class User extends BaseDateEntity {
   @OneToMany(() => Review, (review: Review) => review.user)
   reviews: Review[];
 
-  static adminOf({ username }: AdminSignInProps): User {
+  static adminOf(username: string): User {
     const users = new User();
 
     users.username = username;
@@ -72,9 +74,21 @@ export class User extends BaseDateEntity {
 
     return users;
   }
-}
 
-export interface AdminSignInProps {
-  username: string;
-  password: string;
+  static comparePassword(
+    requestPassword: string,
+    dbPassword: string,
+  ): Promise<boolean> {
+    const parsingDBPassword = dbPassword.replace('bcrypt_sha256$', '');
+    const hashed = this.hashCrypto(requestPassword);
+    return bcrypt.compare(hashed, parsingDBPassword);
+  }
+
+  static hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 12);
+  }
+
+  static hashCrypto(password: string): string {
+    return crypto.createHash('sha256').update(password).digest('hex');
+  }
 }

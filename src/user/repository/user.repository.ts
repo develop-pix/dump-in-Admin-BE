@@ -22,13 +22,17 @@ export class UserRepository extends Repository<User> {
   }
 
   findUserByOptionAndCount(page: PaginationProps): Promise<[User[], number]> {
-    const options = this.findUserManyOptions(page);
-    return this.findAndCount(options);
+    const options = this.findUserManyOptions(new User());
+    const { take, skip } = page;
+    return this.findAndCount({ take, skip, ...options });
   }
 
-  findOneUserBy(user: User): Promise<User> {
-    const where = this.findUserOptionsWhere(user);
-    return this.findOneBy(where);
+  findOneUser(user: User): Promise<User> {
+    const options = this.findUserManyOptions(user);
+    return this.findOne({
+      where: options.where,
+      select: options.select,
+    });
   }
 
   countUsersByDate(): Promise<RawCountByDate[]> {
@@ -40,11 +44,13 @@ export class UserRepository extends Repository<User> {
       .getRawMany();
   }
 
-  private findUserManyOptions(page: PaginationProps): FindManyOptions<User> {
-    const { take, skip } = page;
+  private findUserManyOptions(user: User): FindManyOptions<User> {
+    const where = this.findUserOptionsWhere(user);
     const relations = { reviews: true };
     const select: FindOptionsSelect<User> = {
       id: true,
+      isAdmin: true,
+      password: true,
       username: true,
       nickname: true,
       reviews: { id: true },
@@ -52,7 +58,7 @@ export class UserRepository extends Repository<User> {
       createdAt: true,
       deletedAt: true,
     };
-    return { relations, take, skip, select };
+    return { where, relations, select };
   }
 
   private findUserOptionsWhere(user: User): FindOptionsWhere<User> {

@@ -1,8 +1,8 @@
 import { Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
-import { GetReviewListDto } from './get-review-list.dto';
+import { GetReviewList } from './get-review-list.dto';
 
-export class GetReviewDetailDto extends GetReviewListDto {
+export class GetReviewDetail extends GetReviewList {
   @ApiProperty({
     description: '리뷰의 조회수',
   })

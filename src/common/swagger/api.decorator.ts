@@ -1,5 +1,6 @@
 import { HttpStatus, Type, applyDecorators } from '@nestjs/common';
 import {
+  ApiBadRequestResponse,
   ApiExtraModels,
   ApiNotFoundResponse,
   ApiOperation,
@@ -8,7 +9,7 @@ import {
   ApiUnauthorizedResponse,
   getSchemaPath,
 } from '@nestjs/swagger';
-import { Page } from '../dto/get-pagination-list.dto';
+import { PageEntity } from '../dto/get-pagination-list.dto';
 import { ResponseEntity } from '../entity/response.entity';
 import { createSchema } from './api.schema';
 
@@ -24,15 +25,30 @@ export const SwaggerAPI = ({
       summary: `${name} API`,
     }),
 
-    ApiExtraModels(Page, ResponseEntity, model),
+    ApiExtraModels(PageEntity, ResponseEntity, model),
+
     ApiNotFoundResponse({
       description:
-        '실패 시 응답입니다. 404 상태코드와 함께 요청 실패 메시지가 반환됩니다',
+        '데이터가 없을 때 응답입니다. 404 상태코드와 메시지가 반환됩니다',
       schema: {
         allOf: [
           createSchema({
             status: fail,
-            message: `${name} 요청에 실패했습니다.`,
+            message: `${name}을(를) 찾지 못했습니다. input: {props}`,
+            success: false,
+          }),
+        ],
+      },
+    }),
+
+    ApiBadRequestResponse({
+      description:
+        '잘못된 요청일 때 응답입니다. 400 상태코드와 함께 요청 실패 메시지가 반환됩니다',
+      schema: {
+        allOf: [
+          createSchema({
+            status: HttpStatus.BAD_REQUEST,
+            message: '잘못된 요청입니다.',
             success: false,
           }),
         ],
@@ -77,7 +93,7 @@ export const SwaggerAPI = ({
             success: true,
             data: isPagination
               ? {
-                  $ref: getSchemaPath(Page),
+                  $ref: getSchemaPath(PageEntity),
                   properties: {
                     results: {
                       type: 'array',

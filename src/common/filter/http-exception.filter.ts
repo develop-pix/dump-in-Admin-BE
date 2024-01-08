@@ -14,26 +14,26 @@ import * as Sentry from '@sentry/node';
 @Catch()
 export class HttpExceptionFilter implements ExceptionFilter {
   constructor(private readonly logger: Logger) {}
-  catch(exception: Error, host: ArgumentsHost): Error {
+  catch(exception: Error, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();
-    const statusCode = (exception as HttpException).getStatus();
-    const getResponse = (exception as HttpException).getResponse();
-    const response = ResponseEntity.EXCEPTION(
-      getResponse['message'] || 'Internal Server Error',
-      statusCode,
-    );
     const stack = exception.stack;
-    const log = createLog({ req, stack, response });
 
     if (!(exception instanceof HttpException)) {
       exception = new InternalServerErrorException();
       Sentry.captureException(exception);
     }
 
+    const statusCode = (exception as HttpException).getStatus();
+    const getResponse = (exception as HttpException).getResponse();
+    const response = ResponseEntity.EXCEPTION(
+      getResponse['message'] || 'Internal Server Error',
+      statusCode,
+    );
+
+    const log = createLog({ req, stack, response });
     this.logger.log(log);
     res.status(statusCode).json(response);
-    return exception;
   }
 }

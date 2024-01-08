@@ -27,7 +27,7 @@ export class HealthController {
     ]);
     Sentry.captureCheckIn({
       monitorSlug: 'server-health',
-      status: 'ok',
+      status: result.status === 'ok' ? 'ok' : 'error',
     });
     return ResponseEntity.OK_WITH<HealthCheckResult>(
       '헬스 체크 결과입니다.',

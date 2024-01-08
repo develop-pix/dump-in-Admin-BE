@@ -1,7 +1,8 @@
 import { IsOptional } from 'class-validator';
-import { EventReqBodyDto, EventReqBodyProps } from './req-event-body.dto';
+import { EventReqBody } from './req-event-body.dto';
+import { EventUpdateProps } from '../event.interface';
 
-export class UpdateEventDto extends EventReqBodyDto {
+export class UpdateEvent extends EventReqBody {
   @IsOptional()
   title: string;
 
@@ -23,25 +24,7 @@ export class UpdateEventDto extends EventReqBodyDto {
   @IsOptional()
   endDate: Date;
 
-  @IsOptional({ each: true })
-  hashtags: string[];
-
-  @IsOptional({ each: true })
-  images: string[];
-
-  getUpdateProps(): EventUpdateProps {
-    return {
-      title: this.title,
-      content: this.content,
-      mainThumbnailUrl: this.mainThumbnailUrl,
-      brandName: this.brandName,
-      isPublic: this.isPublic,
-      startDate: this.startDate,
-      endDate: this.endDate,
-      hashtags: this.hashtags,
-      images: this.images,
-    };
+  toUpdateEntity(): EventUpdateProps {
+    return this.toEntity();
   }
 }
-
-export interface EventUpdateProps extends Partial<EventReqBodyProps> {}

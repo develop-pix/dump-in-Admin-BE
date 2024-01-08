@@ -1,10 +1,10 @@
 import { IsOptional, IsString, MaxLength, MinLength } from 'class-validator';
-import { EventReqBodyProps } from './req-event-body.dto';
 import { PaginationDto } from '../../common/dto/get-pagination-query.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
+import { FindEventOptionProps } from '../event.interface';
 
-export class EventQueryDto extends PaginationDto {
+export class EventQueryParam extends PaginationDto {
   @ApiProperty({
     description: '이벤트와 관련된 포토부스 업체명',
     required: false,
@@ -33,6 +33,3 @@ export class EventQueryDto extends PaginationDto {
     };
   }
 }
-
-export interface FindEventOptionProps
-  extends Pick<Partial<EventReqBodyProps>, 'brandName' | 'title'> {}

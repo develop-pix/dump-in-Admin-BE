@@ -5,13 +5,13 @@ import {
   BadRequestException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { GetAdminSessionDto } from '../../user/dto/get-session-admin.dto';
+import { GetAdminSession } from '../dto/get-admin-session.dto';
 
 @Injectable()
 export class LoggedCheckGuard implements CanActivate {
   canActivate(context: ExecutionContext): boolean {
     const request = context.switchToHttp().getRequest();
-    const userInfo: GetAdminSessionDto = request.session.user;
+    const userInfo: GetAdminSession = request.session.user;
     const isLoginRequest = request.url.includes('login');
 
     if (isLoginRequest && userInfo) {

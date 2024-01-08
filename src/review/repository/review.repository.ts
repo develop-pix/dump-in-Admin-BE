@@ -32,7 +32,7 @@ export class ReviewRepository extends Repository<Review> {
 
   findOneReview(review: Review): Promise<Review> {
     const options = this.findReviewManyOptions(review);
-    return this.findOne(options);
+    return this.findOneOrFail(options);
   }
 
   countReviewsByDate(): Promise<RawCountByDate[]> {

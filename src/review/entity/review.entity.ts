@@ -10,8 +10,8 @@ import { ReviewImage } from './review-image.entity';
 import { ReviewConcept } from './review-concept.entity';
 import { User } from '../../user/entity/user.entity';
 import { PhotoBooth } from '../../photo-booth/entity/photo-booth.entity';
-import { FindReviewOptionsProps } from '../dto/get-review-query.dto';
 import { BaseDateEntity } from '../../common/entity/common-date.entity';
+import { FindReviewOptionsProps } from '../reivew.interface';
 
 @Entity('review')
 export class Review extends BaseDateEntity {
@@ -75,11 +75,9 @@ export class Review extends BaseDateEntity {
 
   static of({ boothName, nickname }: FindReviewOptionsProps): Review {
     const review = new Review();
-    const user = User.byNickname(nickname);
-    const booth = PhotoBooth.byName(boothName);
 
-    review.user = nickname ? user : undefined;
-    review.photoBooth = boothName ? booth : undefined;
+    review.user = User.byNickname(nickname);
+    review.photoBooth = PhotoBooth.byName(boothName);
 
     return review;
   }

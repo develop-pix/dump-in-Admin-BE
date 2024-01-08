@@ -6,11 +6,11 @@ import {
   Repository,
 } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { PhotoBoothBrand } from '../entity/photo-booth-brand.entity';
+import { PhotoBoothBrand } from '../entity/brand.entity';
 import { PaginationProps } from '../../common/dto/get-pagination-query.dto';
 
 @Injectable()
-export class PhotoBoothBrandRepository extends Repository<PhotoBoothBrand> {
+export class BrandRepository extends Repository<PhotoBoothBrand> {
   constructor(private readonly dataSource: DataSource) {
     const baseRepository = dataSource.getRepository(PhotoBoothBrand);
     super(
@@ -35,7 +35,7 @@ export class PhotoBoothBrandRepository extends Repository<PhotoBoothBrand> {
 
   findOneBrand(brand: PhotoBoothBrand): Promise<PhotoBoothBrand> {
     const options = this.findBrandManyOptions(brand);
-    return this.findOne(options);
+    return this.findOneOrFail(options);
   }
 
   private findBrandManyOptions(

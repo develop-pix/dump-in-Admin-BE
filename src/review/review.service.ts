@@ -1,10 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PaginationProps } from '../common/dto/get-pagination-query.dto';
-import { FindReviewOptionsProps } from './dto/get-review-query.dto';
-import { GetReviewListDto } from './dto/get-review-list.dto';
 import { ReviewRepository } from './repository/review.repository';
 import { Review } from './entity/review.entity';
-import { plainToInstance } from 'class-transformer';
+import { FindReviewOptionsProps } from './reivew.interface';
 
 @Injectable()
 export class ReviewService {
@@ -16,55 +14,32 @@ export class ReviewService {
    * @desc - 쿼리 파라미터에 맞는 리뷰 목록 조회
    *       - 쿼리 옵션이 없으면 전체 리뷰 조회
    */
-  async findReviewByQueryParam(
+  findReviewByQueryParam(
     pageProps: PaginationProps,
     query: FindReviewOptionsProps,
-  ): Promise<[GetReviewListDto[], number]> {
-    const [results, count] =
-      await this.reviewRepository.findReviewByOptionAndCount(
-        Review.of(query),
-        pageProps,
-      );
-
-    if (count === 0) {
-      throw new NotFoundException('리뷰를 찾지 못했습니다');
-    }
-
-    return [
-      results.map((result: Review) => new GetReviewListDto(result)),
-      count,
-    ];
+  ): Promise<[Review[], number]> {
+    return this.reviewRepository.findReviewByOptionAndCount(
+      Review.of(query),
+      pageProps,
+    );
   }
 
   /**
    * @param id - 리뷰 id
    * @desc 해당 리뷰 데이터 조회
+   * @throws 존재하지 않는 리뷰 (EntityNotFoundError)
    */
-  async findOneReviewById(id: number): Promise<Review> {
-    const review = await this.reviewRepository.findOneReview(Review.byId(id));
-
-    if (!review) {
-      throw new NotFoundException('리뷰를 찾지 못했습니다.');
-    }
-
-    return review;
+  findOneReviewById(id: number): Promise<Review> {
+    return this.reviewRepository.findOneReview(Review.byId(id));
   }
 
   /**
    * @param id - 삭제할 리뷰 id
    * @desc 해당 리뷰의 is_deleted 컬럼을 true로 수정 (soft)
+   * @see {@link findOneReviewById} 를 호출하여 리뷰를 찾습니다.
    */
-  async removeReview(id: number): Promise<boolean> {
-    const isExistReview = this.reviewRepository.hasId(Review.byId(id));
-
-    if (!isExistReview) {
-      throw new NotFoundException('리뷰를 찾지 못했습니다.');
-    }
-
-    await this.reviewRepository.save(
-      plainToInstance(Review, { id, isDeleted: true }),
-    );
-
-    return true;
+  async removeReview(id: number): Promise<Review> {
+    await this.findOneReviewById(id);
+    return this.reviewRepository.save({ id, isDeleted: true });
   }
 }
