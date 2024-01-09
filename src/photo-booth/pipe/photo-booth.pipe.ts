@@ -1,6 +1,6 @@
 import { ConflictException, Injectable, PipeTransform } from '@nestjs/common';
-import { PhotoBoothRepository } from '../repository/photo-booth.repository';
 import { PhotoBooth } from '../entity/photo-booth.entity';
+import { PhotoBoothService } from '../photo-booth.service';
 
 /**
  * Validator supports service container in the case if want to inject dependencies into your custom validator constraint classes
@@ -12,12 +12,10 @@ import { PhotoBooth } from '../entity/photo-booth.entity';
 export class PhotoBoothPipe
   implements PipeTransform<string, Promise<PhotoBooth['id']>>
 {
-  constructor(private readonly photoBoothRepository: PhotoBoothRepository) {}
+  constructor(private readonly photoBoothRepository: PhotoBoothService) {}
 
   async transform(value: PhotoBooth['id']) {
-    const isPhotoBoothExist = this.photoBoothRepository.hasId(
-      PhotoBooth.byId(value),
-    );
+    const isPhotoBoothExist = this.photoBoothRepository.hasPhotoBoothId(value);
 
     if (isPhotoBoothExist) {
       throw new ConflictException('이미 포토부스가 존재합니다.');
