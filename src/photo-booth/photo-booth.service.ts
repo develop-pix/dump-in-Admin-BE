@@ -43,6 +43,14 @@ export class PhotoBoothService {
 
   /**
    * @param id - 공개 포토부스의 uuid값
+   * @desc 포토부스 지점에 대한 아이디가 존재하는지 확인 (boolean)
+   */
+  hasPhotoBoothId(id: string): boolean {
+    return this.photoBoothRepository.hasId(PhotoBooth.byId(id));
+  }
+
+  /**
+   * @param id - 공개 포토부스의 uuid값
    * @param props - 저장할 필요한 데이터 일부 (지역, 지점명, 주소 등)
    * @desc 포토부스 지점에 대한 데이터 저장
    */

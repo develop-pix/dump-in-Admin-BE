@@ -90,7 +90,7 @@ describe('EventController', () => {
   });
 
   describe('findOneEvent', () => {
-    it('SUCCESS: 요청한 ID로 이벤트 반환', async () => {
+    it('SUCCESS: 요청한 ID로 이벤트 조회', async () => {
       const mockId = 1;
       const mockResponse = new Events();
 
@@ -112,7 +112,7 @@ describe('EventController', () => {
   });
 
   describe('updateEvent', () => {
-    it('SUCCESS: 이벤트 수정', async () => {
+    it('SUCCESS: 요청한 ID로 이벤트 수정', async () => {
       const mockId = 1;
       const mockResponse = new Events();
       const mockRequest = new UpdateEvent();

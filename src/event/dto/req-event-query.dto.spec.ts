@@ -16,8 +16,7 @@ describe('EventQueryParam', () => {
     const title = 'Example Title';
     eventQueryParam.brandName = brandName;
     eventQueryParam.title = title;
-    const queryProps = eventQueryParam.getQueryProps();
-    expect(queryProps).toEqual({
+    expect(eventQueryParam.getQueryProps()).toEqual({
       brandName,
       title,
     });
