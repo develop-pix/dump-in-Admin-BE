@@ -21,6 +21,7 @@ export const getSessionOptions = (
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
+      sameSite: process.env.NODE_ENV === 'production' ? undefined : 'none',
       secure: process.env.NODE_ENV === 'production',
       maxAge: 24 * 60 * 60 * 1000,
     },
