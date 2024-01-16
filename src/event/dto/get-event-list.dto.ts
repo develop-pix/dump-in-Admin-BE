@@ -68,4 +68,20 @@ export class GetEventList {
   get hashtags(): string[] {
     return this._eventHashtags.map((hashtags) => hashtags.hashtag.name);
   }
+
+  @ApiProperty({
+    description: '이벤트 시작일',
+  })
+  @Expose()
+  get startDate(): Date {
+    return this._startDate;
+  }
+
+  @ApiProperty({
+    description: '이벤트 마감일',
+  })
+  @Expose()
+  get endDate(): Date {
+    return this._endDate;
+  }
 }

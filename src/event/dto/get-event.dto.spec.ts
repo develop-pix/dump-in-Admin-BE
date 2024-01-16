@@ -58,6 +58,8 @@ describe('GetEventList', () => {
       expect(getEventList.hashtags).toEqual(
         mockEventsData.eventHashtags.map((hashtags) => hashtags.hashtag.name),
       );
+      expect(getEventList.startDate).toEqual(mockEventsData.startDate);
+      expect(getEventList.endDate).toEqual(mockEventsData.endDate);
     });
   });
 
@@ -66,8 +68,6 @@ describe('GetEventList', () => {
       const getEventDetail = new GetEventDetail(mockEventsData);
 
       expect(getEventDetail.id).toEqual(mockEventsData.id);
-      expect(getEventDetail.startDate).toEqual(mockEventsData.startDate);
-      expect(getEventDetail.endDate).toEqual(mockEventsData.endDate);
       expect(getEventDetail.images).toEqual(
         mockEventsData.eventImages.map((images) => images.eventImageUrl),
       );
