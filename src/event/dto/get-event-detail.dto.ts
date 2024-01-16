@@ -4,22 +4,6 @@ import { GetEventList } from './get-event-list.dto';
 
 export class GetEventDetail extends GetEventList {
   @ApiProperty({
-    description: '이벤트 시작일',
-  })
-  @Expose()
-  get startDate(): Date {
-    return this._startDate;
-  }
-
-  @ApiProperty({
-    description: '이벤트 마감일',
-  })
-  @Expose()
-  get endDate(): Date {
-    return this._endDate;
-  }
-
-  @ApiProperty({
     description: '이벤트의 조회수',
   })
   @Expose()
