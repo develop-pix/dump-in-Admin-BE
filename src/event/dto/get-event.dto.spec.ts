@@ -58,8 +58,12 @@ describe('GetEventList', () => {
       expect(getEventList.hashtags).toEqual(
         mockEventsData.eventHashtags.map((hashtags) => hashtags.hashtag.name),
       );
-      expect(getEventList.startDate).toEqual(mockEventsData.startDate);
-      expect(getEventList.endDate).toEqual(mockEventsData.endDate);
+      expect(getEventList.startDate).toEqual(
+        mockEventsData.startDate.toISOString().split('T')[0],
+      );
+      expect(getEventList.endDate).toEqual(
+        mockEventsData.endDate.toISOString().split('T')[0],
+      );
     });
   });
 
