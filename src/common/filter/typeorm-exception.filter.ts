@@ -5,7 +5,7 @@ import {
   Logger,
   HttpStatus,
 } from '@nestjs/common';
-import { EntityNotFoundError } from 'typeorm';
+import { EntityNotFoundError, QueryFailedError, TypeORMError } from 'typeorm';
 import { Request, Response } from 'express';
 import { createLog } from '../config/log-helper.config';
 import { ResponseEntity } from '../entity/response.entity';
@@ -15,10 +15,9 @@ import { ResponseEntity } from '../entity/response.entity';
  * @see also @https://gist.github.com/gsusmonzon/ecd7842495f07594761e40c2758617d0
  * @see also @https://docs.nestjs.com/exception-filters
  */
-@Catch(EntityNotFoundError)
-export class EntityNotFoundExceptionFilter implements ExceptionFilter {
-  constructor(private readonly logger: Logger) {}
-
+@Catch(EntityNotFoundError, QueryFailedError)
+export class TypeOrmExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(TypeOrmExceptionFilter.name);
   /**
    * @param message - exception.message
    * @desc - 정규 표현식을 사용하여 개행 문자 및 빈 공간 제거
@@ -35,7 +34,7 @@ export class EntityNotFoundExceptionFilter implements ExceptionFilter {
       .trim();
   }
 
-  public catch(exception: EntityNotFoundError, host: ArgumentsHost) {
+  public catch(exception: TypeORMError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const res = ctx.getResponse<Response>();
     const req = ctx.getRequest<Request>();

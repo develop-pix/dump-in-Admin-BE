@@ -20,6 +20,7 @@ import { BrandModule } from './brand/brand.module';
     CommonModule,
     TypeOrmModule.forRoot(typeOrmConfig),
     ScheduleModule.forRoot(),
+    BrandModule,
     PhotoBoothModule,
     EventModule,
     UserModule,
@@ -28,7 +29,6 @@ import { BrandModule } from './brand/brand.module';
     ReviewModule,
     DashboardModule,
     TerminusModule,
-    BrandModule,
   ],
 })
 export class AppModule {}

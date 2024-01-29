@@ -11,7 +11,7 @@ import { SentryModule } from './sentry/sentry.module';
 import { sentryOptions } from './config/sentry.config';
 import { APP_FILTER } from '@nestjs/core';
 import { HttpExceptionFilter } from './filter/http-exception.filter';
-import { EntityNotFoundExceptionFilter } from './filter/typeorm-exception.filter';
+import { TypeOrmExceptionFilter } from './filter/typeorm-exception.filter';
 
 @Module({
   imports: [
@@ -33,7 +33,7 @@ import { EntityNotFoundExceptionFilter } from './filter/typeorm-exception.filter
     },
     {
       provide: APP_FILTER,
-      useClass: EntityNotFoundExceptionFilter,
+      useClass: TypeOrmExceptionFilter,
     },
   ],
   exports: [ConfigModule, WinstonModule],
