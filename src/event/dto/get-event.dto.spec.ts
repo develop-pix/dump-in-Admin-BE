@@ -32,7 +32,7 @@ describe('GetEventList', () => {
       eventHashtags: eventToEntity.hashtags.map((hashtag) =>
         EventHashtag.create(hashtag),
       ),
-      eventImages: eventToEntity.images,
+      eventImages: eventToEntity.eventImages,
       ...eventToEntity,
     });
   });

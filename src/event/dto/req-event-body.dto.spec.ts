@@ -42,7 +42,7 @@ describe('EventReqBody', () => {
     expect(entity.startDate).toEqual(eventReqBody.startDate);
     expect(entity.endDate).toEqual(eventReqBody.endDate);
     expect(entity.hashtags).toEqual(Hashtag.unique(eventReqBody.hashtags));
-    expect(entity.images).toHaveLength(4);
-    expect(entity.images[0]).toBeInstanceOf(EventImage);
+    expect(entity.eventImages).toHaveLength(4);
+    expect(entity.eventImages[0]).toBeInstanceOf(EventImage);
   });
 });

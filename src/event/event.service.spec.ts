@@ -245,7 +245,9 @@ describe('EventService', () => {
         '스냅',
         '이달의프레임',
       ]),
-      images: ['url1', 'url2', 'url3'].map((image) => EventImage.create(image)),
+      eventImages: ['url1', 'url2', 'url3'].map((image) =>
+        EventImage.create(image),
+      ),
       createdAt: new Date(),
       updatedAt: new Date(),
     };
@@ -299,7 +301,9 @@ describe('EventService', () => {
         '스냅',
         '이달의프레임',
       ]),
-      images: ['url1', 'url2', 'url3'].map((image) => EventImage.create(image)),
+      eventImages: ['url1', 'url2', 'url3'].map((image) =>
+        EventImage.create(image),
+      ),
     };
 
     it('SUCCESS: id 값이 존재할 때 전달 받은 정보로 업데이트', async () => {

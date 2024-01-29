@@ -14,7 +14,7 @@ export interface BrandReqBodyProps {
 export interface ToBrandProps
   extends Omit<BrandReqBodyProps, 'hashtags' | 'images'> {
   hashtags: Hashtag[];
-  images: BrandImage[];
+  brandImages: BrandImage[];
 }
 
 export interface FindBrandOptionProps

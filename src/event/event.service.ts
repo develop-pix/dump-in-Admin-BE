@@ -8,8 +8,8 @@ import { PhotoBoothBrand } from '../brand/entity/brand.entity';
 import { BrandService } from '../brand/brand.service';
 import {
   EventCreateProps,
-  EventUpdateProps,
   FindEventOptionProps,
+  ToEventProps,
 } from './event.interface';
 
 @Injectable()
@@ -74,7 +74,7 @@ export class EventService {
    */
   async updateEventWithHastags(
     id: number,
-    updateProps: EventUpdateProps,
+    updateProps: ToEventProps,
   ): Promise<Events> {
     await this.findOneEventById(id);
     const [photoBoothBrand, eventHashtags] =
@@ -93,10 +93,10 @@ export class EventService {
    *        - 이벤트 관련 해시태그 가져오기
    *        - 이벤트 이미지 엔티티에 이벤트 이미지를 삽입
    */
-  private prepareEventAttributes(
-    props: EventCreateProps | EventUpdateProps,
+  private async prepareEventAttributes(
+    props: EventCreateProps | ToEventProps,
   ): Promise<[PhotoBoothBrand, EventHashtag[]]> {
-    return Promise.all([
+    return await Promise.all([
       this.brandService.findOneBrandBy(props.brandName),
       this.hashtagService.eventHashtags(props.hashtags),
     ]);

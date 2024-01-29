@@ -73,15 +73,20 @@ export class GetEventList {
     description: '이벤트 시작일',
   })
   @Expose()
-  get startDate(): Date {
-    return this._startDate;
+  get startDate(): string {
+    return this.dateToFormat(this._startDate);
   }
 
   @ApiProperty({
     description: '이벤트 마감일',
   })
   @Expose()
-  get endDate(): Date {
-    return this._endDate;
+  get endDate(): string {
+    return this.dateToFormat(this._endDate);
+  }
+
+  private dateToFormat(date: Date): string {
+    const TIME_ZONE = 9 * 60 * 60 * 1000; // 9시간
+    return new Date(date.getTime() + TIME_ZONE).toISOString().split('T')[0];
   }
 }
