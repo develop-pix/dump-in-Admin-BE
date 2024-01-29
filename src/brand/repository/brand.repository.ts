@@ -42,7 +42,7 @@ export class BrandRepository extends Repository<PhotoBoothBrand> {
     brand: PhotoBoothBrand,
   ): FindManyOptions<PhotoBoothBrand> {
     const where = this.findBrandOptionsWhere(brand);
-    const relations = { brandHashtags: true };
+    const relations = { brandHashtags: true, brandImages: true };
     const select: FindOptionsSelect<PhotoBoothBrand> = {
       id: true,
       name: true,

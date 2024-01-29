@@ -212,7 +212,9 @@ describe('BrandService', () => {
         '스냅',
         '이달의프레임',
       ]),
-      images: ['url1', 'url2', 'url3'].map((image) => BrandImage.create(image)),
+      brandImages: ['url1', 'url2', 'url3'].map((image) =>
+        BrandImage.create(image),
+      ),
     };
 
     it('SUCCESS: 전달 받은 정보로 포토부스 업체 생성', async () => {
@@ -241,7 +243,9 @@ describe('BrandService', () => {
       photoBoothUrl: undefined,
       mainThumbnailImageUrl: 'string',
       hashtags: Hashtag.unique(['스냅', '이달의프레임']),
-      images: ['url1', 'url2', 'url3'].map((image) => BrandImage.create(image)),
+      brandImages: ['url1', 'url2', 'url3'].map((image) =>
+        BrandImage.create(image),
+      ),
     };
 
     it('SUCCESS: id 값이 존재할 때 전달 받은 정보로 업데이트', async () => {

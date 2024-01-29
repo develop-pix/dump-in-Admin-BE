@@ -34,7 +34,7 @@ describe('BrandReqBody', () => {
     expect(entity.photoBoothUrl).toEqual(brandReqBody.photoBoothUrl);
     expect(entity.isEvent).toEqual(brandReqBody.isEvent);
     expect(entity.hashtags).toEqual(Hashtag.unique(brandReqBody.hashtags));
-    expect(entity.images).toHaveLength(2);
-    expect(entity.images[0]).toBeInstanceOf(BrandImage);
+    expect(entity.brandImages).toHaveLength(2);
+    expect(entity.brandImages[0]).toBeInstanceOf(BrandImage);
   });
 });

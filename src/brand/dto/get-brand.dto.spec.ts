@@ -25,7 +25,7 @@ describe('GetBrandDto', () => {
       brandHashtags: brandToEntity.hashtags.map((hashtag) =>
         BrandHashtag.create(hashtag),
       ),
-      brandImages: brandToEntity.images,
+      brandImages: brandToEntity.brandImages,
       ...brandToEntity,
     });
   });

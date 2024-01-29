@@ -71,7 +71,7 @@ export class BrandReqBody implements BrandReqBodyProps {
     example: ['url', 'url2', 'url3', 'url4'],
   })
   @IsArray()
-  @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
+  @ArrayMaxSize(4, { message: '이미지는 최대 4개까지 입력 가능합니다.' })
   @IsUrl({}, { each: true })
   images: string[];
 
@@ -83,7 +83,7 @@ export class BrandReqBody implements BrandReqBodyProps {
       mainThumbnailImageUrl: this.mainThumbnailImageUrl,
       description: this.description,
       photoBoothUrl: this.photoBoothUrl,
-      images: this.images.map((image) => BrandImage.create(image)),
+      brandImages: this.images.map((image) => BrandImage.create(image)),
       hashtags,
     };
   }
