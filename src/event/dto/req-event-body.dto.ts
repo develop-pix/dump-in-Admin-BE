@@ -2,7 +2,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import {
   ArrayMaxSize,
   IsArray,
-  IsDate,
+  IsBoolean,
+  IsDateString,
   IsString,
   IsUrl,
   MaxLength,
@@ -39,7 +40,6 @@ export class EventReqBody implements EventReqBodyProps {
   @MinLength(2)
   @MaxLength(256)
   @IsUrl()
-  @Type(() => String)
   mainThumbnailUrl: string;
 
   @ApiProperty({
@@ -55,22 +55,24 @@ export class EventReqBody implements EventReqBodyProps {
     description: '이벤트 공개 여부',
     example: 'true',
   })
-  @IsString()
+  @IsBoolean()
   @Type(() => Boolean)
   isPublic: boolean;
 
   @ApiProperty({
     description: '이벤트 시작일',
+    example: '2024-01-01',
   })
-  @IsDate()
-  @Type(() => Date)
+  @IsString()
+  @IsDateString()
   startDate: Date;
 
   @ApiProperty({
     description: '이벤트 마감일',
+    example: '2024-01-31',
   })
-  @IsDate()
-  @Type(() => Date)
+  @IsString()
+  @IsDateString()
   endDate: Date;
 
   @ApiProperty({
@@ -87,7 +89,7 @@ export class EventReqBody implements EventReqBodyProps {
     example: ['url', 'url2', 'url3', 'url4'],
   })
   @IsArray()
-  @ArrayMaxSize(4, { message: '해시태그는 최대 4개까지 입력 가능합니다.' })
+  @ArrayMaxSize(4, { message: '이미지 최대 4개까지 입력 가능합니다.' })
   @IsUrl({}, { each: true })
   images: string[];
 
@@ -101,7 +103,7 @@ export class EventReqBody implements EventReqBodyProps {
       isPublic: this.isPublic,
       startDate: this.startDate,
       endDate: this.endDate,
-      images: this.images.map((image) => EventImage.create(image)),
+      eventImages: this.images.map((image) => EventImage.create(image)),
       hashtags,
     };
   }

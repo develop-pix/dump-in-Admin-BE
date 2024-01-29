@@ -1,6 +1,6 @@
 import { IsOptional } from 'class-validator';
 import { EventReqBody } from './req-event-body.dto';
-import { EventUpdateProps } from '../event.interface';
+import { ToEventProps } from '../event.interface';
 
 export class UpdateEvent extends EventReqBody {
   @IsOptional()
@@ -24,7 +24,7 @@ export class UpdateEvent extends EventReqBody {
   @IsOptional()
   endDate: Date;
 
-  toUpdateEntity(): EventUpdateProps {
+  toUpdateEntity(): ToEventProps {
     return this.toEntity();
   }
 }

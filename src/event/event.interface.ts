@@ -6,7 +6,7 @@ export interface ToEventProps
   extends Omit<EventReqBodyProps, 'brandName' | 'hashtags' | 'images'> {
   brandName: PhotoBoothBrand;
   hashtags: Hashtag[];
-  images: EventImage[];
+  eventImages: EventImage[];
 }
 
 export interface EventReqBodyProps {
@@ -25,8 +25,6 @@ export interface EventCreateProps extends ToEventProps {
   createdAt: Date;
   updatedAt: Date;
 }
-
-export interface EventUpdateProps extends ToEventProps {}
 
 export interface FindEventOptionProps
   extends Pick<EventReqBodyProps, 'brandName' | 'title'> {}
