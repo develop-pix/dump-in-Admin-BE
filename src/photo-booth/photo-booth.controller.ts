@@ -109,7 +109,7 @@ export class PhotoBoothController {
   @Put('raw/:id')
   @SwaggerAPI({ name: '비공개 포토부스를 앱에 노출', success: 201, fail: 409 })
   async moveHiddenToOpenBooth(
-    @Param('id', ParseUUIDPipe) id: string,
+    @Param('id', ParseUUIDPipe, PhotoBoothPipe) id: string,
     @Body() request: MoveHiddenToOpenBooth,
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.moveHiddenToOpenBooth(
@@ -146,7 +146,7 @@ export class PhotoBoothController {
   @Patch(':id')
   @SwaggerAPI({ name: '앱에 공개된 포토부스 수정' })
   async updateOpenBooth(
-    @Param('id', ParseUUIDPipe, PhotoBoothPipe) id: string,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() request: UpdatePhotoBooth,
   ): Promise<ResponseEntity<string>> {
     await this.photoBoothService.updateOpenBooth(id, request.toUpdateEntity());
